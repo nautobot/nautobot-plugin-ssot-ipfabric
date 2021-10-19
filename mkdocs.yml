@@ -21,3 +21,6 @@ markdown_extensions:
       permalink: true
 nav:
   - Introduction: "index.md"
+plugins:
+  - search
+  - include-markdown
