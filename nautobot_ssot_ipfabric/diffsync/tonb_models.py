@@ -1,13 +1,15 @@
 """DiffSyncModel subclasses for Nautobot-to-IPFabric data sync."""
-from typing import Container, List, Optional
-from django.conf import settings
-from requests.api import delete
-from nautobot.dcim.models import Device as NautobotDevice
-from nautobot.dcim.models import Site
 import uuid
+from typing import List, Optional
 
 from diffsync import DiffSyncModel
-import nautobot_ssot_ipfabric.diffsync.tonb.nbutils as tonb_nbutils
+
+# from django.conf import settings
+# from requests.api import delete
+from nautobot.dcim.models import Device as NautobotDevice
+from nautobot.dcim.models import Site
+
+import nautobot_ssot_ipfabric.utilities.nbutils as tonb_nbutils
 
 DEFAULT_DEVICE_ROLE = "leaf"
 DEFAULT_DEVICE_ROLE_COLOR = "ff0000"
@@ -35,15 +37,15 @@ class Location(DiffSyncModel):
 
     @classmethod
     def create(cls, diffsync, ids, attrs):
-        "Create Site in Nautobot."
+        """Create Site in Nautobot."""
         region_obj = tonb_nbutils.create_region(region_name=attrs["region_name"])
         tenant_obj = tonb_nbutils.create_tenant(tenant_name=attrs["container_name"])
-        site_obj = tonb_nbutils.create_site(site_name=ids["name"], region_obj=region_obj, tenant_obj=tenant_obj)
+        tonb_nbutils.create_site(site_name=ids["name"], region_obj=region_obj, tenant_obj=tenant_obj)
 
         return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
 
     def delete(self) -> Optional["DiffSyncModel"]:
-        """Delete Site in Nautobot"""
+        """Delete Site in Nautobot."""
         site = Site.objects.get(name=self.name)
         site.delete()
         super().delete()
@@ -72,8 +74,8 @@ class Device(DiffSyncModel):
 
     @classmethod
     def create(cls, diffsync, ids, attrs):
-        "Create Device in Nautobot under its parent site."
-        ## TODO: Update creation of device role to be dynamic somehow.
+        """Create Device in Nautobot under its parent site."""
+        # TODO: Update creation of device role to be dynamic somehow.
         device_type_object = tonb_nbutils.create_device_type_object(
             device_type=attrs["model"], vendor_name=attrs["vendor"]
         )
@@ -128,7 +130,7 @@ class MgmtInterface(DiffSyncModel):
 
     @classmethod
     def create(cls, diffsync, ids, attrs):
-        "Create management interface in Nautobot under its parent device."
+        """Create management interface in Nautobot under its parent device."""
         device_obj = NautobotDevice.objects.get(name=ids["device_name"])
         new_interface = tonb_nbutils.create_interface(interface_name=ids["name"], device_obj=device_obj)
         ipam_ip = tonb_nbutils.create_ip(
@@ -144,6 +146,7 @@ class MgmtInterface(DiffSyncModel):
         return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
 
     def delete(self) -> Optional["DiffSyncModel"]:
+        """Delete."""
         device = NautobotDevice.objects.get(name=self.device_name)
         interface = device.interfaces.get(name=self.name)
         interface.delete()

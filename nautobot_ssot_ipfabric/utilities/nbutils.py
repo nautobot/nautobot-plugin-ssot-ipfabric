@@ -1,12 +1,12 @@
 """Utility functions for Nautobot ORM."""
-from nautobot.dcim.models import DeviceType, DeviceRole, Site, Manufacturer, Region
-from nautobot.tenancy.models import Tenant
-from nautobot.ipam.models import IPAddress
-from nautobot.extras.models.statuses import Status
-from nautobot.extras.models.tags import Tag
-from nautobot.extras.models.customfields import CustomField
+# from nautobot.extras.models.tags import Tag
+# from nautobot.extras.models.customfields import CustomField
 from django.contrib.contenttypes.models import ContentType
 from django.utils.text import slugify
+from nautobot.dcim.models import DeviceRole, DeviceType, Manufacturer, Region, Site
+from nautobot.extras.models.statuses import Status
+from nautobot.ipam.models import Interface, IPAddress
+from nautobot.tenancy.models import Tenant
 from netutils.ip import netmask_to_cidr
 
 
@@ -15,6 +15,8 @@ def create_site(site_name, region_obj=None, tenant_obj=None):
 
     Args:
         site_name (str): Name of the site.
+        region_obj (Region): Region Nautobot Object
+        tenant_obj (Tenant): Tenant Nautobot Object
     """
     try:
         site_obj = Site.objects.get(slug=slugify(site_name))
@@ -60,14 +62,16 @@ def create_tenant(tenant_name):
 
 def create_device_type_object(device_type, vendor_name):
     """Create a specified device type in Nautobot.
+
     Args:
         device_type (str): Device model gathered from DiffSync model.
+        vendor_name (str): Vendor Name
     """
     try:
         device_type_obj = DeviceType.objects.get(model=device_type)
     except DeviceType.DoesNotExist:
-        mf = create_manufacturer(vendor_name)
-        device_type_obj = DeviceType(manufacturer=mf, model=device_type, slug=slugify(device_type))
+        mf_name = create_manufacturer(vendor_name)
+        device_type_obj = DeviceType(manufacturer=mf_name, model=device_type, slug=slugify(device_type))
         device_type_obj.validated_save()
     return device_type_obj
 
@@ -76,15 +80,16 @@ def create_manufacturer(vendor_name):
     """Create specified manufacturer in Nautobot."""
     try:
 
-        mf = Manufacturer.objects.get(slug=slugify(vendor_name))
+        mf_name = Manufacturer.objects.get(slug=slugify(vendor_name))
     except Manufacturer.DoesNotExist:
-        mf = Manufacturer(name=vendor_name, slug=slugify(vendor_name))
-        mf.validated_save()
-    return mf
+        mf_name = Manufacturer(name=vendor_name, slug=slugify(vendor_name))
+        mf_name.validated_save()
+    return mf_name
 
 
 def create_device_role_object(role_name, role_color):
     """Create specified device role in Nautobot.
+
     Args:
         role_name (str): Role name.
         role_color (str): Role color.
@@ -119,21 +124,21 @@ def create_device_status(device_status, device_status_color):
     return status_obj
 
 
-def create_ip(ip_address, subnet_mask, status, object=None):
+def create_ip(ip_address, subnet_mask, status="Active", object_pk=None):
     """Verifies ip address exists in Nautobot. If not, creates specified ip.
 
     Args:
         ip_address (str): IP address.
         subnet_mask (str): Subnet mask used for IP Address.
         status (str): Status to assign to IP Address.
-        assigned_uuid (UUID): The primary key for which to assign the IP to.
+        object_pk (UUID): The primary key for which to assign the IP to.
     """
     try:
         ip_obj = IPAddress.objects.get(address=ip_address)
     except IPAddress.DoesNotExist:
         cidr = netmask_to_cidr(subnet_mask)
         ip_obj = IPAddress(
-            address=f"{ip_address}/{cidr}", status=Status.objects.get(name="Active"), assigned_object=object
+            address=f"{ip_address}/{cidr}", status=Status.objects.get(name=status), assigned_object=object_pk
         )
         ip_obj.validated_save()
     return ip_obj
@@ -148,7 +153,7 @@ def create_interface(interface_name, device_obj):
     """
     try:
         interface_obj = device_obj.interfaces.get(name=interface_name)
-    except:
+    except Interface.DoesNotExist:
         interface_obj = device_obj.interfaces.create(name=interface_name)
         device_obj.validated_save()
     return interface_obj

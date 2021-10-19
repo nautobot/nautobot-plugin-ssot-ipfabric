@@ -3,14 +3,14 @@ from django.conf import settings
 from django.templatetags.static import static
 from django.urls import reverse
 
-from diffsync.enum import DiffSyncFlags
+# from nautobot.dcim.models import Device, Interface, Region, Site
+from nautobot.extras.jobs import BooleanVar, Job
+from nautobot_ssot.jobs.base import DataMapping, DataSource
 
-from nautobot.dcim.models import Device, Interface, Region, Site
-from nautobot.extras.jobs import Job, BooleanVar
-
-from nautobot_ssot.jobs.base import DataMapping, DataTarget, DataSource
+# from diffsync.enum import DiffSyncFlags
 
 
+# pylint:disable=too-few-public-methods
 class IpFabricDataSource(DataSource, Job):
     """Job syncing data from IP Fabric to Nautobot."""
 
