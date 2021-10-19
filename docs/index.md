@@ -1,17 +1,53 @@
-# NautobotSSoTIPFabric
+# Nautobot SSoT Plugin - IPFabric
 
-TODO: Write plugin documentation, the outline here is provided as a guide and should be expanded upon.  If more detail is required you are encouraged to expand on the table of contents (TOC) in `mkdocs.yml` to add additional pages.
+This plugin was created to allow users to sync data from IP Fabric into Nautobot.
 
-## Description
+## Overview
 
-## Installation
+Currently this plugin will provide the ability to sync the following IP Fabric models into Nautobot.
 
-## Configuration
+- Site -> Nautobot Site
+- Device -> Nautobot Device
+- Part Numbers -> Nautobot Manufacturer/Device Type/Platform
+- Interfaces -> Nautobot Device Interfaces
+
+## Installation & Configuration
+
+The plugin is available as a Python package in pypi and can be installed with pip
+
+```shell
+pip install nautobot-ssot-ipfabric
+```
+
+> The plugin is compatible with Nautobot 1.1.0 and higher
+
+To ensure Nautobot SSoT IPFabric is automatically re-installed during future upgrades, create a file named `local_requirements.txt` (if not already existing) in the Nautobot root directory (alongside `requirements.txt`) and list the `nautobot-ssot-ipfabric` package:
+
+```no-highlight
+# echo nautobot-ssot-ipfabric >> local_requirements.txt
+```
+
+Once installed, the plugin needs to be enabled in your `nautobot_config.py`
+
+```python
+# In your nautobot_config.py
+PLUGINS = ["nautobot_ssot_ipfabric"]
+
+# PLUGINS_CONFIG = {
+#   "nautobot_ssot_ipfabric": {
+#     ADD YOUR SETTINGS HERE
+#   }
+# }
+```
+
+Currently, there are no further settings that need to be configured within `nautobot_config.py` for the plugin to work.
 
 ## Usage
 
 ## API
 
-## Views
+## DiffSync Models
 
-## Models
+### IPFabric Site
+
+### IPFabric Device
