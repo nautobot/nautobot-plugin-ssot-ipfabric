@@ -21,6 +21,7 @@ packages = [
 nautobot = { version = "*", optional = true }
 python = "^3.6"
 nautobot-ssot = "^1.0.1"
+netutils = "^0.2.3"
 
 [tool.poetry.dev-dependencies]
 bandit = "*"
@@ -108,3 +109,6 @@ testpaths = [
     "tests"
 ]
 addopts = "-vv --doctest-modules"
+
+[tool.isort]
+profile = "black"
