@@ -321,6 +321,15 @@ def check_migrations(context):
 
     run_command(context, command)
 
+@task
+def yamllint(context):
+    """Run yamllint to validate formating adheres to NTC defined YAML standards.
+
+    Args:
+        context (obj): Used to run specific commands
+    """
+    command = "yamllint . --format standard"
+    run_command(context, command)
 
 @task(
     help={
@@ -371,6 +380,8 @@ def tests(context, failfast=False):
     bandit(context)
     print("Running pydocstyle...")
     pydocstyle(context)
+    print("Running yamllint..")
+    yamllint(context)
     print("Running pylint...")
     pylint(context)
     print("Running unit tests...")
