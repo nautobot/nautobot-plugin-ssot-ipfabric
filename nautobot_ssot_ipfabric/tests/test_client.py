@@ -3,10 +3,10 @@ import os
 import unittest
 
 import responses
-from nautobot_ssot_ipfabric.utilities.ipfabric_client import IpFabricClient
 
 from nautobot_ssot_ipfabric.tests.fixtures import real_path
 from nautobot_ssot_ipfabric.utilities import json_fixture
+from nautobot_ssot_ipfabric.utilities.ipfabric_client import IpFabricClient
 
 FIXTURES = os.environ.get("FIXTURE_DIR", real_path)
 
