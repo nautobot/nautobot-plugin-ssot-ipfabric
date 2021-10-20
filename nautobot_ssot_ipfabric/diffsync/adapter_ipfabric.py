@@ -1,4 +1,4 @@
-"""DiffSync adapter class for Nautobot as source-of-truth."""
+"""DiffSync adapter class for Ip Fabric."""
 
 from diffsync import DiffSync
 from . import tonb_models
