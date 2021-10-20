@@ -1,8 +1,6 @@
 """DiffSync adapter class for Nautobot as source-of-truth."""
 import logging
 
-import logging
-
 from diffsync import DiffSync
 from diffsync.exceptions import ObjectNotFound
 from nautobot.dcim.models import Device, Site
