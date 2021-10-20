@@ -98,22 +98,23 @@ class Device(DiffSyncModel):
         return super().delete()
 
 
-class MgmtInterface(DiffSyncModel):
-    """Mgmt Interface model."""
+class Interface(DiffSyncModel):
+    """Interface model."""
 
-    _modelname = "mgmt_interface"
+    _modelname = "interface"
     _identifiers = (
         "device_name",
         "name",
     )
     _shortname = ("name",)
     _attributes = (
+        "name",
         "ip_address",
         "subnet_mask",
     )
     _children = {}
 
-    name: Optional[str]
+    name: str
     device_name: Optional[str]
     ip_address: Optional[str]
     subnet_mask: Optional[str]
@@ -123,14 +124,11 @@ class MgmtInterface(DiffSyncModel):
 
     @classmethod
     def create(cls, diffsync, ids, attrs):
-        """Create management interface in Nautobot under its parent device."""
+        """Create interface in Nautobot under its parent device."""
         device_obj = NautobotDevice.objects.get(name=ids["device_name"])
         new_interface = tonb_nbutils.create_interface(interface_name=ids["name"], device_obj=device_obj)
         ipam_ip = tonb_nbutils.create_ip(
-            ip_address=attrs["ip_address"],
-            subnet_mask=attrs["subnet_mask"],
-            status="Active",
-            object=new_interface,
+            ip_address=attrs["ip_address"], subnet_mask=attrs["subnet_mask"], status="Active", object=new_interface,
         )
 
         device_obj.primary_ip4 = ipam_ip
@@ -144,6 +142,15 @@ class MgmtInterface(DiffSyncModel):
         interface = device.interfaces.get(name=self.name)
         interface.delete()
         return super().delete()
+
+
+class MgmtInterface(Interface):
+    """
+    MgmtInterface class renamed to Interface.
+    For compatibility until references are removed.
+    """
+
+    _modelname = "mgmt_interface"
 
 
 Location.update_forward_refs()
