@@ -72,8 +72,8 @@ class IPFabricDiffSync(DiffSync):
                 type="1000base-t",  # TODO: (GREG) Determine how to handle type.
             )
             self.add(interface)
-            # __tbd__.add_child(interface)  # Needed?
-            self.job.log_debug(message=interface)
+            device.add_child(interface)
+            # self.job.log_debug(message=interface)
 
     def load(self):
         """Load data from IP Fabric."""
