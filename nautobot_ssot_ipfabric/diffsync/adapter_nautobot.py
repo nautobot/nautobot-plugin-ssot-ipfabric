@@ -21,7 +21,7 @@ class NautobotDiffSync(DiffSync):
 
     location = tonb_models.Location
     device = tonb_models.Device
-    mgmt_interface = tonb_models.MgmtInterface
+    interface = tonb_models.Interface
 
     top_level = [
         "location",
