@@ -266,11 +266,21 @@ PLUGINS = ["nautobot_ssot", "nautobot_ssot_ipfabric", "nautobot_chatops", "nauto
 # Plugins configuration settings. These settings are used by various plugins that the user may have installed.
 # Each key in the dictionary is the name of an installed plugin and its value is a dictionary of settings.
 PLUGINS_CONFIG = {
+    "nautobot_chatops": {
+        "enable_slack": True,
+        "slack_api_token": os.environ.get("SLACK_API_TOKEN"),
+        "slack_signing_secret": os.environ.get("SLACK_SIGNING_SECRET"),
+        "session_cache_timeout": 3600,
+    },
     "nautobot_ssot_ipfabric": {
         "IPFABRIC_API_TOKEN": os.environ.get("IPFABRIC_API_TOKEN"),
         "IPFABRIC_HOST": os.environ.get("IPFABRIC_HOST"),
     },
     "nautobot_ssot": {"hide_example_jobs": True},
+    "nautobot_chatops_ipfabric": {
+        "IPFABRIC_API_TOKEN": os.environ.get("IPFABRIC_API_TOKEN"),
+        "IPFABRIC_HOST": os.environ.get("IPFABRIC_HOST"),
+    },
 }
 
 # When determining the primary IP address for a device, IPv6 is preferred over IPv4 by default. Set this to True to
