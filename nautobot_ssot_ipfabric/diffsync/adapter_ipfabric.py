@@ -68,8 +68,8 @@ class IPFabricDiffSync(DiffSync):
                 mac_address=iface["mac"],
                 mtu=iface["mtu"],
                 ip_address=iface["primaryIp"],
-                subnet_mask="255.255.255.255",  # TODO: Determine how to handle mask.
-                type="1000base-t",  # TODO: Determine how to handle type.
+                subnet_mask="255.255.255.255",  # TODO: (GREG) Determine how to handle mask.
+                type="1000base-t",  # TODO: (GREG) Determine how to handle type.
             )
             self.add(interface)
             # __tbd__.add_child(interface)  # Needed?
