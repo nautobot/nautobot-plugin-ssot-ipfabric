@@ -39,10 +39,7 @@ class IpFabricClient(IpFabric):
 
     # pylint: disable=arguments-renamed
     def get_device_inventory(
-        self,
-        search_key=None,
-        filters=None,
-        snapshot_id="$last",
+        self, search_key=None, filters=None, snapshot_id="$last",
     ):
         """Return Device info."""
         logger.debug("Received device inventory request")
@@ -68,3 +65,66 @@ class IpFabricClient(IpFabric):
 
         logger.debug("Requesting inventory with payload: %s", payload)
         return self.get_response("/api/v1/tables/inventory/devices", payload)
+
+    # pylint: disable=arguments-renamed
+    def get_device_inventory(
+        self, search_key=None, filters=None, snapshot_id="$last",
+    ):
+        """Return Device info."""
+        logger.debug("Received device inventory request")
+        if search_key:
+            pass
+
+        # columns and snapshot required
+        payload = {
+            "columns": [
+                "hostname",
+                "siteName",
+                "vendor",
+                "platform",
+                "model",
+                "memoryUtilization",
+                "version",
+                "sn",
+                "loginIp",
+            ],
+            "filters": filters if filters else {},
+            "snapshot": snapshot_id,
+        }
+
+        logger.debug("Requesting inventory with payload: %s", payload)
+        return self.get_response("/api/v1/tables/inventory/devices", payload)
+
+    # pylint: disable=arguments-renamed
+    def get_interface_inventory(
+        self, search_key=None, filters=None, device=None, snapshot_id="$last",
+    ):
+        """Return Interface info."""
+        logger.debug("Received interface inventory request")
+        if search_key:
+            pass
+
+        filters = filters if filters else {}
+        if device:
+            filters["hostname"] = ["eq", device]
+
+        payload = {
+            "columns": [
+                "id",
+                "hostname",
+                "intName",
+                "dscr",
+                "mac",
+                # "duplex",
+                # "speed",
+                "media",
+                "mtu",
+                "primaryIp",
+                # "hasTransceiver",
+            ],
+            "filters": filters,
+            "snapshot": snapshot_id,
+        }
+
+        logger.debug("Requesting interface inventory with payload: %s", payload)
+        return self.get_response("/api/v1/tables/inventory/interfaces", payload)
