@@ -22,5 +22,5 @@ markdown_extensions:
 nav:
   - Introduction: "index.md"
 plugins:
-  - search
-  - include-markdown
+  - "search"
+  - "include-markdown"
