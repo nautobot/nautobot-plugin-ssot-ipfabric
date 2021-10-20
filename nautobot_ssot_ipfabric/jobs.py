@@ -49,12 +49,10 @@ class IpFabricDataSource(DataSource, Job):
         # TODO Add sync job
         configs = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
         ipfabric_conn = IpFabricClient(configs["IPFABRIC_HOST"], configs["IPFABRIC_API_TOKEN"])
+
         self.log_info(message="Loading current data from IP Fabric...")
         ipfabric_diffsync = IPFabricDiffSync(job=self, sync=self.sync, client=ipfabric_conn)
         ipfabric_diffsync.load()
-        # import pdb
-
-        # pdb.set_trace()
         self.log_info(message=ipfabric_diffsync.dict())
 
         self.log_info(message="Loading current data from Nautobot.")

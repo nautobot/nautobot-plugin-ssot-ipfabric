@@ -18,17 +18,16 @@ def create_site(site_name, region_obj=None, tenant_obj=None):
         region_obj (Region): Region Nautobot Object
         tenant_obj (Tenant): Tenant Nautobot Object
     """
-    try:
-        site_obj = Site.objects.get(slug=slugify(site_name))
-    except Site.DoesNotExist:
-        site_obj = Site(
-            name=site_name,
-            slug=slugify(site_name),
-            status=Status.objects.get(name="Active"),
-            region=region_obj,
-            tenant=tenant_obj,
-        )
-        site_obj.validated_save()
+
+    site_obj, _ = Site.objects.get_or_create(
+        name=site_name,
+        slug=slugify(site_name),
+        status=Status.objects.get(name="Active"),
+        region=region_obj,
+        tenant=tenant_obj,
+    )
+
+    site_obj.validated_save()
     return site_obj
 
 

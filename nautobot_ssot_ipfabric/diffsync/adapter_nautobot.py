@@ -77,9 +77,10 @@ class NautobotDiffSync(DiffSync):
         device_model.add_child(interface)
 
     def load_devices(self):
-        """Add Nautobot Site objects as DiffSync Location models."""
+        """Add Nautobot Device objects as DiffSync Device models."""
         for device_record in Device.objects.all():
             self.job.log_debug(message=f"Loading Device {device_record.name}")
+            location = self.get(self.location, device_record.site.name)
             try:
                 device = self.get(self.device, device_record.name)
                 device.pk = device_record.pk
@@ -94,33 +95,16 @@ class NautobotDiffSync(DiffSync):
                     vendor=str(device_record.device_type.manufacturer),
                     status=device_record.status,
                     pk=device_record.pk,
-                    serial_number=device_record.serial_number if device_record.serial_number else "",
+                    serial_number=device_record.serial if device_record.serial else "",
                 )
+
                 self.add(device)
+                location.add_child(device)
 
     def load(self):
         """Load data from Nautobot."""
         self.load_sites()
         self.load_devices()
-
-        # for location in self.get_all(self.location):
-        #     if location.name is None:
-        #         continue
-        #     for device_record in Device.objects.filter(site__slug=slugify(location.name)):
-        #         device = self.device(
-        #             diffsync=self,
-        #             name=device_record.name,
-        #             platform=str(device_record.platform) if device_record.platform else None,
-        #             model=str(device_record.device_type),
-        #             role=str(device_record.device_role),
-        #             location_name=location.name,
-        #             vendor=str(device_record.device_type.manufacturer),
-        #             status=device_record.status,
-        #             pk=device_record.pk,
-        #         )
-        #         self.log_info(message=device)
-        #         self.add(device)
-        #         location.add_child(device)
 
 
 #                for interface_record in Interface.objects.filter(device=device_record):
