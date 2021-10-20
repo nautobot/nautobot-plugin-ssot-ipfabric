@@ -5,9 +5,10 @@ from diffsync import DiffSync
 from diffsync.exceptions import ObjectNotFound
 from nautobot.dcim.models import Device, Site
 
+from . import tonb_models
+
 # from netutils.ip import cidr_to_netmask
 
-from . import tonb_models
 
 # from django.utils.text import slugify
 
