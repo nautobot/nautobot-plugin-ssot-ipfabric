@@ -22,25 +22,16 @@ class Location(DiffSyncModel):
 
     _modelname = "location"
     _identifiers = ("name",)
-    _attributes = (
-        "region_name",
-        "container_name",
-    )
+    _attributes = ()
     _children = {"device": "devices"}
 
     name: str
     devices: List["Device"] = list()
 
-    sys_id: Optional[str] = None
-    region_pk: Optional[uuid.UUID] = None
-    site_pk: Optional[uuid.UUID] = None
-
     @classmethod
     def create(cls, diffsync, ids, attrs):
         """Create Site in Nautobot."""
-        region_obj = tonb_nbutils.create_region(region_name=attrs["region_name"])
-        tenant_obj = tonb_nbutils.create_tenant(tenant_name=attrs["container_name"])
-        tonb_nbutils.create_site(site_name=ids["name"], region_obj=region_obj, tenant_obj=tenant_obj)
+        tonb_nbutils.create_site(site_name=ids["name"])
 
         return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
 

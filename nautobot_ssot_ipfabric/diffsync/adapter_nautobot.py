@@ -2,8 +2,7 @@
 
 from diffsync import DiffSync
 from diffsync.exceptions import ObjectNotFound
-from nautobot.dcim.models import Device, Interface, Site
-from nautobot.ipam.models import IPAddress
+from nautobot.dcim.models import Site
 from netutils.ip import cidr_to_netmask
 
 from . import tonb_models
@@ -14,7 +13,6 @@ class NautobotDiffSync(DiffSync):
 
     location = tonb_models.Location
     device = tonb_models.Device
-    interface = tonb_models.Interface
     mgmt_interface = tonb_models.MgmtInterface
 
     top_level = [
@@ -76,30 +74,31 @@ class NautobotDiffSync(DiffSync):
         # Import all Nautobot Site records as Locations
         self.load_sites()
 
-        for location in self.get_all(self.location):
-            if location.site_pk is None:
-                continue
-            for device_record in Device.objects.filter(site__pk=location.site_pk):
-                device = self.device(
-                    diffsync=self,
-                    name=device_record.name,
-                    platform=str(device_record.platform) if device_record.platform else None,
-                    model=str(device_record.device_type),
-                    role=str(device_record.device_role),
-                    location_name=location.name,
-                    vendor=str(device_record.device_type.manufacturer),
-                    status=device_record.status,
-                    pk=device_record.pk,
-                )
-                self.add(device)
-                location.add_child(device)
 
-                for interface_record in Interface.objects.filter(device=device_record):
-                    try:
-                        if interface_record.ip_addresses.get(host=device_record.primary_ip.host):
-                            self.load_primary_ip_interface(interface_record, device, device_record)
-                    except (IPAddress.DoesNotExist, AttributeError) as e:
-                        print(e)
-                        pass
-                        # Pass for now but can uncomment to load all interfaces for a device.
-                        # self.load_interface(interface_record, device)
+#        for location in self.get_all(self.location):
+#            if location.site_pk is None:
+#                continue
+#            for device_record in Device.objects.filter(site__pk=location.site_pk):
+#                device = self.device(
+#                    diffsync=self,
+#                    name=device_record.name,
+#                    platform=str(device_record.platform) if device_record.platform else None,
+#                    model=str(device_record.device_type),
+#                    role=str(device_record.device_role),
+#                    location_name=location.name,
+#                    vendor=str(device_record.device_type.manufacturer),
+#                    status=device_record.status,
+#                    pk=device_record.pk,
+#                )
+#                self.add(device)
+#                location.add_child(device)
+#
+#                for interface_record in Interface.objects.filter(device=device_record):
+#                    try:
+#                        if interface_record.ip_addresses.get(host=device_record.primary_ip.host):
+#                            self.load_primary_ip_interface(interface_record, device, device_record)
+#                    except (IPAddress.DoesNotExist, AttributeError) as e:
+#                        print(e)
+#                        pass
+#                        # Pass for now but can uncomment to load all interfaces for a device.
+#                        # self.load_interface(interface_record, device)
