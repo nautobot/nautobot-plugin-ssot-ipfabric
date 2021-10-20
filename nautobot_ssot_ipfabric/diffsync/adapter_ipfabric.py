@@ -95,4 +95,3 @@ class IPFabricDiffSync(DiffSync):
                 location.add_child(device)
                 self.load_device_interfaces(device, interfaces)
                 self.job.log_debug(message=device)
-
