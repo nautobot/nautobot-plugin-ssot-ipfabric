@@ -8,5 +8,4 @@ to run automatically when a python shell is started.
 
 import logging
 
-
 logging.getLogger("parso").setLevel(logging.INFO)

@@ -6,6 +6,7 @@ from django.urls import reverse
 # from nautobot.dcim.models import Device, Interface, Region, Site
 from nautobot.extras.jobs import BooleanVar, Job
 from nautobot_ssot.jobs.base import DataMapping, DataSource
+
 from nautobot_ssot_ipfabric.diffsync.adapter_ipfabric import IPFabricDiffSync
 from nautobot_ssot_ipfabric.diffsync.adapter_nautobot import NautobotDiffSync
 
