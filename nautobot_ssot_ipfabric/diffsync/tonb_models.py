@@ -11,7 +11,7 @@ from nautobot.dcim.models import Site
 
 import nautobot_ssot_ipfabric.utilities.nbutils as tonb_nbutils
 
-DEFAULT_DEVICE_ROLE = "leaf"
+DEFAULT_DEVICE_ROLE = "leaf"  # TODO: (HUGO) Do something about this
 DEFAULT_DEVICE_ROLE_COLOR = "ff0000"
 DEFAULT_DEVICE_STATUS = "Active"
 DEFAULT_DEVICE_STATUS_COLOR = "ff0000"
@@ -55,6 +55,7 @@ class Device(DiffSyncModel):
     location_name: Optional[str]
     model: Optional[str]
     vendor: Optional[str]
+    serial_number: Optional[str]
 
     mgmt_int: List["MgmtInterface"] = list()
     mgmt_address: Optional[str]
@@ -82,6 +83,7 @@ class Device(DiffSyncModel):
             device_role=device_role_object,
             site=site_object,
             name=ids["name"],
+            serial=ids.get("serial_number", ""),
         )
 
         new_device.validated_save()

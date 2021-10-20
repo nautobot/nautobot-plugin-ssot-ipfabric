@@ -1,4 +1,4 @@
-"""ServiceNow Data Target Job."""
+"""IP Fabric Data Target Job."""
 from django.conf import settings
 from django.templatetags.static import static
 from django.urls import reverse
@@ -6,11 +6,11 @@ from django.urls import reverse
 # from nautobot.dcim.models import Device, Interface, Region, Site
 from nautobot.extras.jobs import BooleanVar, Job
 from nautobot_ssot.jobs.base import DataMapping, DataSource
-from .diffsync.adapter_ipfabric import IPFabricDiffSync
-from .diffsync.adapter_nautobot import NautobotDiffSync
+from nautobot_ssot_ipfabric.diffsync.adapter_ipfabric import IPFabricDiffSync
+from nautobot_ssot_ipfabric.diffsync.adapter_nautobot import NautobotDiffSync
 
 # from diffsync.enum import DiffSyncFlags
-from .utilities.ipfabric_client import IpFabricClient
+from nautobot_ssot_ipfabric.utilities.ipfabric_client import IpFabricClient
 
 
 # pylint:disable=too-few-public-methods
@@ -51,18 +51,24 @@ class IpFabricDataSource(DataSource, Job):
         self.log_info(message="Loading current data from IP Fabric...")
         ipfabric_diffsync = IPFabricDiffSync(job=self, sync=self.sync, client=ipfabric_conn)
         ipfabric_diffsync.load()
+        # import pdb
+
+        # pdb.set_trace()
+        self.log_info(message=ipfabric_diffsync.dict())
 
         self.log_info(message="Loading current data from Nautobot.")
         nautobot_diffsync = NautobotDiffSync(job=self, sync=self.sync)
         nautobot_diffsync.load()
+        self.log_info(message=nautobot_diffsync.dict())
 
         self.log_info(message="Calculating diffs...")
         diff = nautobot_diffsync.diff_from(ipfabric_diffsync)
+        self.log_info(message=diff.dict())
         self.sync.diff = diff.dict()
         self.sync.save()
 
         if not self.kwargs["dry_run"]:
-            self.log_info(message="Syncing from Nautobot to ServiceNow...")
+            self.log_info(message="Syncing from IP Fabric to Nautobot")
             nautobot_diffsync.sync_from(ipfabric_diffsync)
             self.log_info(message="Sync complete")
 

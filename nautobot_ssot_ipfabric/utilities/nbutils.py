@@ -67,23 +67,16 @@ def create_device_type_object(device_type, vendor_name):
         device_type (str): Device model gathered from DiffSync model.
         vendor_name (str): Vendor Name
     """
-    try:
-        device_type_obj = DeviceType.objects.get(model=device_type)
-    except DeviceType.DoesNotExist:
-        mf_name = create_manufacturer(vendor_name)
-        device_type_obj = DeviceType(manufacturer=mf_name, model=device_type, slug=slugify(device_type))
-        device_type_obj.validated_save()
+    mf_name = create_manufacturer(vendor_name)
+    device_type_obj, _ = DeviceType.objects.get_or_create(
+        manufacturer=mf_name, model=device_type, slug=slugify(device_type)
+    )
     return device_type_obj
 
 
 def create_manufacturer(vendor_name):
     """Create specified manufacturer in Nautobot."""
-    try:
-
-        mf_name = Manufacturer.objects.get(slug=slugify(vendor_name))
-    except Manufacturer.DoesNotExist:
-        mf_name = Manufacturer(name=vendor_name, slug=slugify(vendor_name))
-        mf_name.validated_save()
+    mf_name, _ = Manufacturer.objects.get_or_create(name=vendor_name, slug=slugify(vendor_name))
     return mf_name
 
 

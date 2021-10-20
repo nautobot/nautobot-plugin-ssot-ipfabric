@@ -9,3 +9,4 @@ nautobot_ssot_ipfabric:
     - "docker-compose.requirements.yml"
     - "docker-compose.base.yml"
     - "docker-compose.dev.yml"
+    - "requirements.yml"
