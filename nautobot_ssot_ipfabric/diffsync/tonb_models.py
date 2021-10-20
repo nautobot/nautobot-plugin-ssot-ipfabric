@@ -49,7 +49,7 @@ class Device(DiffSyncModel):
     _modelname = "device"
     _identifiers = ("name",)
     _attributes = ("location_name", "model", "vendor")
-    _children = {"mgmt_interface": "mgmt_int"}
+    _children = {"interface": "interfaces"}
 
     name: str
     location_name: Optional[str]
@@ -59,7 +59,8 @@ class Device(DiffSyncModel):
 
     mgmt_int: List["MgmtInterface"] = list()  # pylint: disable=use-list-literal
     mgmt_address: Optional[str]
-    # interfaces: List["Interface"] = list()
+
+    interfaces: List["Interface"] = list()  # pylint: disable=use-list-literal
 
     sys_id: Optional[str] = None
     pk: Optional[uuid.UUID] = None
