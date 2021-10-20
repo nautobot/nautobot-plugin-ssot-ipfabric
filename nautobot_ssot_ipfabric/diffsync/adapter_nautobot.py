@@ -1,13 +1,18 @@
 """DiffSync adapter class for Nautobot as source-of-truth."""
 import logging
 
+import logging
+
 from diffsync import DiffSync
 from diffsync.exceptions import ObjectNotFound
-from nautobot.dcim.models import Site, Device
+from nautobot.dcim.models import Device, Site
 
 # from netutils.ip import cidr_to_netmask
 
-from nautobot_ssot_ipfabric.diffsync import tonb_models
+from . import tonb_models
+
+# from django.utils.text import slugify
+
 
 logger = logging.getLogger("adapter_nautobot")
 
