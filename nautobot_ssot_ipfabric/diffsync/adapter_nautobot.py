@@ -1,14 +1,16 @@
 """DiffSync adapter class for Nautobot as source-of-truth."""
+import logging
 
 from diffsync import DiffSync
 from diffsync.exceptions import ObjectNotFound
-from nautobot.dcim.models import Site, Device
-from netutils.ip import cidr_to_netmask
+from nautobot.dcim.models import Device, Site
+
+# from netutils.ip import cidr_to_netmask
+
+from . import tonb_models
 
 # from django.utils.text import slugify
 
-from . import tonb_models
-import logging
 
 logger = logging.getLogger("adapter_nautobot")
 
@@ -48,31 +50,31 @@ class NautobotDiffSync(DiffSync):
                 )
                 self.add(location)
 
-    def load_interface(self, interface_record, device_model):
-        """Import a single Nautobot Interface object as a DiffSync Interface model."""
-        interface = self.interface(
-            diffsync=self,
-            name=interface_record.name,
-            device_name=device_model.name,
-            description=interface_record.description,
-            pk=interface_record.pk,
-        )
-        self.add(interface)
-        device_model.add_child(interface)
+    # def load_interface(self, interface_record, device_model):
+    #     """Import a single Nautobot Interface object as a DiffSync Interface model."""
+    #     interface = self.interface(
+    #         diffsync=self,
+    #         name=interface_record.name,
+    #         device_name=device_model.name,
+    #         description=interface_record.description,
+    #         pk=interface_record.pk,
+    #     )
+    #     self.add(interface)
+    #     device_model.add_child(interface)
 
-    def load_primary_ip_interface(self, interface_record, device_model, device_record):
-        """Import a Nautobot primary IP interface object as a DiffSync MgmtInterface model."""
-        interface = self.mgmt_interface(
-            diffsync=self,
-            name=interface_record.name,
-            device_name=device_model.name,
-            ip_address=device_record.primary_ip4.host,
-            subnet_mask=cidr_to_netmask(device_record.primary_ip4.prefix_length),
-            description=interface_record.description,
-            pk=interface_record.pk,
-        )
-        self.add(interface)
-        device_model.add_child(interface)
+    # def load_primary_ip_interface(self, interface_record, device_model, device_record):
+    #     """Import a Nautobot primary IP interface object as a DiffSync MgmtInterface model."""
+    #     interface = self.mgmt_interface(
+    #         diffsync=self,
+    #         name=interface_record.name,
+    #         device_name=device_model.name,
+    #         ip_address=device_record.primary_ip4.host,
+    #         subnet_mask=cidr_to_netmask(device_record.primary_ip4.prefix_length),
+    #         description=interface_record.description,
+    #         pk=interface_record.pk,
+    #     )
+    #     self.add(interface)
+    #     device_model.add_child(interface)
 
     def load_devices(self):
         """Add Nautobot Site objects as DiffSync Location models."""
@@ -85,14 +87,14 @@ class NautobotDiffSync(DiffSync):
                 device = self.device(
                     diffsync=self,
                     name=device_record.name,
-                    platform=str(device_record.platform) if device_record.platform else None,
+                    # platform=str(device_record.platform) if device_record.platform else None,
                     model=str(device_record.device_type),
-                    role=str(device_record.device_role),
+                    # role=str(device_record.device_role),
                     location_name=device_record.site.name,
                     vendor=str(device_record.device_type.manufacturer),
-                    status=device_record.status,
+                    # status=device_record.status,
                     pk=device_record.pk,
-                    serial_number=device_record.serial_number if device_record.serial_number else "",
+                    serial_number=device_record.serial_number if device_record.serial else "",
                 )
                 self.add(device)
 

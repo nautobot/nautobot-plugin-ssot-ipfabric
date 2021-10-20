@@ -6,6 +6,7 @@ from django.urls import reverse
 # from nautobot.dcim.models import Device, Interface, Region, Site
 from nautobot.extras.jobs import BooleanVar, Job
 from nautobot_ssot.jobs.base import DataMapping, DataSource
+
 from nautobot_ssot_ipfabric.diffsync.adapter_ipfabric import IPFabricDiffSync
 from nautobot_ssot_ipfabric.diffsync.adapter_nautobot import NautobotDiffSync
 
@@ -45,31 +46,30 @@ class IpFabricDataSource(DataSource, Job):
 
     def sync_data(self):
         """Sync a device data from IP Fabric into Nautobot."""
-        # TODO Add sync job
         configs = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
-        ipfabric_conn = IpFabricClient(configs["IPFABRIC_HOST"], configs["IPFABRIC_API_TOKEN"])
-        self.log_info(message="Loading current data from IP Fabric...")
-        ipfabric_diffsync = IPFabricDiffSync(job=self, sync=self.sync, client=ipfabric_conn)
-        ipfabric_diffsync.load()
-        # import pdb
 
-        # pdb.set_trace()
-        self.log_info(message=ipfabric_diffsync.dict())
+        client = IpFabricClient(configs["IPFABRIC_HOST"], configs["IPFABRIC_API_TOKEN"])
+
+        source = IPFabricDiffSync(job=self, sync=self.sync, client=client)
+
+        self.log_info(message="Loading current data from IP Fabric...")
+        source.load()
+
+        dest = NautobotDiffSync(job=self, sync=self.sync)
 
         self.log_info(message="Loading current data from Nautobot.")
-        nautobot_diffsync = NautobotDiffSync(job=self, sync=self.sync)
-        nautobot_diffsync.load()
-        self.log_info(message=nautobot_diffsync.dict())
+        dest.load()
 
         self.log_info(message="Calculating diffs...")
-        diff = nautobot_diffsync.diff_from(ipfabric_diffsync)
-        self.log_info(message=diff.dict())
+        diff = dest.diff_from(source)
+        self.log_info(message=f"Diff: {diff.dict()}")
+
         self.sync.diff = diff.dict()
         self.sync.save()
 
         if not self.kwargs["dry_run"]:
             self.log_info(message="Syncing from IP Fabric to Nautobot")
-            nautobot_diffsync.sync_from(ipfabric_diffsync)
+            dest.sync_from(source)
             self.log_info(message="Sync complete")
 
 

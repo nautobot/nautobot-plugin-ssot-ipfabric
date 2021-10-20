@@ -26,7 +26,7 @@ class Location(DiffSyncModel):
     _children = {"device": "devices"}
 
     name: str
-    devices: List["Device"] = list()
+    devices: List["Device"] = list()  # pylint: disable=use-list-literal
 
     @classmethod
     def create(cls, diffsync, ids, attrs):
@@ -57,7 +57,7 @@ class Device(DiffSyncModel):
     vendor: Optional[str]
     serial_number: Optional[str]
 
-    mgmt_int: List["MgmtInterface"] = list()
+    mgmt_int: List["MgmtInterface"] = list()  # pylint: disable=use-list-literal
     mgmt_address: Optional[str]
     # interfaces: List["Interface"] = list()
 
@@ -135,7 +135,10 @@ class Interface(DiffSyncModel):
         device_obj = NautobotDevice.objects.get(name=ids["device_name"])
         new_interface = tonb_nbutils.create_interface(interface_name=ids["name"], device_obj=device_obj)
         # ipam_ip = tonb_nbutils.create_ip(
-        #     ip_address=attrs["ip_address"], subnet_mask=attrs["subnet_mask"], status="Active", object=new_interface,
+        #     ip_address=attrs["ip_address"],
+        #     subnet_mask=attrs["subnet_mask"],
+        #     status="Active",
+        #     object_pk=new_interface,
         # )
 
         # device_obj.primary_ip4 = ipam_ip

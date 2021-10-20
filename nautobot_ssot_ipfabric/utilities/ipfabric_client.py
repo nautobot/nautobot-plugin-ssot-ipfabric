@@ -1,9 +1,7 @@
 """Extending IP Fabric connection from IP Fabric ChatOps."""
 import logging
+
 from nautobot_chatops_ipfabric.ipfabric import IpFabric
-
-
-# import requests
 
 logger = logging.getLogger("ipfabric")
 

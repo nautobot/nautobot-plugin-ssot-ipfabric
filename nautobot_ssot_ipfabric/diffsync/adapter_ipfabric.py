@@ -1,6 +1,7 @@
 """DiffSync adapter class for Ip Fabric."""
 
 from diffsync import DiffSync
+
 from . import tonb_models
 
 
@@ -77,7 +78,6 @@ class IPFabricDiffSync(DiffSync):
     def load(self):
         """Load data from IP Fabric."""
         self.load_sites()
-        # self.load_devices()
         devices = self.client.get_device_inventory()
 
         for location in self.get_all(self.location):

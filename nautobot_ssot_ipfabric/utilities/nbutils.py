@@ -5,7 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.text import slugify
 from nautobot.dcim.models import DeviceRole, DeviceType, Manufacturer, Region, Site
 from nautobot.extras.models.statuses import Status
-from nautobot.ipam.models import Interface, IPAddress
+from nautobot.ipam.models import IPAddress
 from nautobot.tenancy.models import Tenant
 from netutils.ip import netmask_to_cidr
 
@@ -18,17 +18,13 @@ def create_site(site_name, region_obj=None, tenant_obj=None):
         region_obj (Region): Region Nautobot Object
         tenant_obj (Tenant): Tenant Nautobot Object
     """
-    try:
-        site_obj = Site.objects.get(slug=slugify(site_name))
-    except Site.DoesNotExist:
-        site_obj = Site(
-            name=site_name,
-            slug=slugify(site_name),
-            status=Status.objects.get(name="Active"),
-            region=region_obj,
-            tenant=tenant_obj,
-        )
-        site_obj.validated_save()
+    site_obj, _ = Site.objects.get_or_create(
+        name=site_name,
+        slug=slugify(site_name),
+        status=Status.objects.get(name="Active"),
+        region=region_obj,
+        tenant=tenant_obj,
+    )
     return site_obj
 
 
@@ -38,11 +34,7 @@ def create_region(region_name):
     Args:
         region_name (str): Name of the site.
     """
-    try:
-        region_obj = Region.objects.get(slug=slugify(region_name))
-    except Region.DoesNotExist:
-        region_obj = Region(name=region_name, slug=slugify(region_name))
-        region_obj.validated_save()
+    region_obj, _ = Region.objects.get_or_create(name=region_name, slug=slugify(region_name))
     return region_obj
 
 
@@ -52,11 +44,7 @@ def create_tenant(tenant_name):
     Args:
         tenant_name (str): The name of the tenant.
     """
-    try:
-        tenant_obj = Tenant.objects.get(slug=slugify(tenant_name))
-    except Tenant.DoesNotExist:
-        tenant_obj = Tenant(name=tenant_name, slug=slugify(tenant_name))
-        tenant_obj.validated_save()
+    tenant_obj, _ = Tenant.objects.get_or_create(name=tenant_name, slug=slugify(tenant_name))
     return tenant_obj
 
 
@@ -87,11 +75,7 @@ def create_device_role_object(role_name, role_color):
         role_name (str): Role name.
         role_color (str): Role color.
     """
-    try:
-        role_obj = DeviceRole.objects.get(name=role_name)
-    except DeviceRole.DoesNotExist:
-        role_obj = DeviceRole(name=role_name, slug=role_name.lower(), color=role_color)
-        role_obj.validated_save()
+    role_obj, _ = DeviceRole.objects.get_or_create(name=role_name, slug=role_name.lower(), color=role_color)
     return role_obj
 
 
@@ -144,9 +128,5 @@ def create_interface(interface_name, device_obj):
         interface_name (str): Name of the interface.
         device_obj (Device): Device object to check interface against.
     """
-    try:
-        interface_obj = device_obj.interfaces.get(name=interface_name)
-    except Interface.DoesNotExist:
-        interface_obj = device_obj.interfaces.create(name=interface_name)
-        device_obj.validated_save()
+    interface_obj, _ = device_obj.interfaces.get_or_create(name=interface_name)
     return interface_obj
