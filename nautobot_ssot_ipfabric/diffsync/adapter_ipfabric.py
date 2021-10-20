@@ -30,6 +30,22 @@ class IPFabricDiffSync(DiffSync):
             location = self.location(diffsync=self, name=site["siteName"])
             self.add(location)
 
+    # def load_devices(self):
+    #     """Add IP Fabric Device objects as DiffSync Location models."""
+    #     devices = self.client.get_device_inventory()
+    #     for device in devices:
+    #         self.job.log_debug(message=f"Loading Device {device['hostname']}")
+    #         device = self.device(
+    #             diffsync=self,
+    #             name=device["hostname"],
+    #             location_name=device["siteName"],
+    #             model=device["model"],
+    #             vendor=device["vendor"],
+    #             serial_number=device["sn"],
+    #         )
+    #         self.location.add_child(device)
+    #         self.job.log_debug(message=device)
+
     def load_interface(self, interface_record, device_model):
         """Import a single Nautobot Interface object as a DiffSync Interface model."""
         pass
@@ -40,5 +56,24 @@ class IPFabricDiffSync(DiffSync):
 
     def load(self):
         """Load data from IP Fabric."""
-        # Import all Nautobot Site records as Locations
         self.load_sites()
+        # self.load_devices()
+        devices = self.client.get_device_inventory()
+
+        for location in self.get_all(self.location):
+            if location.name is None:
+                continue
+            location_devices = [device for device in devices if device["siteName"] == location.name]
+            for device in location_devices:
+                self.job.log_debug(message=f"Loading Device {device['hostname']}")
+                device = self.device(
+                    diffsync=self,
+                    name=device["hostname"],
+                    location_name=device["siteName"],
+                    model=device["model"],
+                    vendor=device["vendor"],
+                    serial_number=device["sn"],
+                )
+                self.add(device)
+                location.add_child(device)
+                self.job.log_debug(message=device)

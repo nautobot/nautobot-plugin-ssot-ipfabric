@@ -39,6 +39,7 @@ pylint = "*"
 pylint-django = "*"
 pytest = "*"
 yamllint = "*"
+responses = "^0.14.0"
 
 [tool.poetry.extras]
 nautobot = ["nautobot"]

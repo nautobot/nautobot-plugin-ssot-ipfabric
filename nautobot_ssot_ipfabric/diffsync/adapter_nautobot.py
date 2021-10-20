@@ -2,10 +2,15 @@
 
 from diffsync import DiffSync
 from diffsync.exceptions import ObjectNotFound
-from nautobot.dcim.models import Site
+from nautobot.dcim.models import Site, Device
 from netutils.ip import cidr_to_netmask
 
+# from django.utils.text import slugify
+
 from . import tonb_models
+import logging
+
+logger = logging.getLogger("adapter_nautobot")
 
 
 class NautobotDiffSync(DiffSync):
@@ -37,8 +42,8 @@ class NautobotDiffSync(DiffSync):
                 location = self.location(
                     diffsync=self,
                     name=site_record.name,
-                    region_name=site_record.region.name,
-                    container_name=site_record.tenant.name,
+                    region_name=site_record.region.name if site_record.region else None,
+                    container_name=site_record.tenant.name if site_record.tenant else None,
                     site_pk=site_record.pk,
                 )
                 self.add(location)
@@ -69,30 +74,53 @@ class NautobotDiffSync(DiffSync):
         self.add(interface)
         device_model.add_child(interface)
 
+    def load_devices(self):
+        """Add Nautobot Site objects as DiffSync Location models."""
+        for device_record in Device.objects.all():
+            self.job.log_debug(message=f"Loading Device {device_record.name}")
+            try:
+                device = self.get(self.device, device_record.name)
+                device.pk = device_record.pk
+            except ObjectNotFound:
+                device = self.device(
+                    diffsync=self,
+                    name=device_record.name,
+                    platform=str(device_record.platform) if device_record.platform else None,
+                    model=str(device_record.device_type),
+                    role=str(device_record.device_role),
+                    location_name=device_record.site.name,
+                    vendor=str(device_record.device_type.manufacturer),
+                    status=device_record.status,
+                    pk=device_record.pk,
+                    serial_number=device_record.serial_number if device_record.serial_number else "",
+                )
+                self.add(device)
+
     def load(self):
         """Load data from Nautobot."""
-        # Import all Nautobot Site records as Locations
         self.load_sites()
+        self.load_devices()
+
+        # for location in self.get_all(self.location):
+        #     if location.name is None:
+        #         continue
+        #     for device_record in Device.objects.filter(site__slug=slugify(location.name)):
+        #         device = self.device(
+        #             diffsync=self,
+        #             name=device_record.name,
+        #             platform=str(device_record.platform) if device_record.platform else None,
+        #             model=str(device_record.device_type),
+        #             role=str(device_record.device_role),
+        #             location_name=location.name,
+        #             vendor=str(device_record.device_type.manufacturer),
+        #             status=device_record.status,
+        #             pk=device_record.pk,
+        #         )
+        #         self.log_info(message=device)
+        #         self.add(device)
+        #         location.add_child(device)
 
 
-#        for location in self.get_all(self.location):
-#            if location.site_pk is None:
-#                continue
-#            for device_record in Device.objects.filter(site__pk=location.site_pk):
-#                device = self.device(
-#                    diffsync=self,
-#                    name=device_record.name,
-#                    platform=str(device_record.platform) if device_record.platform else None,
-#                    model=str(device_record.device_type),
-#                    role=str(device_record.device_role),
-#                    location_name=location.name,
-#                    vendor=str(device_record.device_type.manufacturer),
-#                    status=device_record.status,
-#                    pk=device_record.pk,
-#                )
-#                self.add(device)
-#                location.add_child(device)
-#
 #                for interface_record in Interface.objects.filter(device=device_record):
 #                    try:
 #                        if interface_record.ip_addresses.get(host=device_record.primary_ip.host):
