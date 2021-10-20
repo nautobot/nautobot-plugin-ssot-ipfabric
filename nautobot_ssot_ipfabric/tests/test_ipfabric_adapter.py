@@ -1,13 +1,14 @@
 """Unit tests for the IPFabric DiffSync adapter class."""
-import uuid
 import json
+import uuid
 from unittest.mock import MagicMock
 
-from django.test import TestCase
 from django.contrib.contenttypes.models import ContentType
+from django.test import TestCase
 from nautobot.extras.models import Job, JobResult
-from nautobot_ssot_ipfabric.jobs import IpFabricDataSource
+
 from nautobot_ssot_ipfabric.diffsync.adapter_ipfabric import IPFabricDiffSync
+from nautobot_ssot_ipfabric.jobs import IpFabricDataSource
 
 
 def load_json(path):

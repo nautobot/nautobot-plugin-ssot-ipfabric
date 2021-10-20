@@ -74,7 +74,7 @@ class Device(DiffSyncModel):
         device_role_object = tonb_nbutils.create_device_role_object(
             role_name=DEFAULT_DEVICE_ROLE, role_color=DEFAULT_DEVICE_ROLE_COLOR
         )
-        device_status_object = tonb_nbutils.create_device_status(DEFAULT_DEVICE_STATUS, DEFAULT_DEVICE_STATUS_COLOR)
+        device_status_object = tonb_nbutils.create_status(DEFAULT_DEVICE_STATUS, DEFAULT_DEVICE_STATUS_COLOR)
         site_object = tonb_nbutils.create_site(attrs["location_name"])
 
         new_device = NautobotDevice(
