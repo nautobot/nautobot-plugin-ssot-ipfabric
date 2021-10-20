@@ -9,7 +9,7 @@ class IPFabricDiffSync(DiffSync):
 
     location = tonb_models.Location
     device = tonb_models.Device
-    mgmt_interface = tonb_models.MgmtInterface
+    interface = tonb_models.Interface
 
     top_level = [
         "location",
@@ -46,13 +46,33 @@ class IPFabricDiffSync(DiffSync):
     #         self.location.add_child(device)
     #         self.job.log_debug(message=device)
 
-    def load_interface(self, interface_record, device_model):
-        """Import a single Nautobot Interface object as a DiffSync Interface model."""
-        pass
+    # def load_interface(self, interface_record, device_model):
+    #     """Import a single Nautobot Interface object as a DiffSync Interface model."""
+    #     pass
 
-    def load_primary_ip_interface(self, interface_record, device_model, device_record):
-        """Import a Nautobot primary IP interface object as a DiffSync MgmtInterface model."""
-        pass
+    # def load_primary_ip_interface(self, interface_record, device_model, device_record):
+    #     """Import a Nautobot primary IP interface object as a DiffSync MgmtInterface model."""
+    #     pass
+
+    def load_interfaces(self, devices):
+        """Import interfaces from IP Fabric."""
+        interfaces = self.client.get_interface_inventory()
+        self.job.log_debug(message=f"length devices: {len(interfaces)}")
+        for iface in interfaces:
+            self.job.log_debug(message=f"Loading Interface {iface['hostname']}: {iface['intName']}")
+            interface = self.interface(
+                diffsync=self,
+                name=iface["intName"],
+                device_name=iface["hostname"],
+                mac_address=iface["mac"],
+                mtu=iface["mtu"],
+                ip_address=iface["primaryIp"],
+                subnet_mask="255.255.255.255",  # TODO: Determine how to handle mask.
+                type="1000base-t",  # TODO: Determine how to handle type.
+            )
+            self.add(interface)
+            # __tbd__.add_child(interface)  # Needed?
+            self.job.log_debug(message=interface)
 
     def load(self):
         """Load data from IP Fabric."""
@@ -77,3 +97,5 @@ class IPFabricDiffSync(DiffSync):
                 self.add(device)
                 location.add_child(device)
                 self.job.log_debug(message=device)
+
+        self.load_interfaces(devices)
