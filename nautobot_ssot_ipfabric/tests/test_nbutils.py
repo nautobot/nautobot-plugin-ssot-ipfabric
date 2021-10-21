@@ -121,5 +121,6 @@ class TestNautobotUtils(TestCase):
 
     def test_create_interface(self):
         """Test `create_interface` Utility."""
-        test_interface = create_interface("Test-Interface", self.device)
+        interface_details = {"name": "Test-Interface"}
+        test_interface = create_interface(self.device, interface_details)
         self.assertEqual(test_interface.id, self.device.interfaces.get(name="Test-Interface").id)
