@@ -8,21 +8,26 @@ from nautobot.tenancy.models import Tenant
 from netutils.ip import netmask_to_cidr
 
 
-def create_site(site_name, region_obj=None, tenant_obj=None):
+def create_site(site_name, site_id=None, region_obj=None, tenant_obj=None):
     """Creates a specified site in Nautobot.
 
     Args:
         site_name (str): Name of the site.
+        site_id (str): ID of the site.
         region_obj (Region): Region Nautobot Object
         tenant_obj (Tenant): Tenant Nautobot Object
     """
-    site_obj, _ = Site.objects.get_or_create(
-        name=site_name,
-        slug=slugify(site_name),
-        status=Status.objects.get(name="Active"),
-        region=region_obj,
-        tenant=tenant_obj,
-    )
+    try:
+        site_obj = Site.objects.get(name=site_name)
+    except Site.DoesNotExist:
+        site_obj = Site.objects.create(
+            name=site_name,
+            slug=slugify(site_name),
+            status=Status.objects.get(name="Active"),
+            facility=site_id if site_id is not None else "",
+            region=region_obj,
+            tenant=tenant_obj,
+        )
     return site_obj
 
 
