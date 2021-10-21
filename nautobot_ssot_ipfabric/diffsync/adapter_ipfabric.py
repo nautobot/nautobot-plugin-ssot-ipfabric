@@ -32,26 +32,6 @@ class IPFabricDiffSync(DiffSync):
             location = self.location(diffsync=self, name=site["siteName"])
             self.add(location)
 
-    # def load_devices(self):
-    #     """Add IP Fabric Device objects as DiffSync Location models."""
-    #     devices = self.client.get_device_inventory()
-    #     for device in devices:
-    #         self.job.log_debug(message=f"Loading Device {device['hostname']}")
-    #         device = self.device(
-    #             diffsync=self,
-    #             name=device["hostname"],
-    #             location_name=device["siteName"],
-    #             model=device["model"],
-    #             vendor=device["vendor"],
-    #             serial_number=device["sn"],
-    #         )
-    #         self.location.add_child(device)
-    #         self.job.log_debug(message=device)
-
-    # def load_primary_ip_interface(self, interface_record, device_model, device_record):
-    #     """Import a Nautobot primary IP interface object as a DiffSync MgmtInterface model."""
-    #     pass
-
     def load_device_interfaces(self, device_model, interfaces, device_primary_ip):
         """Create and load DiffSync Interface model objects for a specific device."""
         device_interfaces = [iface for iface in interfaces if iface.get("hostname") == device_model.name]
