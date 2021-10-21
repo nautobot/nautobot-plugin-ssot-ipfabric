@@ -118,14 +118,27 @@ def create_ip(ip_address, subnet_mask, status="Active", object_pk=None):
     return ip_obj
 
 
-def create_interface(interface_name, device_obj):
+def create_interface(device_obj, interface_details):
     """Verifies interface exists on specified device. If not, creates interface.
 
     Args:
-        interface_name (str): Name of the interface.
         device_obj (Device): Device object to check interface against.
+        interface_details (dict): interface details.
     """
-    interface_obj, _ = device_obj.interfaces.get_or_create(name=interface_name)
+    interface_fields = (
+        "name",
+        "description",
+        "enabled",
+        "mac_address",
+        "mtu",
+        "mode",
+        "lag",
+        "type",
+        "mgmt_only",
+        "untagged_vlan",
+    )
+    fields = {k: v for k, v in interface_details.items() if k in interface_fields and v}
+    interface_obj, _ = device_obj.interfaces.get_or_create(**fields)
     return interface_obj
 
 
