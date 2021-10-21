@@ -8,6 +8,7 @@ from diffsync import DiffSyncModel
 # from requests.api import delete
 from nautobot.dcim.models import Device as NautobotDevice
 from nautobot.dcim.models import Site
+from nautobot.ipam.models import VLAN
 
 import nautobot_ssot_ipfabric.utilities.nbutils as tonb_nbutils
 
@@ -23,10 +24,11 @@ class Location(DiffSyncModel):
     _modelname = "location"
     _identifiers = ("name",)
     _attributes = ()
-    _children = {"device": "devices"}
+    _children = {"device": "devices", "vlan": "vlans"}
 
     name: str
     devices: List["Device"] = list()  # pylint: disable=use-list-literal
+    vlans: List["Vlan"] = list()  # pylint: disable=use-list-literal
 
     @classmethod
     def create(cls, diffsync, ids, attrs):
@@ -135,6 +137,7 @@ class Interface(DiffSyncModel):
         """Create interface in Nautobot under its parent device."""
         device_obj = NautobotDevice.objects.get(name=ids["device_name"])
         tonb_nbutils.create_interface(interface_name=ids["name"], device_obj=device_obj)
+        # new_interface = tonb_nbutils.create_interface(interface_name=ids["name"], device_obj=device_obj)
         # ipam_ip = tonb_nbutils.create_ip(
         #     ip_address=attrs["ip_address"],
         #     subnet_mask=attrs["subnet_mask"],
@@ -153,6 +156,45 @@ class Interface(DiffSyncModel):
     #     interface = device.interfaces.get(name=self.name)
     #     interface.delete()
     #     return super().delete()
+
+
+class Vlan(DiffSyncModel):
+    """VLAN model."""
+
+    _modelname = "vlan"
+    _identifiers = ("name", "site")
+    _shortname = ("name",)
+    _attributes = (
+        "vid",
+        "status",
+    )
+    _children = {}
+
+    name: str
+    vid: int
+    status: str
+    site: str
+
+    # sys_id: Optional[str] = None
+    pk: Optional[uuid.UUID] = None
+
+    @classmethod
+    def create(cls, diffsync, ids, attrs):
+        """Create VLANs in Nautobot under the site."""
+        status = attrs["status"].lower().capitalize()
+        site = Site.objects.get(name=ids["site"])
+        name = ids["name"] if ids["name"] else f"VLAN{attrs['vid']}"
+        new_vlan = tonb_nbutils.create_vlan(vlan_name=name, vlan_id=attrs["vid"], vlan_status=status, site_obj=site)
+
+        new_vlan.validated_save()
+
+        return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
+
+    def delete(self) -> Optional["DiffSyncModel"]:
+        """Delete."""
+        vlan = VLAN.objects.get(name=self.name)
+        vlan.delete()
+        return super().delete()
 
 
 class MgmtInterface(Interface):
