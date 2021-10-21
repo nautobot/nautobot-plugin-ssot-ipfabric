@@ -1,6 +1,6 @@
 """DiffSyncModel subclasses for Nautobot-to-IPFabric data sync."""
-import uuid
 from typing import List, Optional
+import uuid
 
 from diffsync import DiffSyncModel
 
@@ -117,6 +117,7 @@ class Interface(DiffSyncModel):
         "type",
         "ip_address",
         "subnet_mask",
+        "ip_is_primary",
     )
     _children = {}
 
@@ -128,6 +129,7 @@ class Interface(DiffSyncModel):
     type: Optional[str]
     ip_address: Optional[str]
     subnet_mask: Optional[str]
+    ip_is_primary: Optional[bool]
 
     # sys_id: Optional[str] = None
     pk: Optional[uuid.UUID] = None
@@ -136,17 +138,23 @@ class Interface(DiffSyncModel):
     def create(cls, diffsync, ids, attrs):
         """Create interface in Nautobot under its parent device."""
         device_obj = NautobotDevice.objects.get(name=ids["device_name"])
-        tonb_nbutils.create_interface(interface_name=ids["name"], device_obj=device_obj)
-        # new_interface = tonb_nbutils.create_interface(interface_name=ids["name"], device_obj=device_obj)
-        # ipam_ip = tonb_nbutils.create_ip(
-        #     ip_address=attrs["ip_address"],
-        #     subnet_mask=attrs["subnet_mask"],
-        #     status="Active",
-        #     object_pk=new_interface,
-        # )
+        interface_obj = tonb_nbutils.create_interface(interface_name=ids["name"], device_obj=device_obj)
 
-        # device_obj.primary_ip4 = ipam_ip
-        device_obj.validated_save()
+        ip_address = attrs["ip_address"]
+        if ip_address:
+            ip_address_obj = tonb_nbutils.create_ip(
+                ip_address=attrs["ip_address"],
+                subnet_mask=attrs["subnet_mask"],
+                status="Active",
+                object_pk=interface_obj,
+            )
+            interface_obj.ip_addresses.add(ip_address_obj)
+            if attrs["ip_is_primary"]:
+                if ip_address_obj.family == 4:
+                    device_obj.primary_ip4 = ip_address_obj
+                if ip_address_obj.family == 6:
+                    device_obj.primary_ip6 = ip_address_obj
+                device_obj.validated_save()
 
         return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
 

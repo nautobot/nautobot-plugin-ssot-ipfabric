@@ -52,12 +52,16 @@ class IPFabricDiffSync(DiffSync):
     #     """Import a Nautobot primary IP interface object as a DiffSync MgmtInterface model."""
     #     pass
 
-    def load_device_interfaces(self, device_model, interfaces):
+    def load_device_interfaces(self, device_model, interfaces, device_primary_ip):
         """Create and load DiffSync Interface model objects for a specific device."""
         device_interfaces = [iface for iface in interfaces if iface.get("hostname") == device_model.name]
         self.job.log_debug(message=f"Loading {len(device_interfaces)} interfaces for device '{device_model.name}'")
 
         for iface in device_interfaces:
+            ip_address = iface["primaryIp"]
+            ip_is_primary = ip_address == device_primary_ip
+            # self.job.log_debug(message=f'{iface["hostname"]}  {device_primary_ip}, {iface["intName"]} {ip_address}')
+
             interface = self.interface(
                 diffsync=self,
                 name=iface["intName"],
@@ -67,6 +71,7 @@ class IPFabricDiffSync(DiffSync):
                 ip_address=iface["primaryIp"],
                 subnet_mask="255.255.255.255",  # TODO: (GREG) Determine how to handle mask.
                 type="1000base-t",  # TODO: (GREG) Determine how to handle type.
+                ip_is_primary=ip_is_primary,
             )
             self.add(interface)
             device_model.add_child(interface)
@@ -84,7 +89,6 @@ class IPFabricDiffSync(DiffSync):
             location_vlans = [vlan for vlan in vlans if vlan["siteName"] == location.name]
             for vlan in location_vlans:
                 self.job.log_debug(message=f"Loading VLAN {vlan['vlanName']}")
-                self.job.log_debug(message=f"VLAN: {vlan}")
                 vlan = self.vlan(
                     diffsync=self,
                     name=vlan["vlanName"],
@@ -97,7 +101,8 @@ class IPFabricDiffSync(DiffSync):
             location_devices = [device for device in devices if device["siteName"] == location.name]
             for device in location_devices:
                 self.job.log_debug(message=f"Loading Device {device['hostname']}")
-                device = self.device(
+                device_primary_ip = device["loginIp"]
+                device_model = self.device(
                     diffsync=self,
                     name=device["hostname"],
                     location_name=device["siteName"],
@@ -105,7 +110,7 @@ class IPFabricDiffSync(DiffSync):
                     vendor=device["vendor"],
                     serial_number=device["sn"],
                 )
-                self.add(device)
-                location.add_child(device)
-                self.load_device_interfaces(device, interfaces)
-                self.job.log_debug(message=device)
+                self.add(device_model)
+                location.add_child(device_model)
+                self.load_device_interfaces(device_model, interfaces, device_primary_ip)
+                self.job.log_debug(message=device_model)

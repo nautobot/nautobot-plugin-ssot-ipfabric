@@ -89,6 +89,7 @@ class IpFabricClient(IpFabric):
                 "id",
                 "hostname",
                 "intName",
+                "reason",
                 "dscr",
                 "mac",
                 "duplex",
