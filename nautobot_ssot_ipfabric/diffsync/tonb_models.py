@@ -112,9 +112,11 @@ class Interface(DiffSyncModel):
     _shortname = ("name",)
     _attributes = (
         "description",
+        "enabled",
         "mac_address",
         "mtu",
         "type",
+        "mgmt_only",
         "ip_address",
         "subnet_mask",
         "ip_is_primary",
@@ -124,9 +126,11 @@ class Interface(DiffSyncModel):
     name: str
     device_name: str
     description: Optional[str]
+    enabled: Optional[bool]
     mac_address: Optional[str]
     mtu: Optional[str]
     type: Optional[str]
+    mgmt_only: Optional[bool]
     ip_address: Optional[str]
     subnet_mask: Optional[str]
     ip_is_primary: Optional[bool]
@@ -138,7 +142,7 @@ class Interface(DiffSyncModel):
     def create(cls, diffsync, ids, attrs):
         """Create interface in Nautobot under its parent device."""
         device_obj = NautobotDevice.objects.get(name=ids["device_name"])
-        interface_obj = tonb_nbutils.create_interface(interface_name=ids["name"], device_obj=device_obj)
+        interface_obj = tonb_nbutils.create_interface(device_obj=device_obj, interface_details=dict(**ids, **attrs))
 
         ip_address = attrs["ip_address"]
         if ip_address:
