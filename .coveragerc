@@ -1,6 +1,8 @@
 [run]
 branch = True
 source = nautobot_ssot_ipfabric
+omit = 
+    */tests/*
 
 [report]
 show_missing = true
