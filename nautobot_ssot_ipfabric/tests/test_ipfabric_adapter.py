@@ -19,6 +19,8 @@ def load_json(path):
 
 SITE_FIXTURE = load_json("./nautobot_ssot_ipfabric/tests/fixtures/get_sites.json")
 DEVICE_INVENTORY_FIXTURE = load_json("./nautobot_ssot_ipfabric/tests/fixtures/get_device_inventory.json")
+VLAN_FIXTURE = load_json("./nautobot_ssot_ipfabric/tests/fixtures/get_vlans.json")
+INTERFACE_FIXTURE = load_json("./nautobot_ssot_ipfabric/tests/fixtures/get_interface_inventory.json")
 
 
 class IPFabricDiffSyncTestCase(TestCase):
@@ -31,6 +33,8 @@ class IPFabricDiffSyncTestCase(TestCase):
         ipfabric_client = MagicMock()
         ipfabric_client.get_sites.return_value = SITE_FIXTURE
         ipfabric_client.get_device_inventory.return_value = DEVICE_INVENTORY_FIXTURE
+        ipfabric_client.get_vlans.return_value = VLAN_FIXTURE
+        ipfabric_client.get_interface_inventory.return_value = INTERFACE_FIXTURE
 
         job = IpFabricDataSource()
         job.job_result = JobResult.objects.create(
@@ -46,10 +50,15 @@ class IPFabricDiffSyncTestCase(TestCase):
             {dev["hostname"] for dev in DEVICE_INVENTORY_FIXTURE},
             {dev.get_unique_id() for dev in ipfabric.get_all("device")},
         )
+        self.assertEqual(
+            {f"{vlan['vlanName']}__{vlan['siteName']}" for vlan in VLAN_FIXTURE},
+            {vlan.get_unique_id() for vlan in ipfabric.get_all("vlan")},
+        )
 
         # Assert each site has a device tied to it.
         for site in ipfabric.get_all("location"):
             self.assertEqual(len(site.devices), 1, f"{site} does not have the expected single device tied to it.")
+            self.assertTrue(hasattr(site, "vlans"))
 
         # Assert each device has the necessary attributes
         for device in ipfabric.get_all("device"):
@@ -57,6 +66,7 @@ class IPFabricDiffSyncTestCase(TestCase):
             self.assertTrue(hasattr(device, "model"))
             self.assertTrue(hasattr(device, "vendor"))
             self.assertTrue(hasattr(device, "serial_number"))
+            self.assertTrue(hasattr(device, "interfaces"))
 
         # Assert each vlan has the necessary attributes
         for vlan in ipfabric.get_all("vlan"):
@@ -65,4 +75,12 @@ class IPFabricDiffSyncTestCase(TestCase):
             self.assertTrue(hasattr(vlan, "status"))
             self.assertTrue(hasattr(vlan, "site"))
 
-        # TODO: Add testing for any new models we add
+        # Assert each interface has the necessary attributes
+        for interface in ipfabric.get_all("interface"):
+            self.assertTrue(hasattr(interface, "name"))
+            self.assertTrue(hasattr(interface, "device_name"))
+            self.assertTrue(hasattr(interface, "mac_address"))
+            self.assertTrue(hasattr(interface, "mtu"))
+            self.assertTrue(hasattr(interface, "ip_address"))
+            self.assertTrue(hasattr(interface, "subnet_mask"))
+            self.assertTrue(hasattr(interface, "type"))

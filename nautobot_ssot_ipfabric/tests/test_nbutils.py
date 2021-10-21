@@ -59,6 +59,15 @@ class TestNautobotUtils(TestCase):
         )
 
         self.device.interfaces.create(name="Test-Interface")
+        # self.vlan_content_type = ContentType.objects.get(app_label="ipam", model="vlan")
+        # self.vlan_status = Status.objects.create(
+        #     name="Test-Vlan-Status",
+        #     slug=slugify("Test-Vlan-Status"),
+        #     color=ColorChoices.COLOR_AMBER,
+        #     description="Test-Description",
+        # )
+        # self.vlan_status.content_types.set([self.vlan_content_type])
+        # self.site.vlans.create("Test-Vlan", 100, self.vlan_status)
 
     def test_create_site(self):
         """Test `create_site` Utility."""
