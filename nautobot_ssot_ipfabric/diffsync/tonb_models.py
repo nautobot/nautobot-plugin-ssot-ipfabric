@@ -116,6 +116,7 @@ class Interface(DiffSyncModel):
         "type",
         "ip_address",
         "subnet_mask",
+        "ip_is_primary",
     )
     _children = {}
 
@@ -127,6 +128,7 @@ class Interface(DiffSyncModel):
     type: Optional[str]
     ip_address: Optional[str]
     subnet_mask: Optional[str]
+    ip_is_primary: Optional[bool]
 
     # sys_id: Optional[str] = None
     pk: Optional[uuid.UUID] = None
@@ -146,9 +148,12 @@ class Interface(DiffSyncModel):
                 object_pk=interface_obj,
             )
             interface_obj.ip_addresses.add(ip_address_obj)
-
-        # TODO: (GREG) Determine if this is primary IP
-        # device_obj.validated_save()
+            if attrs["ip_is_primary"]:
+                if ip.family == 4:
+                    device_obj.primary_ip4 = ip
+                if ip.family == 6:
+                    device_obj.primary_ip6 = ip
+                device_obj.validated_save()
 
         return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
 
