@@ -57,25 +57,43 @@ class IPFabricDiffSync(DiffSync):
         device_interfaces = [iface for iface in interfaces if iface.get("hostname") == device_model.name]
         self.job.log_debug(message=f"Loading {len(device_interfaces)} interfaces for device '{device_model.name}'")
 
-        for iface in device_interfaces:
-            ip_address = iface["primaryIp"]
-            ip_is_primary = ip_address == device_primary_ip
-            # self.job.log_debug(message=f'{iface["hostname"]}  {device_primary_ip}, {iface["intName"]} {ip_address}')
+        pseudo_interface = self.pseudo_management_interface(device_model.name, device_interfaces, device_primary_ip)
+        if pseudo_interface:
+            device_interfaces.append(pseudo_interface)
 
+        for iface in device_interfaces:
+            ip_address = iface.get("primaryIp")
             interface = self.interface(
                 diffsync=self,
-                name=iface["intName"],
-                device_name=iface["hostname"],
-                mac_address=iface["mac"],
-                mtu=iface["mtu"],
-                ip_address=iface["primaryIp"],
-                subnet_mask="255.255.255.255",  # TODO: (GREG) Determine how to handle mask.
-                type="1000base-t",  # TODO: (GREG) Determine how to handle type.
-                ip_is_primary=ip_is_primary,
+                name=iface.get("intName"),
+                device_name=iface.get("hostname"),
+                description=iface.get("dscr"),
+                enabled=not iface.get("reason") == "admin",
+                mac_address=iface.get("mac"),
+                mtu=iface.get("mtu"),
+                # TODO: (GREG) Determine how to handle interface type.
+                type=iface.get("type", "1000base-t"),
+                mgmt_only=iface.get("mgmt_only", False),
+                ip_address=iface.get("primaryIp"),
+                # TODO: (GREG) Determine how to handle mask.
+                subnet_mask="255.255.255.255",
+                # TODO: (GREG) Determine how to handle type.
+                ip_is_primary=ip_address == device_primary_ip,
             )
             self.add(interface)
             device_model.add_child(interface)
             # self.job.log_debug(message=interface)
+
+    def pseudo_management_interface(self, hostname, device_interfaces, device_primary_ip):
+        if not any(iface for iface in device_interfaces if iface.get("primaryIp", "") == device_primary_ip):
+            return {
+                "hostname": hostname,
+                "intName": "mgmt_only",
+                "dscr": "virtual",
+                "primaryIp": device_primary_ip,
+                "type": "virtual",
+                "mgmt_only": True,
+            }
 
     def load(self):
         """Load data from IP Fabric."""
