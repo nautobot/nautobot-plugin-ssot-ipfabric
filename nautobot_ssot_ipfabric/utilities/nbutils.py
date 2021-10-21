@@ -1,6 +1,4 @@
 """Utility functions for Nautobot ORM."""
-# from nautobot.extras.models.tags import Tag
-# from nautobot.extras.models.customfields import CustomField
 from django.contrib.contenttypes.models import ContentType
 from django.utils.text import slugify
 from nautobot.dcim.models import DeviceRole, DeviceType, Manufacturer, Region, Site
@@ -75,29 +73,31 @@ def create_device_role_object(role_name, role_color):
         role_name (str): Role name.
         role_color (str): Role color.
     """
-    role_obj, _ = DeviceRole.objects.get_or_create(name=role_name, slug=role_name.lower(), color=role_color)
+    role_obj, _ = DeviceRole.objects.get_or_create(name=role_name, slug=slugify(role_name), color=role_color)
     return role_obj
 
 
-def create_device_status(device_status, device_status_color):
-    """Verifies device status object exists in Nautobot. If not, creates specified device status.
+def create_status(status_name, status_color, description="", app_label="dcim", model="device"):
+    """Verifies status object exists in Nautobot. If not, creates specified status. Defaults to dcim | device.
 
     Args:
-        device_status (str): Status name.
-        device_status_color (str): Status color.
+        status_name (str): Status name.
+        status_color (str): Status color.
+        description (str): Description
+        app_label (str): App Label ("DCIM")
+        model (str): Django Model ("DEVICE")
     """
     try:
-        status_obj = Status.objects.get(name=device_status)
+        status_obj = Status.objects.get(name=status_name)
     except Status.DoesNotExist:
-        dcim_device = ContentType.objects.get(app_label="dcim", model="device")
-        status_obj = Status(
-            name=device_status,
-            slug=device_status.lower(),
-            color=device_status_color,
-            description="Status used for ServiceNow Sync.",
+        content_type = ContentType.objects.get(app_label=app_label, model=model)
+        status_obj = Status.objects.create(
+            name=status_name,
+            slug=slugify(status_name),
+            color=status_color,
+            description=description,
         )
-        status_obj.validated_save()
-        status_obj.content_types.set([dcim_device])
+        status_obj.content_types.set([content_type])
     return status_obj
 
 
@@ -108,16 +108,13 @@ def create_ip(ip_address, subnet_mask, status="Active", object_pk=None):
         ip_address (str): IP address.
         subnet_mask (str): Subnet mask used for IP Address.
         status (str): Status to assign to IP Address.
-        object_pk (UUID): The primary key for which to assign the IP to.
+        object_pk (UUID): Object to assign interface
     """
-    try:
-        ip_obj = IPAddress.objects.get(address=ip_address)
-    except IPAddress.DoesNotExist:
-        cidr = netmask_to_cidr(subnet_mask)
-        ip_obj = IPAddress(
-            address=f"{ip_address}/{cidr}", status=Status.objects.get(name=status), assigned_object=object_pk
-        )
-        ip_obj.validated_save()
+    status_obj = Status.objects.get_for_model(IPAddress).get(slug=slugify(status))
+    cidr = netmask_to_cidr(subnet_mask)
+    ip_obj, _ = IPAddress.objects.get_or_create(address=f"{ip_address}/{cidr}", status=status_obj)
+    if object_pk:
+        ip_obj.assigned_object_id = object_pk
     return ip_obj
 
 

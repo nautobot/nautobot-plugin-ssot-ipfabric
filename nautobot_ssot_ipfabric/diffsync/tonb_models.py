@@ -49,7 +49,7 @@ class Device(DiffSyncModel):
     _modelname = "device"
     _identifiers = ("name",)
     _attributes = ("location_name", "model", "vendor")
-    _children = {"mgmt_interface": "mgmt_int"}
+    _children = {"interface": "interfaces"}
 
     name: str
     location_name: Optional[str]
@@ -59,7 +59,8 @@ class Device(DiffSyncModel):
 
     mgmt_int: List["MgmtInterface"] = list()  # pylint: disable=use-list-literal
     mgmt_address: Optional[str]
-    # interfaces: List["Interface"] = list()
+
+    interfaces: List["Interface"] = list()  # pylint: disable=use-list-literal
 
     sys_id: Optional[str] = None
     pk: Optional[uuid.UUID] = None
@@ -74,7 +75,7 @@ class Device(DiffSyncModel):
         device_role_object = tonb_nbutils.create_device_role_object(
             role_name=DEFAULT_DEVICE_ROLE, role_color=DEFAULT_DEVICE_ROLE_COLOR
         )
-        device_status_object = tonb_nbutils.create_device_status(DEFAULT_DEVICE_STATUS, DEFAULT_DEVICE_STATUS_COLOR)
+        device_status_object = tonb_nbutils.create_status(DEFAULT_DEVICE_STATUS, DEFAULT_DEVICE_STATUS_COLOR)
         site_object = tonb_nbutils.create_site(attrs["location_name"])
 
         new_device = NautobotDevice(

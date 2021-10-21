@@ -1,12 +1,13 @@
 """Unit tests for the IPFabric DiffSync adapter class."""
 import uuid
 
-from django.test import TestCase
 from django.contrib.contenttypes.models import ContentType
-from nautobot.extras.models import Job, JobResult, Status
+from django.test import TestCase
 from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site
-from nautobot_ssot_ipfabric.jobs import IpFabricDataSource
+from nautobot.extras.models import Job, JobResult, Status
+
 from nautobot_ssot_ipfabric.diffsync.adapter_nautobot import NautobotDiffSync
+from nautobot_ssot_ipfabric.jobs import IpFabricDataSource
 
 
 class IPFabricDiffSyncTestCase(TestCase):

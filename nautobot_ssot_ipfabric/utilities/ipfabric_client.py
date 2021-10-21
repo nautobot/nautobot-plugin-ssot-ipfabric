@@ -37,7 +37,10 @@ class IpFabricClient(IpFabric):
 
     # pylint: disable=arguments-renamed
     def get_device_inventory(
-        self, search_key=None, filters=None, snapshot_id="$last",
+        self,
+        search_key=None,
+        filters=None,
+        snapshot_id="$last",
     ):
         """Return Device info."""
         logger.debug("Received device inventory request")
@@ -66,7 +69,10 @@ class IpFabricClient(IpFabric):
 
     # pylint: disable=arguments-renamed
     def get_device_inventory(
-        self, search_key=None, filters=None, snapshot_id="$last",
+        self,
+        search_key=None,
+        filters=None,
+        snapshot_id="$last",
     ):
         """Return Device info."""
         logger.debug("Received device inventory request")
@@ -95,7 +101,11 @@ class IpFabricClient(IpFabric):
 
     # pylint: disable=arguments-renamed
     def get_interface_inventory(
-        self, search_key=None, filters=None, device=None, snapshot_id="$last",
+        self,
+        search_key=None,
+        filters=None,
+        device=None,
+        snapshot_id="$last",
     ):
         """Return Interface info."""
         logger.debug("Received interface inventory request")
