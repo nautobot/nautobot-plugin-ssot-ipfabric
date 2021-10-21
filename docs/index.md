@@ -27,27 +27,86 @@ To ensure Nautobot SSoT IPFabric is automatically re-installed during future upg
 # echo nautobot-ssot-ipfabric >> local_requirements.txt
 ```
 
-Once installed, the plugin needs to be enabled in your `nautobot_config.py`
+Once installed, the plugin needs to be enabled in your `nautobot_config.py` as well as the **IP Fabric Host** and **IP Fabric API Token**.
 
 ```python
 # In your nautobot_config.py
 PLUGINS = ["nautobot_ssot_ipfabric"]
 
-# PLUGINS_CONFIG = {
-#   "nautobot_ssot_ipfabric": {
-#     ADD YOUR SETTINGS HERE
-#   }
-# }
+PLUGINS_CONFIG = {
+  "nautobot_ssot_ipfabric": {
+      "IPFABRIC_HOST": os.environ.get("IPFABRIC_HOST"),
+      "IPFABRIC_API_TOKEN": os.environ.get("IPFABRIC_API_TOKEN"),
+  }
+}
 ```
-
-Currently, there are no further settings that need to be configured within `nautobot_config.py` for the plugin to work.
 
 ## Usage
 
-## API
+Nautobot SSoT IP Fabric provides a user interface to interact with the underlying job that executes the synchronization from **IP Fabric** into **Nautobot**.
 
+### Single Source of Truth Dashboard
+
+This plugin leverages the [Single Source of Truth](https://github.com/nautobot/nautobot-plugin-ssot) plugin that provides a dashboard that provides a fantastic entrypoint for seeing the status of the synchronization between **IP Fabric** and **Nautobot**.
+
+You can navigate to the SSoT Dashboard with the following steps:
+
+1. Click the **Plugins** menu and select **Dashboard** under *Single Source of Truth*.
+
+![SSoT Dashboard Nav Menu](./images/nav_dashboard.png)
+
+Now you should see the dashboard with information pertaining to **IP Fabric**.
+
+![SSoT Dashboard](./images/dashboard.png)
+
+We can see **IP Fabric** under **Data Sources** with some quick information such as the results of the latest synchronizations and the ability to launch the synchronization job.
+
+On the right hand side, we're provided with additional information such as the source, target, start time, status, and the type of job.
+
+Let's go ahead and click on **IP Fabric** under **Data Sources**.
+
+![IPFabric Datasource](./images/ipfabric_datasource.png)
+
+Now we can see additional details as to which IP Fabric host we're syncing from and the models that get get mapped between the source and destination. We can also kick off sync job by clicking on **Sync Now**, but we will revisit that shortly.
+
+Below, the sync history is provided with more details of what happened during each synchronization job.
+
+![IPFabric Sync History](./images/ipfabric_sync_history.png)
+
+Now back to running the job. Let's click on **Sync Now**.
+
+![Sync Run](./images/ipfabric_sync_run.png)
+
+There are two options available.
+
+- **Debug**: Enables more verbose logging that can be useful for troubleshooting synchronization issues.
+- **Dry run**: This will only report the difference between the source and destination without synchronization.
+
+If interested to see the source code, click on **Source**.
+
+After a job is launched, you will be redirected to the job results page which will provide any logged messages during the synchronization.
+
+If you're interested in more details, click **SSoT Sync Details**.
+
+![Job Results](./images/job_results.png)
+
+You can then views the details of each object.
+
+![Sync Details](./images/sync_details.png)
 ## DiffSync Models
 
 ### IPFabric Site
 
+| IP Fabric (Source) | DiffSync Model | Nautobot (Destination) |
+| ------------------ | -------------- | ---------------------- |
+| siteName           | Location.name  | Site                   |
+
 ### IPFabric Device
+
+| IP Fabric (Source) | DiffSync Model       | Nautobot (Destination) |
+| ------------------ | -------------------- | ---------------------- |
+| hostname           | Device.name          | Device.name            |
+| siteName           | Device.location_name | Device.site            |
+| vendor             | Device.vendor        | Device.manufacturer    |
+| model              | Device.model         | Device.device_type     |
+| sn                 | Device.serial_number | Device.serial          |

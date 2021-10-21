@@ -2,45 +2,9 @@
 
 A plugin for [Nautobot](https://github.com/nautobot/nautobot).
 
-## Installation
+## Documentation
 
-The plugin is available as a Python package in pypi and can be installed with pip
-
-```shell
-pip install nautobot-ssot-ipfabric
-```
-
-> The plugin is compatible with Nautobot 1.1.0 and higher
-
-To ensure Nautobot SSoT IPFabric is automatically re-installed during future upgrades, create a file named `local_requirements.txt` (if not already existing) in the Nautobot root directory (alongside `requirements.txt`) and list the `nautobot-ssot-ipfabric` package:
-
-```no-highlight
-# echo nautobot-ssot-ipfabric >> local_requirements.txt
-```
-
-Once installed, the plugin needs to be enabled in your `nautobot_config.py`
-
-```python
-# In your nautobot_config.py
-PLUGINS = ["nautobot_ssot_ipfabric"]
-
-# PLUGINS_CONFIG = {
-#   "nautobot_ssot_ipfabric": {
-#     ADD YOUR SETTINGS HERE
-#   }
-# }
-```
-
-The plugin behavior can be controlled with the following list of settings
-
-- TODO
-
-## Usage
-
-### API
-
-TODO
-
+See the docs at [here](./docs/index.md) or at the generated [doc site](http://localhost:8001).
 ## Contributing
 
 Pull requests are welcomed and automatically built and tested against multiple version of Python and multiple version of Nautobot through TravisCI.

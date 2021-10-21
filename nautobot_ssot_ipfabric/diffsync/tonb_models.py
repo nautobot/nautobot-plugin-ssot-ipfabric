@@ -49,7 +49,7 @@ class Device(DiffSyncModel):
     _modelname = "device"
     _identifiers = ("name",)
     _attributes = ("location_name", "model", "vendor")
-    _children = {"mgmt_interface": "mgmt_int"}
+    _children = {"interface": "interfaces"}
 
     name: str
     location_name: Optional[str]
@@ -59,7 +59,8 @@ class Device(DiffSyncModel):
 
     mgmt_int: List["MgmtInterface"] = list()  # pylint: disable=use-list-literal
     mgmt_address: Optional[str]
-    # interfaces: List["Interface"] = list()
+
+    interfaces: List["Interface"] = list()  # pylint: disable=use-list-literal
 
     sys_id: Optional[str] = None
     pk: Optional[uuid.UUID] = None
@@ -74,7 +75,7 @@ class Device(DiffSyncModel):
         device_role_object = tonb_nbutils.create_device_role_object(
             role_name=DEFAULT_DEVICE_ROLE, role_color=DEFAULT_DEVICE_ROLE_COLOR
         )
-        device_status_object = tonb_nbutils.create_device_status(DEFAULT_DEVICE_STATUS, DEFAULT_DEVICE_STATUS_COLOR)
+        device_status_object = tonb_nbutils.create_status(DEFAULT_DEVICE_STATUS, DEFAULT_DEVICE_STATUS_COLOR)
         site_object = tonb_nbutils.create_site(attrs["location_name"])
 
         new_device = NautobotDevice(
@@ -98,52 +99,69 @@ class Device(DiffSyncModel):
         return super().delete()
 
 
-class MgmtInterface(DiffSyncModel):
-    """Mgmt Interface model."""
+class Interface(DiffSyncModel):
+    """Interface model."""
 
-    _modelname = "mgmt_interface"
+    _modelname = "interface"
     _identifiers = (
-        "device_name",
         "name",
+        "device_name",
     )
     _shortname = ("name",)
     _attributes = (
+        "description",
+        "mac_address",
+        "mtu",
+        "type",
         "ip_address",
         "subnet_mask",
     )
     _children = {}
 
-    name: Optional[str]
-    device_name: Optional[str]
+    name: str
+    device_name: str
+    description: Optional[str]
+    mac_address: Optional[str]
+    mtu: Optional[str]
+    type: Optional[str]
     ip_address: Optional[str]
     subnet_mask: Optional[str]
 
-    sys_id: Optional[str] = None
+    # sys_id: Optional[str] = None
     pk: Optional[uuid.UUID] = None
 
     @classmethod
     def create(cls, diffsync, ids, attrs):
-        """Create management interface in Nautobot under its parent device."""
+        """Create interface in Nautobot under its parent device."""
         device_obj = NautobotDevice.objects.get(name=ids["device_name"])
         new_interface = tonb_nbutils.create_interface(interface_name=ids["name"], device_obj=device_obj)
-        ipam_ip = tonb_nbutils.create_ip(
-            ip_address=attrs["ip_address"],
-            subnet_mask=attrs["subnet_mask"],
-            status="Active",
-            object_pk=new_interface,
-        )
+        # ipam_ip = tonb_nbutils.create_ip(
+        #     ip_address=attrs["ip_address"],
+        #     subnet_mask=attrs["subnet_mask"],
+        #     status="Active",
+        #     object_pk=new_interface,
+        # )
 
-        device_obj.primary_ip4 = ipam_ip
+        # device_obj.primary_ip4 = ipam_ip
         device_obj.validated_save()
 
         return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
 
-    def delete(self) -> Optional["DiffSyncModel"]:
-        """Delete."""
-        device = NautobotDevice.objects.get(name=self.device_name)
-        interface = device.interfaces.get(name=self.name)
-        interface.delete()
-        return super().delete()
+    # def delete(self) -> Optional["DiffSyncModel"]:
+    #     """Delete."""
+    #     device = NautobotDevice.objects.get(name=self.device_name)
+    #     interface = device.interfaces.get(name=self.name)
+    #     interface.delete()
+    #     return super().delete()
+
+
+class MgmtInterface(Interface):
+    """
+    MgmtInterface class renamed to Interface.
+    For compatibility until references are removed.
+    """
+
+    _modelname = "mgmt_interface"
 
 
 Location.update_forward_refs()

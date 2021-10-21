@@ -20,7 +20,7 @@ class NautobotSSoTIPFabricConfig(PluginConfig):
     author = "Network to Code, LLC"
     description = "Nautobot SSoT IPFabric."
     base_url = "ssot-ipfabric"
-    required_settings = []
+    required_settings = ["IPFABRIC_HOST", "IPFABRIC_API_TOKEN"]
     min_version = "1.1.0"
     max_version = "1.9999"
     default_settings = {}
