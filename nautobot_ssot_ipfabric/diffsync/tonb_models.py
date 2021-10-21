@@ -150,10 +150,10 @@ class Interface(DiffSyncModel):
             )
             interface_obj.ip_addresses.add(ip_address_obj)
             if attrs["ip_is_primary"]:
-                if ip.family == 4:
-                    device_obj.primary_ip4 = ip
-                if ip.family == 6:
-                    device_obj.primary_ip6 = ip
+                if ip_address_obj.family == 4:
+                    device_obj.primary_ip4 = ip_address_obj
+                if ip_address_obj.family == 6:
+                    device_obj.primary_ip6 = ip_address_obj
                 device_obj.validated_save()
 
         return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
