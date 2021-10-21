@@ -65,5 +65,4 @@ class IPFabricDiffSyncTestCase(TestCase):
             self.assertTrue(hasattr(vlan, "status"))
             self.assertTrue(hasattr(vlan, "site"))
 
-
         # TODO: Add testing for any new models we add
