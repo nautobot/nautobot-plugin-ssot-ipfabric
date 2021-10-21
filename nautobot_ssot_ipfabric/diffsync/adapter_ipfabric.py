@@ -37,7 +37,7 @@ class IPFabricDiffSync(DiffSync):
         device_interfaces = [iface for iface in interfaces if iface.get("hostname") == device_model.name]
         self.job.log_debug(message=f"Loading {len(device_interfaces)} interfaces for device '{device_model.name}'")
 
-        pseudo_interface = self.pseudo_management_interface(device_model.name, device_interfaces, device_primary_ip)
+        pseudo_interface = pseudo_management_interface(device_model.name, device_interfaces, device_primary_ip)
         if pseudo_interface:
             device_interfaces.append(pseudo_interface)
 
@@ -63,21 +63,6 @@ class IPFabricDiffSync(DiffSync):
             self.add(interface)
             device_model.add_child(interface)
             # self.job.log_debug(message=interface)
-
-    def pseudo_management_interface(self, hostname, device_interfaces, device_primary_ip):
-        """Return a dict for an non-existing interface
-        if none of the interfaces contain the management IP address.
-        This is the case when the device is managed via an IP address that is behind a NAT device.
-        """
-        if not any(iface for iface in device_interfaces if iface.get("primaryIp", "") == device_primary_ip):
-            return {
-                "hostname": hostname,
-                "intName": "pseudo_mgmt",
-                "dscr": "pseudo interface for NAT IP address",
-                "primaryIp": device_primary_ip,
-                "type": "virtual",
-                "mgmt_only": True,
-            }
 
     def load(self):
         """Load data from IP Fabric."""
@@ -116,3 +101,17 @@ class IPFabricDiffSync(DiffSync):
                 location.add_child(device_model)
                 self.load_device_interfaces(device_model, interfaces, device_primary_ip)
                 self.job.log_debug(message=device_model)
+
+
+def pseudo_management_interface(hostname, device_interfaces, device_primary_ip):
+    """Return a dict for an non-existing interface for NAT management addresses."""
+    if any(iface for iface in device_interfaces if iface.get("primaryIp", "") == device_primary_ip):
+        return None
+    return {
+        "hostname": hostname,
+        "intName": "pseudo_mgmt",
+        "dscr": "pseudo interface for NAT IP address",
+        "primaryIp": device_primary_ip,
+        "type": "virtual",
+        "mgmt_only": True,
+    }
