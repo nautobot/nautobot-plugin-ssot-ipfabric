@@ -110,3 +110,25 @@ You can then views the details of each object.
 | vendor             | Device.vendor        | Device.manufacturer    |
 | model              | Device.model         | Device.device_type     |
 | sn                 | Device.serial_number | Device.serial          |
+
+### IPFabric Interface
+
+| IP Fabric (Source) | DiffSync Model          | Nautobot (Destination)    |
+| ------------------ | ----------------------- | ------------------------- |
+| intName            | Interface.name          | Interface.name            |
+| hostname           | Interface.device_name   | Interface.assigned_object |
+| mac                | Interface.mac_address   | Interface.mac_address     |
+| mtu                | Interface.mtu           | Interface.mtu             |
+| N/A                | Interface.type          | Interface.type            |
+| primaryIp          | Interface.ip_address    | IPAddress.address         |
+| N/A                | Interface.subnet_mask   | IPAddress.address         |
+| N/A                | Interface.ip_is_primary | Device.primary_ip         |
+
+### IPFabric VLAN
+
+| IP Fabric (Source) | DiffSync Model | Nautobot (Destination) |
+| ------------------ | -------------- | ---------------------- |
+| vlanName           | Vlan.name      | VLAN.name              |
+| vlanId             | Vlan.vid       | VLAN.vid               |
+| status             | Vlan.status    | VLAN.status            |
+| siteName           | Vlan.site      | VLAN.site              |
