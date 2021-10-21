@@ -73,3 +73,39 @@ class TestIpFabricClient(unittest.TestCase):
 
         self.assertEqual(vlans[0]["siteName"], "JCY-SPINE-01.INFRA.NTC.COM_1")
         self.assertEqual(len(vlans), 13)
+
+    @responses.activate
+    def test_get_interface_inventory(self):
+        """Test `get_interface_inventory` API Call."""
+        endpoint = f"{self.uri}/api/v1/tables/inventory/interfaces"
+        json_response = json_fixture(f"{FIXTURES}/get_interface_inventory.json")
+        # IP Fabric Responses are wrapped inside 'data' key.
+        response = {"data": json_response}
+        responses.add(
+            responses.POST,
+            endpoint,
+            json=response,
+            status=200,
+        )
+        interfaces = self.client.get_interface_inventory()
+
+        self.assertEqual(interfaces[0]["id"], "19941192")
+        self.assertEqual(interfaces[2]["primaryIp"], "10.10.0.10")
+        self.assertEqual(len(interfaces), 4)
+
+    @responses.activate
+    def test_get_interface_inventory_filter(self):
+        """Test `get_interface_inventory` with filter applied API Call."""
+        endpoint = f"{self.uri}/api/v1/tables/inventory/interfaces"
+        json_response = json_fixture(f"{FIXTURES}/get_interface_inventory.json")
+        # IP Fabric Responses are wrapped inside 'data' key.
+        response = {"data": json_response}
+        responses.add(
+            responses.POST,
+            endpoint,
+            json=response,
+            status=200,
+        )
+        interfaces = self.client.get_interface_inventory(device="nyc-rtr-01")
+
+        self.assertEqual(interfaces[0]["hostname"], "nyc-rtr-01")
