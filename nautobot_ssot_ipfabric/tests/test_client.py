@@ -56,7 +56,6 @@ class TestIpFabricClient(unittest.TestCase):
         self.assertEqual(sites[0]["platform"], "veos")
         self.assertEqual(len(sites), 6)
 
-
     @responses.activate
     def test_get_vlans(self):
         """Test `get_vlans` API Call."""

@@ -22,6 +22,7 @@ nautobot = { version = "*", optional = true }
 python = "^3.6"
 nautobot-ssot = "^1.0.1"
 netutils = "^0.2.3"
+nautobot-chatops = "^1.5.0"
 
 [tool.poetry.dev-dependencies]
 bandit = "*"
@@ -118,3 +119,6 @@ addopts = "-vv --doctest-modules"
 
 [tool.isort]
 profile = "black"
+
+[tool.poetry.plugins."nautobot.workers"]
+"ipfabric" = "nautobot_ssot_ipfabric.workers:ipfabric"
