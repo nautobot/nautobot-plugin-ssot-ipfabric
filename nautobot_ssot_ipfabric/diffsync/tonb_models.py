@@ -1,5 +1,4 @@
 """DiffSyncModel subclasses for Nautobot-to-IPFabric data sync."""
-from functools import lru_cache
 from typing import List, Optional
 import uuid
 
