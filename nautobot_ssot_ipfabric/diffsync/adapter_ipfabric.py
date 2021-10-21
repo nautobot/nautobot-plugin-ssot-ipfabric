@@ -65,11 +65,15 @@ class IPFabricDiffSync(DiffSync):
             # self.job.log_debug(message=interface)
 
     def pseudo_management_interface(self, hostname, device_interfaces, device_primary_ip):
+        """Return a dict for an non-existing interface
+        if none of the interfaces contain the management IP address.
+        This is the case when the device is managed via an IP address that is behind a NAT device.
+        """
         if not any(iface for iface in device_interfaces if iface.get("primaryIp", "") == device_primary_ip):
             return {
                 "hostname": hostname,
-                "intName": "mgmt_only",
-                "dscr": "virtual",
+                "intName": "pseudo_mgmt",
+                "dscr": "pseudo interface for NAT IP address",
                 "primaryIp": device_primary_ip,
                 "type": "virtual",
                 "mgmt_only": True,
