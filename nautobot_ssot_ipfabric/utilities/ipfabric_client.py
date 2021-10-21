@@ -140,25 +140,22 @@ class IpFabricClient(IpFabric):
     # pylint: disable=arguments-renamed
     def get_vlans(
         self,
-        search_key=None,
         filters=None,
         snapshot_id="$last",
     ):
         """Return VLAN info."""
         logger.debug("Received VLAN inventory request")
-        if search_key:
-            pass
 
         # columns and snapshot required
         payload = {
             "columns": [
-                "hostname",
                 "siteName",
                 "vlanName",
+                "vlanId",
                 "status"
             ],
             "filters": filters if filters else {},
-            "snapshot": "$last"
+            "snapshot": snapshot_id
         }
 
         logger.debug("Requesting VLAN information with payload: %s", payload)

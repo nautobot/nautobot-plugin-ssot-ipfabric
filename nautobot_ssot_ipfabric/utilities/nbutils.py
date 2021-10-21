@@ -141,6 +141,6 @@ def create_vlan(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: Site):
     Returns:
         (VLAN): Returns created or obtained VLAN object.
     """
-    status = Status.object.get(name=vlan_status)
+    status = Status.objects.get(name=vlan_status)
     vlan_obj, _ = site_obj.vlans.get_or_create(name=vlan_name, vid=vlan_id, status=status)
     return vlan_obj
