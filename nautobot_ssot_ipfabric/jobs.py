@@ -31,12 +31,15 @@ class IpFabricDataSource(DataSource, Job):
     @classmethod
     def data_mappings(cls):
         """List describing the data mappings involved in this DataSource."""
+        configs = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
+
         return (
             DataMapping("Device", None, "Device", reverse("dcim:device_list")),
             DataMapping("Site", None, "Site", reverse("dcim:site_list")),
             DataMapping("Interfaces", None, "Interfaces", reverse("dcim:interface_list")),
             DataMapping("IP Addresses", None, "IP Addresses", reverse("ipam:ipaddress_list")),
             DataMapping("VLANs", None, "VLANs", reverse("ipam:vlan_list")),
+            DataMapping("Network Diagram", None, "Graph", f"{configs['IPFABRIC_HOST']}/graph"),
         )
 
     @classmethod

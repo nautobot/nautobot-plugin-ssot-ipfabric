@@ -9,8 +9,10 @@ from .nbutils import (
     create_site,
     create_status,
     create_tenant,
+    create_vlan,
 )
 from .test_utils import json_fixture
+from .ipfabric_client import IpFabricClient
 
 __all__ = (
     "create_site",
@@ -23,4 +25,6 @@ __all__ = (
     "create_ip",
     "create_interface",
     "json_fixture",
+    "IpFabricClient",
+    "create_vlan",
 )
