@@ -2011,7 +2011,7 @@ nautobot = ["nautobot"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "fccfc8a57f1bce51c37da0562f0ce0cd91cce553a2a45b173bbbc1310e67b322"
+content-hash = "793fb0577ce5b05007e1272b69cc7b79a3bb942662a6f1654981f260d7a6ff8b"
 
 [metadata.files]
 amqp = [
