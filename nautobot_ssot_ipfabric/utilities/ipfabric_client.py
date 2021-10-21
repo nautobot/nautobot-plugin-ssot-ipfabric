@@ -68,38 +68,6 @@ class IpFabricClient(IpFabric):
         return self.get_response("/api/v1/tables/inventory/devices", payload)
 
     # pylint: disable=arguments-renamed
-    def get_device_inventory(
-        self,
-        search_key=None,
-        filters=None,
-        snapshot_id="$last",
-    ):
-        """Return Device info."""
-        logger.debug("Received device inventory request")
-        if search_key:
-            pass
-
-        # columns and snapshot required
-        payload = {
-            "columns": [
-                "hostname",
-                "siteName",
-                "vendor",
-                "platform",
-                "model",
-                "memoryUtilization",
-                "version",
-                "sn",
-                "loginIp",
-            ],
-            "filters": filters if filters else {},
-            "snapshot": snapshot_id,
-        }
-
-        logger.debug("Requesting inventory with payload: %s", payload)
-        return self.get_response("/api/v1/tables/inventory/devices", payload)
-
-    # pylint: disable=arguments-renamed
     def get_interface_inventory(
         self,
         search_key=None,

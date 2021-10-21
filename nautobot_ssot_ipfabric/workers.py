@@ -1,7 +1,13 @@
-from nautobot_chatops.workers import subcommand_of, handle_subcommands
+# Disable dispatcher from chatops unused. # pylint: disable=unused-argument
+"""Chat Ops Worker."""
+import uuid
+
+from django.contrib.contenttypes.models import ContentType
 from django_rq import job
-from nautobot_ssot_ipfabric.jobs import IpFabricDataSource
 from nautobot.extras.models import JobResult
+from nautobot_chatops.workers import handle_subcommands, subcommand_of
+
+from nautobot_ssot_ipfabric.jobs import IpFabricDataSource
 
 
 @job("default")
@@ -11,9 +17,19 @@ def ipfabric(subcommand, **kwargs):
 
 
 @subcommand_of("ipfabric")
-def ssot_sync_to_nautobot(dispatcher, dry_run="True"):
+def ssot_sync_to_nautobot(dispatcher, dry_run=True):
     """Start an SSoT sync from IPFabric to Nautobot."""
     data = {"dry_run": dry_run}
-    job = IpFabricDataSource()
-    job.job_result = JobResult()
-    job.run(data, commit=True)
+    sync_job = IpFabricDataSource()
+    sync_job.job_result = JobResult(
+        name=sync_job.class_path,
+        obj_type=ContentType.objects.get(
+            app_label="extras",
+            model="job",
+        ),
+        job_id=uuid.uuid4(),
+    )
+    sync_job.job_result.validated_save()
+    sync_job.run(data, commit=True)
+    # To get the url of JOB:
+    # sync_job.job_result.get_absolute_url()

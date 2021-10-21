@@ -134,7 +134,7 @@ class Interface(DiffSyncModel):
     def create(cls, diffsync, ids, attrs):
         """Create interface in Nautobot under its parent device."""
         device_obj = NautobotDevice.objects.get(name=ids["device_name"])
-        new_interface = tonb_nbutils.create_interface(interface_name=ids["name"], device_obj=device_obj)
+        tonb_nbutils.create_interface(interface_name=ids["name"], device_obj=device_obj)
         # ipam_ip = tonb_nbutils.create_ip(
         #     ip_address=attrs["ip_address"],
         #     subnet_mask=attrs["subnet_mask"],
@@ -156,8 +156,8 @@ class Interface(DiffSyncModel):
 
 
 class MgmtInterface(Interface):
-    """
-    MgmtInterface class renamed to Interface.
+    """MgmtInterface class renamed to Interface.
+
     For compatibility until references are removed.
     """
 
