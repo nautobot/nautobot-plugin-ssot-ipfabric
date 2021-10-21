@@ -119,12 +119,11 @@ class NautobotDiffSync(DiffSync):
                     site=vlan_record.site.name,
                     status=vlan_record.status.slug,
                     pk=vlan_record.pk,
-                    vid = vlan_record.vid
+                    vid=vlan_record.vid,
                 )
 
                 self.add(vlan)
                 location.add_child(vlan)
-
 
     def load(self):
         """Load data from Nautobot."""

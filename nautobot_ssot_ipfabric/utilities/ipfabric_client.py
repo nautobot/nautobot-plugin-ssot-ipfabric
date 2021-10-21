@@ -148,14 +148,9 @@ class IpFabricClient(IpFabric):
 
         # columns and snapshot required
         payload = {
-            "columns": [
-                "siteName",
-                "vlanName",
-                "vlanId",
-                "status"
-            ],
+            "columns": ["siteName", "vlanName", "vlanId", "status"],
             "filters": filters if filters else {},
-            "snapshot": snapshot_id
+            "snapshot": snapshot_id,
         }
 
         logger.debug("Requesting VLAN information with payload: %s", payload)
