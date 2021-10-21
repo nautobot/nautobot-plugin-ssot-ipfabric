@@ -38,7 +38,7 @@
    {
       "id":"19941192",
       "hostname":"nyc-rtr-01",
-      "intName":"ipip",
+      "intName":"eth1",
       "dscr":null,
       "mac":null,
       "duplex":null,

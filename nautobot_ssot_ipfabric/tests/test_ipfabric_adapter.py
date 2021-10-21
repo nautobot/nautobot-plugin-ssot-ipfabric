@@ -34,7 +34,7 @@ class IPFabricDiffSyncTestCase(TestCase):
         ipfabric_client.get_sites.return_value = SITE_FIXTURE
         ipfabric_client.get_device_inventory.return_value = DEVICE_INVENTORY_FIXTURE
         ipfabric_client.get_vlans.return_value = VLAN_FIXTURE
-        ipfabric_client.get_interface_inventory = INTERFACE_FIXTURE
+        ipfabric_client.get_interface_inventory.return_value = INTERFACE_FIXTURE
 
         job = IpFabricDataSource()
         job.job_result = JobResult.objects.create(
