@@ -126,3 +126,30 @@ class IpFabricClient(IpFabric):
 
         logger.debug("Requesting interface inventory with payload: %s", payload)
         return self.get_response("/api/v1/tables/inventory/interfaces", payload)
+
+    # pylint: disable=arguments-renamed
+    def get_vlans(
+        self,
+        search_key=None,
+        filters=None,
+        snapshot_id="$last",
+    ):
+        """Return VLAN info."""
+        logger.debug("Received VLAN inventory request")
+        if search_key:
+            pass
+
+        # columns and snapshot required
+        payload = {
+            "columns": [
+                "hostname",
+                "siteName",
+                "vlanName",
+                "status"
+            ],
+            "filters": filters if filters else {},
+            "snapshot": "$last"
+        }
+
+        logger.debug("Requesting VLAN information with payload: %s", payload)
+        return self.get_response("/api/v1/tables/vlan/device", payload)

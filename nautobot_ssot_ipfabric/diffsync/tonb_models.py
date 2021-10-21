@@ -154,6 +154,45 @@ class Interface(DiffSyncModel):
     #     return super().delete()
 
 
+
+class Vlan(DiffSyncModel):
+    """VLAN model."""
+
+    _modelname = "VLAN"
+    _identifiers = (
+        "name",
+        "vlan_name",
+    )
+    _shortname = ("name",)
+    _attributes = (
+        "name",
+        "vid",
+        "status",
+        "site",
+    )
+    _children = {}
+
+    name: str
+    vlan_name: str
+    vid: int
+    status: str
+    site: str
+
+    # sys_id: Optional[str] = None
+    pk: Optional[uuid.UUID] = None
+
+    @classmethod
+    def create(cls, diffsync, ids, attrs):
+        """Create VLANs in Nautobot under the site."""
+        status = attrs["status"].lower().capitalize()
+        site=Site.objects.get(name=attrs["site"])
+        name= ids["vlan_name"] if ids["vlan_name"] else f"VLAN{attrs['vid']}"
+        new_vlan = tonb_nbutils.create_vlan(vlan_name=name, vlan_id=attrs["vid"], vlan_status=status, site_obj=site)
+
+        new_vlan.validated_save()
+
+        return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
+
 class MgmtInterface(Interface):
     """
     MgmtInterface class renamed to Interface.

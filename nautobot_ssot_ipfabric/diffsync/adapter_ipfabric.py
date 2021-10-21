@@ -11,6 +11,7 @@ class IPFabricDiffSync(DiffSync):
     location = tonb_models.Location
     device = tonb_models.Device
     interface = tonb_models.Interface
+    vlan = tonb_models.Vlan
 
     top_level = [
         "location",
@@ -99,3 +100,4 @@ class IPFabricDiffSync(DiffSync):
                 self.job.log_debug(message=device)
 
         self.load_interfaces(devices)
+        self.load_vlans(intefaces)
