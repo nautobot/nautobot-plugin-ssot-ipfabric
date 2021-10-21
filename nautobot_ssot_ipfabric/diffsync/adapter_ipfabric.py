@@ -11,6 +11,7 @@ class IPFabricDiffSync(DiffSync):
     location = tonb_models.Location
     device = tonb_models.Device
     interface = tonb_models.Interface
+    vlan = tonb_models.Vlan
 
     top_level = [
         "location",
@@ -81,10 +82,23 @@ class IPFabricDiffSync(DiffSync):
         self.load_sites()
         devices = self.client.get_device_inventory()
         interfaces = self.client.get_interface_inventory()
-
+        vlans = self.client.get_vlans()
         for location in self.get_all(self.location):
             if location.name is None:
                 continue
+            location_vlans = [vlan for vlan in vlans if vlan["siteName"] == location.name]
+            for vlan in location_vlans:
+                self.job.log_debug(message=f"Loading VLAN {vlan['vlanName']}")
+                self.job.log_debug(message=f"VLAN: {vlan}")
+                vlan = self.vlan(
+                    diffsync=self,
+                    name=vlan["vlanName"],
+                    site=vlan["siteName"],
+                    vid=vlan["vlanId"],
+                    status=vlan["status"],
+                )
+                self.add(vlan)
+                location.add_child(vlan)
             location_devices = [device for device in devices if device["siteName"] == location.name]
             for device in location_devices:
                 self.job.log_debug(message=f"Loading Device {device['hostname']}")

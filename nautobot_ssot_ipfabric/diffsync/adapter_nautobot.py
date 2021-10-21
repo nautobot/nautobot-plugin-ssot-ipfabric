@@ -4,6 +4,7 @@ import logging
 from diffsync import DiffSync
 from diffsync.exceptions import ObjectNotFound
 from nautobot.dcim.models import Device, Site
+from nautobot.ipam.models import VLAN
 
 from . import tonb_models
 
@@ -22,6 +23,7 @@ class NautobotDiffSync(DiffSync):
     location = tonb_models.Location
     device = tonb_models.Device
     interface = tonb_models.Interface
+    vlan = tonb_models.Vlan
 
     top_level = [
         "location",
@@ -102,10 +104,32 @@ class NautobotDiffSync(DiffSync):
                 self.add(device)
                 location.add_child(device)
 
+    def load_vlans(self):
+        """Add Nautobot VLAN objects as DiffSync VLAN models."""
+        for vlan_record in VLAN.objects.all():
+            self.job.log_debug(message=f"Loading VLAN {vlan_record.name}")
+            location = self.get(self.location, vlan_record.site.name)
+            try:
+                vlan = self.get(self.vlan, vlan_record.name)
+                vlan.pk = vlan_record.pk
+            except ObjectNotFound:
+                vlan = self.vlan(
+                    diffsync=self,
+                    name=vlan_record.name,
+                    site=vlan_record.site.name,
+                    status=vlan_record.status.slug,
+                    pk=vlan_record.pk,
+                    vid=vlan_record.vid,
+                )
+
+                self.add(vlan)
+                location.add_child(vlan)
+
     def load(self):
         """Load data from Nautobot."""
         self.load_sites()
         self.load_devices()
+        self.load_vlans()
 
 
 #                for interface_record in Interface.objects.filter(device=device_record):

@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from nautobot.dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site
 from nautobot.extras.models import Job, JobResult, Status
+from nautobot.ipam.models import VLAN
 
 from nautobot_ssot_ipfabric.diffsync.adapter_nautobot import NautobotDiffSync
 from nautobot_ssot_ipfabric.jobs import IpFabricDataSource
@@ -30,6 +31,8 @@ class IPFabricDiffSyncTestCase(TestCase):
         Device.objects.create(
             name="csr2", device_type=device_type, device_role=device_role, site=site_2, status=status_active
         )
+
+        VLAN.objects.create(name="VLAN101", vid=101, status=status_active, site=site_1)
 
     def test_data_loading(self):
         """Test the load() function."""
@@ -60,5 +63,12 @@ class IPFabricDiffSyncTestCase(TestCase):
             # self.assertTrue(hasattr(device, "role"))
             # self.assertTrue(hasattr(device, "status"))
             self.assertTrue(hasattr(device, "serial_number"), f"{device} is missing serial_number")
+
+        # Assert each vlan has the necessary attributes
+        for vlan in nautobot.get_all("vlan"):
+            self.assertTrue(hasattr(vlan, "name"))
+            self.assertTrue(hasattr(vlan, "vid"))
+            self.assertTrue(hasattr(vlan, "status"))
+            self.assertTrue(hasattr(vlan, "site"))
 
         # TODO: Add testing for any new models we add
