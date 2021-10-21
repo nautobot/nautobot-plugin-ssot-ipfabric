@@ -83,7 +83,7 @@ class IPFabricDiffSync(DiffSync):
             location_devices = [device for device in devices if device["siteName"] == location.name]
             for device in location_devices:
                 self.job.log_debug(message=f"Loading Device {device['hostname']}")
-                device = self.device(
+                device_model = self.device(
                     diffsync=self,
                     name=device["hostname"],
                     location_name=device["siteName"],
@@ -91,7 +91,7 @@ class IPFabricDiffSync(DiffSync):
                     vendor=device["vendor"],
                     serial_number=device["sn"],
                 )
-                self.add(device)
-                location.add_child(device)
-                self.load_device_interfaces(device, interfaces)
-                self.job.log_debug(message=device)
+                self.add(device_model)
+                location.add_child(device_model)
+                self.load_device_interfaces(device_model, interfaces)
+                self.job.log_debug(message=device_model)
