@@ -29,6 +29,21 @@ class IPFabricJobTest(TestCase):
         self.assertEqual("Site", mappings[1].target_name)
         self.assertEqual(reverse("dcim:site_list"), mappings[1].target_url)
 
+        self.assertEqual("Interfaces", mappings[2].source_name)
+        self.assertIsNone(mappings[2].source_url)
+        self.assertEqual("Interfaces", mappings[2].target_name)
+        self.assertEqual(reverse("dcim:interface_list"), mappings[2].target_url)
+
+        self.assertEqual("IP Addresses", mappings[3].source_name)
+        self.assertIsNone(mappings[3].source_url)
+        self.assertEqual("IP Addresses", mappings[3].target_name)
+        self.assertEqual(reverse("ipam:ipaddress_list"), mappings[3].target_url)
+
+        self.assertEqual("VLANs", mappings[4].source_name)
+        self.assertIsNone(mappings[4].source_url)
+        self.assertEqual("VLANs", mappings[4].target_name)
+        self.assertEqual(reverse("ipam:vlan_list"), mappings[4].target_url)
+
     @override_settings(
         PLUGINS_CONFIG={
             "nautobot_ssot_ipfabric": {
