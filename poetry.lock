@@ -683,7 +683,7 @@ python-versions = "*"
 name = "future"
 version = "0.18.2"
 description = "Clean single-source support for Python 3 and 2"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
@@ -1125,6 +1125,33 @@ svgwrite = ">=1.4.1,<1.5.0"
 
 [package.extras]
 mysql = ["mysqlclient (>=2.0.3,<2.1.0)"]
+
+[[package]]
+name = "nautobot-capacity-metrics"
+version = "1.1.0"
+description = "Plugin to improve the instrumentation of Nautobot and expose additional metrics (Application Metrics, RQ Worker)."
+category = "main"
+optional = false
+python-versions = ">=3.6,<4.0"
+
+[package.dependencies]
+nautobot = ">=1.0.0,<2.0.0"
+
+[[package]]
+name = "nautobot-chatops"
+version = "1.5.0"
+description = "A plugin providing chatbot capabilities for Nautobot"
+category = "main"
+optional = false
+python-versions = ">=3.6,<4.0"
+
+[package.dependencies]
+nautobot = "*"
+nautobot-capacity-metrics = "*"
+PyJWT = ">=2.1.0,<3.0.0"
+slack-sdk = ">=3.4.2,<4.0.0"
+texttable = ">=1.6.2,<2.0.0"
+webexteamssdk = ">=1.3,<2.0"
 
 [[package]]
 name = "nautobot-ssot"
@@ -1602,6 +1629,17 @@ requests = ">=2.0.0"
 rsa = ["oauthlib[signedtoken] (>=3.0.0)"]
 
 [[package]]
+name = "requests-toolbelt"
+version = "0.9.1"
+description = "A utility belt for advanced users of python-requests"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+requests = ">=2.0.1,<3.0.0"
+
+[[package]]
 name = "responses"
 version = "0.14.0"
 description = "A utility library for mocking out the `requests` Python library."
@@ -1682,6 +1720,18 @@ description = "Python 2 and 3 compatibility utilities"
 category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
+
+[[package]]
+name = "slack-sdk"
+version = "3.11.2"
+description = "The Slack API Platform SDK for Python"
+category = "main"
+optional = false
+python-versions = ">=3.6.0"
+
+[package.extras]
+optional = ["aiodns (>1.0)", "aiohttp (>=3.7.3,<4)", "boto3 (<=2)", "SQLAlchemy (>=1,<2)", "websockets (>=9.1,<10)", "websocket-client (>=1,<2)"]
+testing = ["pytest (>=5.4,<6)", "pytest-asyncio (<1)", "Flask-Sockets (>=0.2,<1)", "Flask (>=1,<2)", "Werkzeug (<2)", "pytest-cov (>=2,<3)", "codecov (>=2,<3)", "flake8 (>=3,<4)", "black (==21.9b0)", "psutil (>=5,<6)", "databases (>=0.3)", "boto3 (<=2)", "moto (<2)"]
 
 [[package]]
 name = "smmap"
@@ -1801,6 +1851,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "texttable"
+version = "1.6.4"
+description = "module for creating simple ASCII tables"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
@@ -1902,6 +1960,20 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "webexteamssdk"
+version = "1.6"
+description = "Community-developed Python SDK for the Webex Teams APIs"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+future = "*"
+PyJWT = "*"
+requests = ">=2.4.2"
+requests-toolbelt = "*"
+
+[[package]]
 name = "wrapt"
 version = "1.13.2"
 description = "Module for decorators, wrappers and monkey patching."
@@ -1939,7 +2011,7 @@ nautobot = ["nautobot"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "16be3dc96815b22fa98a4831dbc9fff79c4e6d6adbde3d92da984c10b97665af"
+content-hash = "fccfc8a57f1bce51c37da0562f0ce0cd91cce553a2a45b173bbbc1310e67b322"
 
 [metadata.files]
 amqp = [
@@ -2427,6 +2499,14 @@ nautobot = [
     {file = "nautobot-1.1.4-py3-none-any.whl", hash = "sha256:355773e30aa2d7da187e610751691cb0bde5314933a14d45c3e140c6410d718f"},
     {file = "nautobot-1.1.4.tar.gz", hash = "sha256:a4feff233bf7255a1deadb025c023a96b97a18a3cf676af151ea02c2896b709c"},
 ]
+nautobot-capacity-metrics = [
+    {file = "nautobot-capacity-metrics-1.1.0.tar.gz", hash = "sha256:7f39fdc203dec1579902b4972193feace8140addd5360cefadb1dc4895b8a582"},
+    {file = "nautobot_capacity_metrics-1.1.0-py3-none-any.whl", hash = "sha256:f5a07e6cfc0dc814109f6806a19079d8ac0ce19cc68d5d19c6433dae11370f5c"},
+]
+nautobot-chatops = [
+    {file = "nautobot-chatops-1.5.0.tar.gz", hash = "sha256:fa8bb4a0b833614a4fa1fd120d1cce87d97e5ca837234120895e7fcfb8e330af"},
+    {file = "nautobot_chatops-1.5.0-py3-none-any.whl", hash = "sha256:6166018adcda20ce9d1db042d1720eff55ca66240cec527dd4a345220018055b"},
+]
 nautobot-ssot = [
     {file = "nautobot-ssot-1.0.1.tar.gz", hash = "sha256:21de4cf3fda47054a1d59672e43314bcd1a9fb736c35c1ca4dddc53e4f1ebbca"},
     {file = "nautobot_ssot-1.0.1-py3-none-any.whl", hash = "sha256:7ef8ea1c73f303fe81d118bd0dbbb78b69154c566a037eb02b51625f98628dae"},
@@ -2819,6 +2899,10 @@ requests-oauthlib = [
     {file = "requests_oauthlib-1.3.0-py2.py3-none-any.whl", hash = "sha256:7f71572defaecd16372f9006f33c2ec8c077c3cfa6f5911a9a90202beb513f3d"},
     {file = "requests_oauthlib-1.3.0-py3.7.egg", hash = "sha256:fa6c47b933f01060936d87ae9327fead68768b69c6c9ea2109c48be30f2d4dbc"},
 ]
+requests-toolbelt = [
+    {file = "requests-toolbelt-0.9.1.tar.gz", hash = "sha256:968089d4584ad4ad7c171454f0a5c6dac23971e9472521ea3b6d49d610aa6fc0"},
+    {file = "requests_toolbelt-0.9.1-py2.py3-none-any.whl", hash = "sha256:380606e1d10dc85c3bd47bf5a6095f815ec007be7a8b69c878507068df059e6f"},
+]
 responses = [
     {file = "responses-0.14.0-py2.py3-none-any.whl", hash = "sha256:57bab4e9d4d65f31ea5caf9de62095032c4d81f591a8fac2f5858f7777b8567b"},
     {file = "responses-0.14.0.tar.gz", hash = "sha256:93f774a762ee0e27c0d9d7e06227aeda9ff9f5f69392f72bb6c6b73f8763563e"},
@@ -2866,6 +2950,10 @@ six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
+slack-sdk = [
+    {file = "slack_sdk-3.11.2-py2.py3-none-any.whl", hash = "sha256:35245ec34c8549fbb5c43ccc17101afd725b3508bb784da46530b214f496bf93"},
+    {file = "slack_sdk-3.11.2.tar.gz", hash = "sha256:131bf605894525c2d66da064677eabc19f53f02ce0f82a3f2fa130d4ec3bc1b0"},
+]
 smmap = [
     {file = "smmap-4.0.0-py2.py3-none-any.whl", hash = "sha256:a9a7479e4c572e2e775c404dcd3080c8dc49f39918c2cf74913d30c4c478e3c2"},
     {file = "smmap-4.0.0.tar.gz", hash = "sha256:7e65386bd122d45405ddf795637b7f7d2b532e7e401d46bbe3fb49b9986d5182"},
@@ -2906,6 +2994,10 @@ swagger-spec-validator = [
 text-unidecode = [
     {file = "text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93"},
     {file = "text_unidecode-1.3-py2.py3-none-any.whl", hash = "sha256:1311f10e8b895935241623731c2ba64f4c455287888b18189350b67134a822e8"},
+]
+texttable = [
+    {file = "texttable-1.6.4-py2.py3-none-any.whl", hash = "sha256:dd2b0eaebb2a9e167d1cefedab4700e5dcbdb076114eed30b58b97ed6b37d6f2"},
+    {file = "texttable-1.6.4.tar.gz", hash = "sha256:42ee7b9e15f7b225747c3fa08f43c5d6c83bc899f80ff9bae9319334824076e9"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
@@ -3014,6 +3106,10 @@ vine = [
 wcwidth = [
     {file = "wcwidth-0.2.5-py2.py3-none-any.whl", hash = "sha256:beb4802a9cebb9144e99086eff703a642a13d6a0052920003a230f3294bbe784"},
     {file = "wcwidth-0.2.5.tar.gz", hash = "sha256:c4d647b99872929fdb7bdcaa4fbe7f01413ed3d98077df798530e5b04f116c83"},
+]
+webexteamssdk = [
+    {file = "webexteamssdk-1.6-py3-none-any.whl", hash = "sha256:e4958dca3903c659fe1e0f79e38740cb2ec1ae2589599807b179c3efb356c3a2"},
+    {file = "webexteamssdk-1.6.tar.gz", hash = "sha256:980f268d89187d1a157dfbadcb626fce849080a31550e549cfe838f0203b3a3d"},
 ]
 wrapt = [
     {file = "wrapt-1.13.2-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:3de7b4d3066cc610054e7aa2c005645e308df2f92be730aae3a47d42e910566a"},
