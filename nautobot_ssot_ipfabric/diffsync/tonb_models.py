@@ -1,6 +1,7 @@
 """DiffSyncModel subclasses for Nautobot-to-IPFabric data sync."""
-import uuid
+from functools import lru_cache
 from typing import List, Optional
+import uuid
 
 from diffsync import DiffSyncModel
 
@@ -135,13 +136,14 @@ class Interface(DiffSyncModel):
         """Create interface in Nautobot under its parent device."""
         device_obj = NautobotDevice.objects.get(name=ids["device_name"])
         new_interface = tonb_nbutils.create_interface(interface_name=ids["name"], device_obj=device_obj)
-        # ipam_ip = tonb_nbutils.create_ip(
-        #     ip_address=attrs["ip_address"],
-        #     subnet_mask=attrs["subnet_mask"],
-        #     status="Active",
-        #     object_pk=new_interface,
-        # )
-
+        ip_address = attrs["ip_address"]
+        if ip_address:
+            ipam_ip = tonb_nbutils.create_ip(
+                ip_address=attrs["ip_address"],
+                subnet_mask=attrs["subnet_mask"],
+                status="Active",
+                object_pk=new_interface,
+            )
         # device_obj.primary_ip4 = ipam_ip
         device_obj.validated_save()
 
