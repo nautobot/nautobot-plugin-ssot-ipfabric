@@ -29,7 +29,7 @@ class IPFabricDiffSync(DiffSync):
         sites = self.client.get_sites()
         for site in sites:
             self.job.log_debug(message=f"Loading Site {site['siteName']}")
-            location = self.location(diffsync=self, name=site["siteName"])
+            location = self.location(diffsync=self, name=site["siteName"], site_id=site["id"])
             self.add(location)
 
     def load_device_interfaces(self, device_model, interfaces, device_primary_ip):
