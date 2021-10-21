@@ -84,7 +84,6 @@ class IPFabricDiffSync(DiffSync):
             location_vlans = [vlan for vlan in vlans if vlan["siteName"] == location.name]
             for vlan in location_vlans:
                 self.job.log_debug(message=f"Loading VLAN {vlan['vlanName']}")
-                self.job.log_debug(message=f"VLAN: {vlan}")
                 vlan = self.vlan(
                     diffsync=self,
                     name=vlan["vlanName"],
