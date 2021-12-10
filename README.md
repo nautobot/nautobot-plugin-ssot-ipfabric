@@ -2,14 +2,30 @@
 
 A plugin for [Nautobot](https://github.com/nautobot/nautobot).
 
+## Build Status
+
+| Branch      | Status                                                                                                                                                                                                            |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **main**    | ![Build Status](https://github.com/networktocode-llc/nautobot-plugin-ssot-ipfabric/actions/workflows/nautobot-ssot-ipfabric-ci.yml/badge.svg?branch=main)    |
+| **develop** | ![Build Status](https://github.com/networktocode-llc/nautobot-plugin-ssot-ipfabric/actions/workflows/nautobot-ssot-ipfabric-ci.yml/badge.svg?branch=develop)|
+
 ## Documentation
 
-See the docs at [here](./docs/index.md) or at the generated [doc site](http://localhost:8001).
+Documentation is hosted with Github Pages: [Nautobot SSoT IP Fabric Documentation](https://networktocode-llc.github.io/nautobot-plugin-ssot-ipfabric/)
+
+To build docs locally
+
+```shell
+sphinx-build -vvv -b html ./docs docs/public
+cd docs/public
+python -m http.server
+```
+
 ## Contributing
 
-Pull requests are welcomed and automatically built and tested against multiple version of Python and multiple version of Nautobot through TravisCI.
+Pull requests are welcomed and automatically built and tested against multiple versions of Python and multiple version of Nautobot through Github Actions.
 
-The project is packaged with a light development environment based on `docker-compose` to help with the local development of the project and to run the tests within TravisCI.
+The project is packaged with a light development environment based on `docker-compose` to help with the local development of the project and to run the tests within Github Actions.
 
 The project is following Network to Code software development guideline and is leveraging:
 
