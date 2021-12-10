@@ -1,0 +1,11 @@
+:py:mod:`nautobot_ssot_ipfabric.api`
+====================================
+
+.. py:module:: nautobot_ssot_ipfabric.api
+
+.. autoapi-nested-parse::
+
+   REST API module for nautobot_ssot_ipfabric plugin.
+
+
+

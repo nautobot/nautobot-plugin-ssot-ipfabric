@@ -1,0 +1,84 @@
+:py:mod:`nautobot_ssot_ipfabric.diffsync.adapter_ipfabric`
+==========================================================
+
+.. py:module:: nautobot_ssot_ipfabric.diffsync.adapter_ipfabric
+
+.. autoapi-nested-parse::
+
+   DiffSync adapter class for Ip Fabric.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.pseudo_management_interface
+
+
+
+.. py:class:: IPFabricDiffSync(*args, job, sync, client, **kwargs)
+
+   Bases: :py:obj:`diffsync.DiffSync`
+
+   Nautobot adapter for DiffSync.
+
+   .. py:attribute:: location
+      
+
+      
+
+   .. py:attribute:: device
+      
+
+      
+
+   .. py:attribute:: interface
+      
+
+      
+
+   .. py:attribute:: vlan
+      
+
+      
+
+   .. py:attribute:: top_level
+      :annotation: = ['location']
+
+      
+
+   .. py:method:: load_sites(self)
+
+      Add IP Fabric Site objects as DiffSync Location models.
+
+
+   .. py:method:: load_device_interfaces(self, device_model, interfaces, device_primary_ip)
+
+      Create and load DiffSync Interface model objects for a specific device.
+
+
+   .. py:method:: load(self)
+
+      Load data from IP Fabric.
+
+
+
+.. py:function:: pseudo_management_interface(hostname, device_interfaces, device_primary_ip)
+
+   Return a dict for an non-existing interface for NAT management addresses.
+
+

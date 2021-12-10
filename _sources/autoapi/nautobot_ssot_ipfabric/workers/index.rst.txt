@@ -1,0 +1,78 @@
+:py:mod:`nautobot_ssot_ipfabric.workers`
+========================================
+
+.. py:module:: nautobot_ssot_ipfabric.workers
+
+.. autoapi-nested-parse::
+
+   Chat Ops Worker.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.workers.prompt_for_dry_run
+   nautobot_ssot_ipfabric.workers.ipfabric_logo
+   nautobot_ssot_ipfabric.workers.ipfabric
+   nautobot_ssot_ipfabric.workers.ssot_sync_to_nautobot
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.workers.configs
+   nautobot_ssot_ipfabric.workers.BASE_CMD
+   nautobot_ssot_ipfabric.workers.IPFABRIC_LOGO_PATH
+   nautobot_ssot_ipfabric.workers.IPFABRIC_LOGO_ALT
+
+
+.. py:data:: configs
+   
+
+   
+
+.. py:data:: BASE_CMD
+   :annotation: = ipfabric
+
+   
+
+.. py:data:: IPFABRIC_LOGO_PATH
+   :annotation: = nautobot_ssot_ipfabric/ipfabric_logo.png
+
+   
+
+.. py:data:: IPFABRIC_LOGO_ALT
+   :annotation: = IPFabric Logo
+
+   
+
+.. py:function:: prompt_for_dry_run(dispatcher, action_id, help_text)
+
+   Prompt the user to select a Network name.
+
+
+.. py:function:: ipfabric_logo(dispatcher)
+
+   Construct an image_element containing the locally hosted IP Fabric logo.
+
+
+.. py:function:: ipfabric(subcommand, **kwargs)
+
+   Interact with ipfabric plugin.
+
+
+.. py:function:: ssot_sync_to_nautobot(dispatcher, dry_run=None)
+
+   Start an SSoT sync from IPFabric to Nautobot.
+
+

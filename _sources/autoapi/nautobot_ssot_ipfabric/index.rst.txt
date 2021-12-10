@@ -1,0 +1,128 @@
+:py:mod:`nautobot_ssot_ipfabric`
+================================
+
+.. py:module:: nautobot_ssot_ipfabric
+
+.. autoapi-nested-parse::
+
+   Plugin declaration for nautobot_ssot_ipfabric.
+
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   api/index.rst
+   diffsync/index.rst
+   tests/index.rst
+   utilities/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   jobs/index.rst
+   template_content/index.rst
+   workers/index.rst
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.NautobotSSoTIPFabricConfig
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.__version__
+   nautobot_ssot_ipfabric.config
+
+
+.. py:data:: __version__
+   
+
+   
+
+.. py:class:: NautobotSSoTIPFabricConfig(app_name, app_module)
+
+   Bases: :py:obj:`nautobot.extras.plugins.PluginConfig`
+
+   Plugin configuration for the nautobot_ssot_ipfabric plugin.
+
+   .. py:attribute:: name
+      :annotation: = nautobot_ssot_ipfabric
+
+      
+
+   .. py:attribute:: verbose_name
+      :annotation: = Nautobot SSoT IPFabric
+
+      
+
+   .. py:attribute:: version
+      
+
+      
+
+   .. py:attribute:: author
+      :annotation: = Network to Code, LLC
+
+      
+
+   .. py:attribute:: description
+      :annotation: = Nautobot SSoT IPFabric.
+
+      
+
+   .. py:attribute:: base_url
+      :annotation: = ssot-ipfabric
+
+      
+
+   .. py:attribute:: required_settings
+      :annotation: = ['IPFABRIC_HOST', 'IPFABRIC_API_TOKEN']
+
+      
+
+   .. py:attribute:: min_version
+      :annotation: = 1.1.0
+
+      
+
+   .. py:attribute:: max_version
+      :annotation: = 1.9999
+
+      
+
+   .. py:attribute:: default_settings
+      
+
+      
+
+   .. py:attribute:: caching_config
+      
+
+      
+
+
+.. py:data:: config
+   
+
+   
+

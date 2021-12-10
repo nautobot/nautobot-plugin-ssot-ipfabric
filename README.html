@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nautobot SSoT IPFabric &mdash; Nautobot SSOT IPFabric 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to Nautobot SSoT IP Faabric documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Nautobot SSOT IPFabric
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Home</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Readme</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#build-status">Build Status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributing">Contributing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#development-environment">Development Environment</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#invoke">Invoke</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#local-poetry-development-environment">Local Poetry Development Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#docker-development-environment">Docker Development Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#cli-helper-commands">CLI Helper Commands</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#docker-dev-environment">Docker dev environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utility">Utility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#project-documentation">Project Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#questions">Questions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#screenshots">Screenshots</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Nautobot SSOT IPFabric</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Nautobot SSoT IPFabric</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/README.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="nautobot-ssot-ipfabric">
+<h1>Nautobot SSoT IPFabric<a class="headerlink" href="#nautobot-ssot-ipfabric" title="Permalink to this headline"></a></h1>
+<p>A plugin for <a class="reference external" href="https://github.com/nautobot/nautobot">Nautobot</a>.</p>
+<section id="build-status">
+<h2>Build Status<a class="headerlink" href="#build-status" title="Permalink to this headline"></a></h2>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Branch</p></th>
+<th class="head"><p>Status</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>main</strong></p></td>
+<td><p><img alt="Build Status" src="https://github.com/networktocode-llc/nautobot-plugin-ssot-ipfabric/actions/workflows/nautobot-ssot-ipfabric-ci.yml/badge.svg?branch=main" /></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>develop</strong></p></td>
+<td><p><img alt="Build Status" src="https://github.com/networktocode-llc/nautobot-plugin-ssot-ipfabric/actions/workflows/nautobot-ssot-ipfabric-ci.yml/badge.svg?branch=develop" /></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline"></a></h2>
+<p>Documentation is hosted with Github Pages: <a class="reference external" href="https://networktocode-llc.github.io/nautobot-plugin-ssot-ipfabric/">Nautobot SSoT IP Fabric Documentation</a></p>
+<p>To build docs locally</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>sphinx-build -vvv -b html ./docs docs/public
+<span class="nb">cd</span> docs/public
+python -m http.server
+</pre></div>
+</div>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline"></a></h2>
+<p>Pull requests are welcomed and automatically built and tested against multiple versions of Python and multiple version of Nautobot through Github Actions.</p>
+<p>The project is packaged with a light development environment based on <code class="docutils literal notranslate"><span class="pre">docker-compose</span></code> to help with the local development of the project and to run the tests within Github Actions.</p>
+<p>The project is following Network to Code software development guideline and is leveraging:</p>
+<ul class="simple">
+<li><p>Black, Pylint, Bandit and pydocstyle for Python linting and formatting.</p></li>
+<li><p>Django unit test to ensure the plugin is working properly.</p></li>
+</ul>
+<section id="development-environment">
+<h3>Development Environment<a class="headerlink" href="#development-environment" title="Permalink to this headline"></a></h3>
+<p>The development environment can be used in 2 ways. First, with a local poetry environment if you wish to develop outside of Docker with the caveat of using external services provided by Docker for PostgresQL and Redis. Second, all services are spun up using Docker and a local mount so you can develop locally, but Nautobot is spun up within the Docker container.</p>
+<p>Below is a quick start guide if you’re already familiar with the development environment provided, but if you’re not familiar, please read the <span class="xref myst">Getting Started Guide</span>.</p>
+<section id="invoke">
+<h4>Invoke<a class="headerlink" href="#invoke" title="Permalink to this headline"></a></h4>
+<p>The <a class="reference external" href="http://www.pyinvoke.org/">PyInvoke</a> library is used to provide some helper commands based on the environment.  There are a few configuration parameters which can be passed to PyInvoke to override the default configuration:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nautobot_ver</span></code>: the version of Nautobot to use as a base for any built docker containers (default: 1.1.4)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project_name</span></code>: the default docker compose project name (default: nautobot_ssot_ipfabric)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">python_ver</span></code>: the version of Python to use as a base for any built docker containers (default: 3.6)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">local</span></code>: a boolean flag indicating if invoke tasks should be run on the host or inside the docker containers (default: False, commands will be run in docker containers)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compose_dir</span></code>: the full path to a directory containing the project compose files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compose_files</span></code>: a list of compose files applied in order (see <a class="reference external" href="https://docs.docker.com/compose/extends/#multiple-compose-files">Multiple Compose files</a> for more information)</p></li>
+</ul>
+<p>Using <strong>PyInvoke</strong> these configuration options can be overridden using <a class="reference external" href="http://docs.pyinvoke.org/en/stable/concepts/configuration.html">several methods</a>.  Perhaps the simplest is simply setting an environment variable <code class="docutils literal notranslate"><span class="pre">INVOKE_NAUTOBOT_SSOT_IPFABRIC_VARIABLE_NAME</span></code> where <code class="docutils literal notranslate"><span class="pre">VARIABLE_NAME</span></code> is the variable you are trying to override.  The only exception is <code class="docutils literal notranslate"><span class="pre">compose_files</span></code>, because it is a list it must be overridden in a yaml file.  There is an example <code class="docutils literal notranslate"><span class="pre">invoke.yml</span></code> (<code class="docutils literal notranslate"><span class="pre">invoke.example.yml</span></code>) in this directory which can be used as a starting point.</p>
+</section>
+<section id="local-poetry-development-environment">
+<h4>Local Poetry Development Environment<a class="headerlink" href="#local-poetry-development-environment" title="Permalink to this headline"></a></h4>
+<ol class="simple">
+<li><p>Copy <code class="docutils literal notranslate"><span class="pre">development/creds.example.env</span></code> to <code class="docutils literal notranslate"><span class="pre">development/creds.env</span></code> (This file will be ignored by Git and Docker)</p></li>
+<li><p>Uncomment the <code class="docutils literal notranslate"><span class="pre">POSTGRES_HOST</span></code>, <code class="docutils literal notranslate"><span class="pre">REDIS_HOST</span></code>, and <code class="docutils literal notranslate"><span class="pre">NAUTOBOT_ROOT</span></code> variables in <code class="docutils literal notranslate"><span class="pre">development/creds.env</span></code></p></li>
+<li><p>Create an <code class="docutils literal notranslate"><span class="pre">invoke.yml</span></code> file with the following contents at the root of the repo (you can also <code class="docutils literal notranslate"><span class="pre">cp</span> <span class="pre">invoke.example.yml</span> <span class="pre">invoke.yml</span></code> and edit as necessary):</p></li>
+</ol>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">nautobot_ssot_ipfabric</span><span class="p">:</span>
+  <span class="nt">local</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">compose_files</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="s">&quot;docker-compose.requirements.yml&quot;</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>Run the following commands:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>poetry shell
+poetry install --extras nautobot
+<span class="nb">export</span> <span class="k">$(</span>cat development/dev.env <span class="p">|</span> xargs<span class="k">)</span>
+<span class="nb">export</span> <span class="k">$(</span>cat development/creds.env <span class="p">|</span> xargs<span class="k">)</span> 
+invoke start <span class="o">&amp;&amp;</span> sleep <span class="m">5</span>
+nautobot-server migrate
+</pre></div>
+</div>
+<blockquote>
+<div><p>If you want to develop on the latest develop branch of Nautobot, run the following command: <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">add</span> <span class="pre">--optional</span> <span class="pre">git+https://github.com/nautobot/nautobot&#64;develop</span></code>. After the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> symbol must match either a branch or a tag.</p>
+</div></blockquote>
+<ol class="simple">
+<li><p>You can now run nautobot-server commands as you would from the <a class="reference external" href="https://nautobot.readthedocs.io/en/latest/">Nautobot documentation</a> for example to start the development server:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>nautobot-server runserver <span class="m">0</span>.0.0.0:8080 --insecure
+</pre></div>
+</div>
+<p>Nautobot server can now be accessed at <a class="reference external" href="http://localhost:8080">http://localhost:8080</a>.</p>
+<p>It is typically recommended to launch the Nautobot <strong>runserver</strong> command in a separate shell so you can keep developing and manage the webserver separately.</p>
+</section>
+<section id="docker-development-environment">
+<h4>Docker Development Environment<a class="headerlink" href="#docker-development-environment" title="Permalink to this headline"></a></h4>
+<p>This project is managed by <a class="reference external" href="https://python-poetry.org/">Python Poetry</a> and has a few requirements to setup your development environment:</p>
+<ol class="simple">
+<li><p>Install Poetry, see the <a class="reference external" href="https://python-poetry.org/docs/#installation">Poetry Documentation</a> for your operating system.</p></li>
+<li><p>Install Docker, see the <a class="reference external" href="https://docs.docker.com/get-docker/">Docker documentation</a> for your operating system.</p></li>
+</ol>
+<p>Once you have Poetry and Docker installed you can run the following commands to install all other development dependencies in an isolated python virtual environment:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>poetry shell
+poetry install
+invoke start
+</pre></div>
+</div>
+<p>Nautobot server can now be accessed at <a class="reference external" href="http://localhost:8080">http://localhost:8080</a>.</p>
+<p>To either stop or destroy the development environment use the following options.</p>
+<ul class="simple">
+<li><p><strong>invoke stop</strong> - Stop the containers, but keep all underlying systems intact</p></li>
+<li><p><strong>invoke destroy</strong> - Stop and remove all containers, volumes, etc. (This results in data loss due to the volume being deleted)</p></li>
+</ul>
+</section>
+</section>
+<section id="cli-helper-commands">
+<h3>CLI Helper Commands<a class="headerlink" href="#cli-helper-commands" title="Permalink to this headline"></a></h3>
+<p>The project is coming with a CLI helper based on <a class="reference external" href="http://www.pyinvoke.org/">invoke</a> to help setup the development environment. The commands are listed below in 3 categories <code class="docutils literal notranslate"><span class="pre">dev</span> <span class="pre">environment</span></code>, <code class="docutils literal notranslate"><span class="pre">utility</span></code> and <code class="docutils literal notranslate"><span class="pre">testing</span></code>.</p>
+<p>Each command can be executed with <code class="docutils literal notranslate"><span class="pre">invoke</span> <span class="pre">&lt;command&gt;</span></code>. Environment variables <code class="docutils literal notranslate"><span class="pre">INVOKE_NAUTOBOT_SSOT_IPFABRIC_PYTHON_VER</span></code> and <code class="docutils literal notranslate"><span class="pre">INVOKE_NAUTOBOT_SSOT_IPFABRIC_NAUTOBOT_VER</span></code> may be specified to override the default versions. Each command also has its own help <code class="docutils literal notranslate"><span class="pre">invoke</span> <span class="pre">&lt;command&gt;</span> <span class="pre">--help</span></code></p>
+<section id="docker-dev-environment">
+<h4>Docker dev environment<a class="headerlink" href="#docker-dev-environment" title="Permalink to this headline"></a></h4>
+<div class="highlight-no-highlight notranslate"><div class="highlight"><pre><span></span>  build            Build all docker images.
+  debug            Start Nautobot and its dependencies in debug mode.
+  destroy          Destroy all containers and volumes.
+  restart          Restart Nautobot and its dependencies.
+  start            Start Nautobot and its dependencies in detached mode.
+  stop             Stop Nautobot and its dependencies.
+</pre></div>
+</div>
+</section>
+<section id="utility">
+<h4>Utility<a class="headerlink" href="#utility" title="Permalink to this headline"></a></h4>
+<div class="highlight-no-highlight notranslate"><div class="highlight"><pre><span></span>  cli              Launch a bash shell inside the running Nautobot container.
+  create-user      Create a new user in django (default: admin), will prompt for password.
+  makemigrations   Run Make Migration in Django.
+  nbshell          Launch a nbshell session.
+  shell-plus       Launch a shell_plus session, which uses iPython and automatically imports all models.
+</pre></div>
+</div>
+</section>
+<section id="testing">
+<h4>Testing<a class="headerlink" href="#testing" title="Permalink to this headline"></a></h4>
+<div class="highlight-no-highlight notranslate"><div class="highlight"><pre><span></span>  bandit           Run bandit to validate basic static code security analysis.
+  black            Run black to check that Python files adhere to its style standards.
+  flake8           This will run flake8 for the specified name and Python version.
+  pydocstyle       Run pydocstyle to validate docstring formatting adheres to NTC defined standards.
+  pylint           Run pylint code analysis.
+  tests            Run all tests for this plugin.
+  unittest         Run Django unit tests for the plugin.
+</pre></div>
+</div>
+</section>
+</section>
+<section id="project-documentation">
+<h3>Project Documentation<a class="headerlink" href="#project-documentation" title="Permalink to this headline"></a></h3>
+<p>Project documentation is generated by <a class="reference external" href="https://www.mkdocs.org/">mkdocs</a> from the documentation located in the docs folder.  You can configure <a class="reference external" href="https://readthedocs.io/">readthedocs.io</a> to point at this folder in your repo.  A container hosting the docs will be started using the invoke commands on <a class="reference external" href="http://localhost:8001">http://localhost:8001</a>, as changes are saved the docs will be automatically reloaded.</p>
+</section>
+</section>
+<section id="questions">
+<h2>Questions<a class="headerlink" href="#questions" title="Permalink to this headline"></a></h2>
+<p>For any questions or comments, please check the <span class="xref myst">FAQ</span> first and feel free to swing by the <a class="reference external" href="https://networktocode.slack.com/">Network to Code slack channel</a> (channel #networktocode).
+Sign up <a class="reference external" href="http://slack.networktocode.com/">here</a></p>
+</section>
+<section id="screenshots">
+<h2>Screenshots<a class="headerlink" href="#screenshots" title="Permalink to this headline"></a></h2>
+<p>TODO</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Nautobot SSoT IP Faabric documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Network To Code, LLC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

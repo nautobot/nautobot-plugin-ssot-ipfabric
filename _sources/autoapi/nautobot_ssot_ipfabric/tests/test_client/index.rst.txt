@@ -1,0 +1,74 @@
+:py:mod:`nautobot_ssot_ipfabric.tests.test_client`
+==================================================
+
+.. py:module:: nautobot_ssot_ipfabric.tests.test_client
+
+.. autoapi-nested-parse::
+
+   Test additional IP-Fabric Client Calls.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.tests.test_client.TestIpFabricClient
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.tests.test_client.FIXTURES
+
+
+.. py:data:: FIXTURES
+   
+
+   
+
+.. py:class:: TestIpFabricClient(methodName='runTest')
+
+   Bases: :py:obj:`unittest.TestCase`
+
+   Test IP Fabric Client
+
+   .. py:method:: setUp(self)
+
+      Setup.
+
+
+   .. py:method:: test_get_sites(self)
+
+      Test `get_sites` API Call.
+
+
+   .. py:method:: test_get_device_inventory(self)
+
+      Test `get_device_inventory` API Call.
+
+
+   .. py:method:: test_get_vlans(self)
+
+      Test `get_vlans` API Call.
+
+
+   .. py:method:: test_get_interface_inventory(self)
+
+      Test `get_interface_inventory` API Call.
+
+
+   .. py:method:: test_get_interface_inventory_filter(self)
+
+      Test `get_interface_inventory` with filter applied API Call.
+
+
+

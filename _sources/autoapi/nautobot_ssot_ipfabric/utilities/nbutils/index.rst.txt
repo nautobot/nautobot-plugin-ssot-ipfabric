@@ -1,0 +1,129 @@
+:py:mod:`nautobot_ssot_ipfabric.utilities.nbutils`
+==================================================
+
+.. py:module:: nautobot_ssot_ipfabric.utilities.nbutils
+
+.. autoapi-nested-parse::
+
+   Utility functions for Nautobot ORM.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.utilities.nbutils.create_site
+   nautobot_ssot_ipfabric.utilities.nbutils.create_region
+   nautobot_ssot_ipfabric.utilities.nbutils.create_tenant
+   nautobot_ssot_ipfabric.utilities.nbutils.create_device_type_object
+   nautobot_ssot_ipfabric.utilities.nbutils.create_manufacturer
+   nautobot_ssot_ipfabric.utilities.nbutils.create_device_role_object
+   nautobot_ssot_ipfabric.utilities.nbutils.create_status
+   nautobot_ssot_ipfabric.utilities.nbutils.create_ip
+   nautobot_ssot_ipfabric.utilities.nbutils.create_interface
+   nautobot_ssot_ipfabric.utilities.nbutils.create_vlan
+
+
+
+.. py:function:: create_site(site_name, site_id=None, region_obj=None, tenant_obj=None)
+
+   Creates a specified site in Nautobot.
+
+   Args:
+       site_name (str): Name of the site.
+       site_id (str): ID of the site.
+       region_obj (Region): Region Nautobot Object
+       tenant_obj (Tenant): Tenant Nautobot Object
+
+
+.. py:function:: create_region(region_name)
+
+   Creates a specified region in Nautobot.
+
+   Args:
+       region_name (str): Name of the site.
+
+
+.. py:function:: create_tenant(tenant_name)
+
+   Create a specified tenant in Nautobot.
+
+   Args:
+       tenant_name (str): The name of the tenant.
+
+
+.. py:function:: create_device_type_object(device_type, vendor_name)
+
+   Create a specified device type in Nautobot.
+
+   Args:
+       device_type (str): Device model gathered from DiffSync model.
+       vendor_name (str): Vendor Name
+
+
+.. py:function:: create_manufacturer(vendor_name)
+
+   Create specified manufacturer in Nautobot.
+
+
+.. py:function:: create_device_role_object(role_name, role_color)
+
+   Create specified device role in Nautobot.
+
+   Args:
+       role_name (str): Role name.
+       role_color (str): Role color.
+
+
+.. py:function:: create_status(status_name, status_color, description='', app_label='dcim', model='device')
+
+   Verifies status object exists in Nautobot. If not, creates specified status. Defaults to dcim | device.
+
+   Args:
+       status_name (str): Status name.
+       status_color (str): Status color.
+       description (str): Description
+       app_label (str): App Label ("DCIM")
+       model (str): Django Model ("DEVICE")
+
+
+.. py:function:: create_ip(ip_address, subnet_mask, status='Active', object_pk=None)
+
+   Verifies ip address exists in Nautobot. If not, creates specified ip.
+
+   Args:
+       ip_address (str): IP address.
+       subnet_mask (str): Subnet mask used for IP Address.
+       status (str): Status to assign to IP Address.
+       object_pk (UUID): Object to assign interface
+
+
+.. py:function:: create_interface(device_obj, interface_details)
+
+   Verifies interface exists on specified device. If not, creates interface.
+
+   Args:
+       device_obj (Device): Device object to check interface against.
+       interface_details (dict): interface details.
+
+
+.. py:function:: create_vlan(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: nautobot.dcim.models.Site)
+
+   Creates or obtains VLAN object.
+
+   Args:
+       vlan_name (str): VLAN Name
+       vlan_id (int): VLAN ID
+       vlan_status (str): VLAN Status
+       site_obj (Site): Site Django Model
+
+   Returns:
+       (VLAN): Returns created or obtained VLAN object.
+
+

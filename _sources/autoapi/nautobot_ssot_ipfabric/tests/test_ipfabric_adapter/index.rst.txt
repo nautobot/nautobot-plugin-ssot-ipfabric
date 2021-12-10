@@ -1,0 +1,80 @@
+:py:mod:`nautobot_ssot_ipfabric.tests.test_ipfabric_adapter`
+============================================================
+
+.. py:module:: nautobot_ssot_ipfabric.tests.test_ipfabric_adapter
+
+.. autoapi-nested-parse::
+
+   Unit tests for the IPFabric DiffSync adapter class.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.tests.test_ipfabric_adapter.IPFabricDiffSyncTestCase
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.tests.test_ipfabric_adapter.load_json
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.tests.test_ipfabric_adapter.SITE_FIXTURE
+   nautobot_ssot_ipfabric.tests.test_ipfabric_adapter.DEVICE_INVENTORY_FIXTURE
+   nautobot_ssot_ipfabric.tests.test_ipfabric_adapter.VLAN_FIXTURE
+   nautobot_ssot_ipfabric.tests.test_ipfabric_adapter.INTERFACE_FIXTURE
+
+
+.. py:function:: load_json(path)
+
+   Load a json file.
+
+
+.. py:data:: SITE_FIXTURE
+   
+
+   
+
+.. py:data:: DEVICE_INVENTORY_FIXTURE
+   
+
+   
+
+.. py:data:: VLAN_FIXTURE
+   
+
+   
+
+.. py:data:: INTERFACE_FIXTURE
+   
+
+   
+
+.. py:class:: IPFabricDiffSyncTestCase(methodName='runTest')
+
+   Bases: :py:obj:`django.test.TestCase`
+
+   Test the IPFabricDiffSync adapter class.
+
+   .. py:method:: test_data_loading(self)
+
+      Test the load() function.
+
+
+

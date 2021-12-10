@@ -1,0 +1,91 @@
+:py:mod:`nautobot_ssot_ipfabric.jobs`
+=====================================
+
+.. py:module:: nautobot_ssot_ipfabric.jobs
+
+.. autoapi-nested-parse::
+
+   IP Fabric Data Target Job.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.jobs.IpFabricDataSource
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.jobs.jobs
+
+
+.. py:class:: IpFabricDataSource
+
+   Bases: :py:obj:`nautobot_ssot.jobs.base.DataSource`, :py:obj:`nautobot.extras.jobs.Job`
+
+   Job syncing data from IP Fabric to Nautobot.
+
+   .. py:class:: Meta
+
+      Metadata about this Job.
+
+      .. py:attribute:: name
+         :annotation: = IP Fabric
+
+         
+
+      .. py:attribute:: data_source
+         :annotation: = IP Fabric
+
+         
+
+      .. py:attribute:: data_source_icon
+         
+
+         
+
+      .. py:attribute:: description
+         :annotation: = Synchronize data from IP Fabric into Nautobot.
+
+         
+
+
+   .. py:attribute:: debug
+      
+
+      
+
+   .. py:method:: data_mappings(cls)
+      :classmethod:
+
+      List describing the data mappings involved in this DataSource.
+
+
+   .. py:method:: config_information(cls)
+      :classmethod:
+
+      Dictionary describing the configuration of this DataSource.
+
+
+   .. py:method:: sync_data(self)
+
+      Sync a device data from IP Fabric into Nautobot.
+
+
+
+.. py:data:: jobs
+   
+
+   
+

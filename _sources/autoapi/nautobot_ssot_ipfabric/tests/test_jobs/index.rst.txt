@@ -1,0 +1,46 @@
+:py:mod:`nautobot_ssot_ipfabric.tests.test_jobs`
+================================================
+
+.. py:module:: nautobot_ssot_ipfabric.tests.test_jobs
+
+.. autoapi-nested-parse::
+
+   Test IPFabric Jobs.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.tests.test_jobs.IPFabricJobTest
+
+
+
+
+.. py:class:: IPFabricJobTest(methodName='runTest')
+
+   Bases: :py:obj:`django.test.TestCase`
+
+   Test the IPFabric job.
+
+   .. py:method:: test_metadata(self)
+
+      Verify correctness of the Job Meta attributes.
+
+
+   .. py:method:: test_data_mapping(self)
+
+      Verify correctness of the data_mappings() API.
+
+
+   .. py:method:: test_config_information(self)
+
+      Verify the config_information() API.
+
+
+

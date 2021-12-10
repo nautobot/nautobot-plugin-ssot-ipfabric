@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nautobot_ssot_ipfabric.diffsync.adapter_ipfabric &mdash; Nautobot SSOT IPFabric 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> Nautobot SSOT IPFabric
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../README.html">Readme</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Nautobot SSOT IPFabric</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">nautobot_ssot_ipfabric.diffsync.adapter_ipfabric</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/nautobot_ssot_ipfabric/diffsync/adapter_ipfabric/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-nautobot_ssot_ipfabric.diffsync.adapter_ipfabric">
+<span id="nautobot-ssot-ipfabric-diffsync-adapter-ipfabric"></span><h1><a class="reference internal" href="#module-nautobot_ssot_ipfabric.diffsync.adapter_ipfabric" title="nautobot_ssot_ipfabric.diffsync.adapter_ipfabric"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nautobot_ssot_ipfabric.diffsync.adapter_ipfabric</span></code></a><a class="headerlink" href="#module-nautobot_ssot_ipfabric.diffsync.adapter_ipfabric" title="Permalink to this headline"></a></h1>
+<p>DiffSync adapter class for Ip Fabric.</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline"></a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync" title="nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IPFabricDiffSync</span></code></a></p></td>
+<td><p>Nautobot adapter for DiffSync.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.pseudo_management_interface" title="nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.pseudo_management_interface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pseudo_management_interface</span></code></a>(hostname, device_interfaces, device_primary_ip)</p></td>
+<td><p>Return a dict for an non-existing interface for NAT management addresses.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.</span></span><span class="sig-name descname"><span class="pre">IPFabricDiffSync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">diffsync.DiffSync</span></code></p>
+<p>Nautobot adapter for DiffSync.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.location">
+<span class="sig-name descname"><span class="pre">location</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.location" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.device">
+<span class="sig-name descname"><span class="pre">device</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.device" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.interface">
+<span class="sig-name descname"><span class="pre">interface</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.interface" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.vlan">
+<span class="sig-name descname"><span class="pre">vlan</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.vlan" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.top_level">
+<span class="sig-name descname"><span class="pre">top_level</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">['location']</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.top_level" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.load_sites">
+<span class="sig-name descname"><span class="pre">load_sites</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.load_sites" title="Permalink to this definition"></a></dt>
+<dd><p>Add IP Fabric Site objects as DiffSync Location models.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.load_device_interfaces">
+<span class="sig-name descname"><span class="pre">load_device_interfaces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interfaces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_primary_ip</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.load_device_interfaces" title="Permalink to this definition"></a></dt>
+<dd><p>Create and load DiffSync Interface model objects for a specific device.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.load" title="Permalink to this definition"></a></dt>
+<dd><p>Load data from IP Fabric.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.pseudo_management_interface">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.</span></span><span class="sig-name descname"><span class="pre">pseudo_management_interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hostname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_interfaces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_primary_ip</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.pseudo_management_interface" title="Permalink to this definition"></a></dt>
+<dd><p>Return a dict for an non-existing interface for NAT management addresses.</p>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Network To Code, LLC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

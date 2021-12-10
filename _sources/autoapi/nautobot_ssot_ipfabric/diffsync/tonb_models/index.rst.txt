@@ -1,0 +1,385 @@
+:py:mod:`nautobot_ssot_ipfabric.diffsync.tonb_models`
+=====================================================
+
+.. py:module:: nautobot_ssot_ipfabric.diffsync.tonb_models
+
+.. autoapi-nested-parse::
+
+   DiffSyncModel subclasses for Nautobot-to-IPFabric data sync.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.diffsync.tonb_models.Location
+   nautobot_ssot_ipfabric.diffsync.tonb_models.Device
+   nautobot_ssot_ipfabric.diffsync.tonb_models.Interface
+   nautobot_ssot_ipfabric.diffsync.tonb_models.Vlan
+   nautobot_ssot_ipfabric.diffsync.tonb_models.MgmtInterface
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.diffsync.tonb_models.DEFAULT_DEVICE_ROLE
+   nautobot_ssot_ipfabric.diffsync.tonb_models.DEFAULT_DEVICE_ROLE_COLOR
+   nautobot_ssot_ipfabric.diffsync.tonb_models.DEFAULT_DEVICE_STATUS
+   nautobot_ssot_ipfabric.diffsync.tonb_models.DEFAULT_DEVICE_STATUS_COLOR
+
+
+.. py:data:: DEFAULT_DEVICE_ROLE
+   :annotation: = leaf
+
+   
+
+.. py:data:: DEFAULT_DEVICE_ROLE_COLOR
+   :annotation: = ff0000
+
+   
+
+.. py:data:: DEFAULT_DEVICE_STATUS
+   :annotation: = Active
+
+   
+
+.. py:data:: DEFAULT_DEVICE_STATUS_COLOR
+   :annotation: = ff0000
+
+   
+
+.. py:class:: Location
+
+   Bases: :py:obj:`diffsync.DiffSyncModel`
+
+   Location model.
+
+   .. py:attribute:: _modelname
+      :annotation: = location
+
+      
+
+   .. py:attribute:: _identifiers
+      :annotation: = ['name']
+
+      
+
+   .. py:attribute:: _attributes
+      :annotation: = ['site_id']
+
+      
+
+   .. py:attribute:: _children
+      
+
+      
+
+   .. py:attribute:: name
+      :annotation: :str
+
+      
+
+   .. py:attribute:: site_id
+      :annotation: :str
+
+      
+
+   .. py:attribute:: devices
+      :annotation: :List[Device]
+
+      
+
+   .. py:attribute:: vlans
+      :annotation: :List[Vlan]
+
+      
+
+   .. py:method:: create(cls, diffsync, ids, attrs)
+      :classmethod:
+
+      Create Site in Nautobot.
+
+
+   .. py:method:: delete(self) -> Optional[diffsync.DiffSyncModel]
+
+      Delete Site in Nautobot.
+
+
+
+.. py:class:: Device
+
+   Bases: :py:obj:`diffsync.DiffSyncModel`
+
+   Device model.
+
+   .. py:attribute:: _modelname
+      :annotation: = device
+
+      
+
+   .. py:attribute:: _identifiers
+      :annotation: = ['name']
+
+      
+
+   .. py:attribute:: _attributes
+      :annotation: = ['location_name', 'model', 'vendor']
+
+      
+
+   .. py:attribute:: _children
+      
+
+      
+
+   .. py:attribute:: name
+      :annotation: :str
+
+      
+
+   .. py:attribute:: location_name
+      :annotation: :Optional[str]
+
+      
+
+   .. py:attribute:: model
+      :annotation: :Optional[str]
+
+      
+
+   .. py:attribute:: vendor
+      :annotation: :Optional[str]
+
+      
+
+   .. py:attribute:: serial_number
+      :annotation: :Optional[str]
+
+      
+
+   .. py:attribute:: mgmt_int
+      :annotation: :List[MgmtInterface]
+
+      
+
+   .. py:attribute:: mgmt_address
+      :annotation: :Optional[str]
+
+      
+
+   .. py:attribute:: interfaces
+      :annotation: :List[Interface]
+
+      
+
+   .. py:attribute:: sys_id
+      :annotation: :Optional[str]
+
+      
+
+   .. py:attribute:: pk
+      :annotation: :Optional[uuid.UUID]
+
+      
+
+   .. py:method:: create(cls, diffsync, ids, attrs)
+      :classmethod:
+
+      Create Device in Nautobot under its parent site.
+
+
+   .. py:method:: delete(self) -> Optional[diffsync.DiffSyncModel]
+
+      Delete device in Nautobot.
+
+
+
+.. py:class:: Interface
+
+   Bases: :py:obj:`diffsync.DiffSyncModel`
+
+   Interface model.
+
+   .. py:attribute:: _modelname
+      :annotation: = interface
+
+      
+
+   .. py:attribute:: _identifiers
+      :annotation: = ['name', 'device_name']
+
+      
+
+   .. py:attribute:: _shortname
+      :annotation: = ['name']
+
+      
+
+   .. py:attribute:: _attributes
+      :annotation: = ['description', 'enabled', 'mac_address', 'mtu', 'type', 'mgmt_only', 'ip_address',...
+
+      
+
+   .. py:attribute:: _children
+      
+
+      
+
+   .. py:attribute:: name
+      :annotation: :str
+
+      
+
+   .. py:attribute:: device_name
+      :annotation: :str
+
+      
+
+   .. py:attribute:: description
+      :annotation: :Optional[str]
+
+      
+
+   .. py:attribute:: enabled
+      :annotation: :Optional[bool]
+
+      
+
+   .. py:attribute:: mac_address
+      :annotation: :Optional[str]
+
+      
+
+   .. py:attribute:: mtu
+      :annotation: :Optional[str]
+
+      
+
+   .. py:attribute:: type
+      :annotation: :Optional[str]
+
+      
+
+   .. py:attribute:: mgmt_only
+      :annotation: :Optional[bool]
+
+      
+
+   .. py:attribute:: ip_address
+      :annotation: :Optional[str]
+
+      
+
+   .. py:attribute:: subnet_mask
+      :annotation: :Optional[str]
+
+      
+
+   .. py:attribute:: ip_is_primary
+      :annotation: :Optional[bool]
+
+      
+
+   .. py:attribute:: pk
+      :annotation: :Optional[uuid.UUID]
+
+      
+
+   .. py:method:: create(cls, diffsync, ids, attrs)
+      :classmethod:
+
+      Create interface in Nautobot under its parent device.
+
+
+
+.. py:class:: Vlan
+
+   Bases: :py:obj:`diffsync.DiffSyncModel`
+
+   VLAN model.
+
+   .. py:attribute:: _modelname
+      :annotation: = vlan
+
+      
+
+   .. py:attribute:: _identifiers
+      :annotation: = ['name', 'site']
+
+      
+
+   .. py:attribute:: _shortname
+      :annotation: = ['name']
+
+      
+
+   .. py:attribute:: _attributes
+      :annotation: = ['vid', 'status']
+
+      
+
+   .. py:attribute:: _children
+      
+
+      
+
+   .. py:attribute:: name
+      :annotation: :str
+
+      
+
+   .. py:attribute:: vid
+      :annotation: :int
+
+      
+
+   .. py:attribute:: status
+      :annotation: :str
+
+      
+
+   .. py:attribute:: site
+      :annotation: :str
+
+      
+
+   .. py:attribute:: pk
+      :annotation: :Optional[uuid.UUID]
+
+      
+
+   .. py:method:: create(cls, diffsync, ids, attrs)
+      :classmethod:
+
+      Create VLANs in Nautobot under the site.
+
+
+   .. py:method:: delete(self) -> Optional[diffsync.DiffSyncModel]
+
+      Delete.
+
+
+
+.. py:class:: MgmtInterface
+
+   Bases: :py:obj:`Interface`
+
+   MgmtInterface class renamed to Interface.
+
+   For compatibility until references are removed.
+
+   .. py:attribute:: _modelname
+      :annotation: = mgmt_interface
+
+      
+
+

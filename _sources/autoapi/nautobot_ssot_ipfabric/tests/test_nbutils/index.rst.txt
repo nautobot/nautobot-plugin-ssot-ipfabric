@@ -1,0 +1,91 @@
+:py:mod:`nautobot_ssot_ipfabric.tests.test_nbutils`
+===================================================
+
+.. py:module:: nautobot_ssot_ipfabric.tests.test_nbutils
+
+.. autoapi-nested-parse::
+
+   Test Nautobot Utilities.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.tests.test_nbutils.TestNautobotUtils
+
+
+
+
+.. py:class:: TestNautobotUtils(methodName='runTest')
+
+   Bases: :py:obj:`django.test.TestCase`
+
+   Test Nautobot Utility.
+
+   .. py:method:: setUp(self)
+
+      Setup.
+
+
+   .. py:method:: test_create_site(self)
+
+      Test `create_site` Utility.
+
+
+   .. py:method:: test_create_region(self)
+
+      Test `create_region` Utility.
+
+
+   .. py:method:: test_create_tenant(self)
+
+      Test `create_tenant` Utility.
+
+
+   .. py:method:: test_create_device_type_object(self)
+
+      Test `create_device_type_object` Utility.
+
+
+   .. py:method:: test_create_manufacturer(self)
+
+      Test `create_manufacturer` Utility.
+
+
+   .. py:method:: test_create_device_role(self)
+
+      Test `create_device_role` Utility.
+
+
+   .. py:method:: test_create_status(self)
+
+      Test `create_status` Utility.
+
+
+   .. py:method:: test_create_status_doesnt_exist(self)
+
+      Test `create_status` Utility.
+
+
+   .. py:method:: test_create_ip(self)
+
+      Test `create_ip` Utility.
+
+
+   .. py:method:: test_create_ip_device_add(self)
+
+      Test `create_ip` adding to device Utility.
+
+
+   .. py:method:: test_create_interface(self)
+
+      Test `create_interface` Utility.
+
+
+

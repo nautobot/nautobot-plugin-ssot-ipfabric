@@ -1,0 +1,89 @@
+:py:mod:`nautobot_ssot_ipfabric.diffsync.adapter_nautobot`
+==========================================================
+
+.. py:module:: nautobot_ssot_ipfabric.diffsync.adapter_nautobot
+
+.. autoapi-nested-parse::
+
+   DiffSync adapter class for Nautobot as source-of-truth.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.diffsync.adapter_nautobot.NautobotDiffSync
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.diffsync.adapter_nautobot.logger
+
+
+.. py:data:: logger
+   
+
+   
+
+.. py:class:: NautobotDiffSync(*args, job, sync, **kwargs)
+
+   Bases: :py:obj:`diffsync.DiffSync`
+
+   Nautobot adapter for DiffSync.
+
+   .. py:attribute:: location
+      
+
+      
+
+   .. py:attribute:: device
+      
+
+      
+
+   .. py:attribute:: interface
+      
+
+      
+
+   .. py:attribute:: vlan
+      
+
+      
+
+   .. py:attribute:: top_level
+      :annotation: = ['location']
+
+      
+
+   .. py:method:: load_sites(self)
+
+      Add Nautobot Site objects as DiffSync Location models.
+
+
+   .. py:method:: load_devices(self)
+
+      Add Nautobot Device objects as DiffSync Device models.
+
+
+   .. py:method:: load_vlans(self)
+
+      Add Nautobot VLAN objects as DiffSync VLAN models.
+
+
+   .. py:method:: load(self)
+
+      Load data from Nautobot.
+
+
+
