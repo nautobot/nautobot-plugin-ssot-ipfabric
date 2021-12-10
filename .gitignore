@@ -300,3 +300,8 @@ creds.env
 
 # Invoke overrides
 invoke.yml
+
+
+# Docs
+docs/public*
+docs/README.md
