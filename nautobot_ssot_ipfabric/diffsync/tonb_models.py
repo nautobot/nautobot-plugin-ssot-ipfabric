@@ -61,7 +61,7 @@ class Device(DiffSyncModel):
 
     _modelname = "device"
     _identifiers = ("name",)
-    _attributes = ("location_name", "model", "vendor", "serial_number")
+    _attributes = ("location_name", "model", "vendor", "serial_number", "role")
     _children = {"interface": "interfaces"}
 
     name: str
@@ -69,6 +69,7 @@ class Device(DiffSyncModel):
     model: Optional[str]
     vendor: Optional[str]
     serial_number: Optional[str]
+    role: Optional[str]
 
     mgmt_int: List["MgmtInterface"] = list()  # pylint: disable=use-list-literal
     mgmt_address: Optional[str]
@@ -90,7 +91,6 @@ class Device(DiffSyncModel):
         device_status_object = tonb_nbutils.create_status(DEFAULT_DEVICE_STATUS, DEFAULT_DEVICE_STATUS_COLOR)
 
         site_object = tonb_nbutils.create_site(attrs["location_name"])
-        print(site_object)
 
         new_device = NautobotDevice(
             status=device_status_object,
@@ -132,10 +132,8 @@ class Device(DiffSyncModel):
         device_role_object = tonb_nbutils.create_device_role_object(
             role_name=DEFAULT_DEVICE_ROLE, role_color=DEFAULT_DEVICE_ROLE_COLOR
         )
-        if _device.device_role != device_role_object:
-            _device.device_role = device_role_object
+        _device.device_role = device_role_object
 
-        # TODO: Compare, if not == update
         device_status_object = tonb_nbutils.create_status(DEFAULT_DEVICE_STATUS, DEFAULT_DEVICE_STATUS_COLOR)
         _device.status = device_status_object
 
@@ -263,3 +261,4 @@ class MgmtInterface(Interface):
 
 Location.update_forward_refs()
 Device.update_forward_refs()
+Interface.update_forward_refs()

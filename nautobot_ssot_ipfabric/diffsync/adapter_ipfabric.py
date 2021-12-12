@@ -89,6 +89,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                     model=device["model"],
                     vendor=device["vendor"],
                     serial_number=device["sn"],
+                    role="Network Device",
                 )
                 self.add(device_model)
                 location.add_child(device_model)

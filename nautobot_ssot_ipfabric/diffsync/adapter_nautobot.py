@@ -83,7 +83,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                     name=device_record.name,
                     # platform=str(device_record.platform) if device_record.platform else None,
                     model=str(device_record.device_type),
-                    # role=str(device_record.device_role),
+                    role=str(device_record.device_role),
                     location_name=device_record.site.name,
                     vendor=str(device_record.device_type.manufacturer),
                     # status=device_record.status,
