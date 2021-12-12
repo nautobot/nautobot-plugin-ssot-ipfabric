@@ -1,23 +1,12 @@
 """DiffSync adapter class for Ip Fabric."""
 
-from diffsync import DiffSync
-
-from . import tonb_models
+from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
 
-class IPFabricDiffSync(DiffSync):
+class IPFabricDiffSync(DiffSyncModelAdapters):
     """Nautobot adapter for DiffSync."""
 
-    location = tonb_models.Location
-    device = tonb_models.Device
-    interface = tonb_models.Interface
-    vlan = tonb_models.Vlan
-
-    top_level = [
-        "location",
-    ]
-
-    def __init__(self, *args, job, sync, client, **kwargs):
+    def __init__(self, job, sync, client, *args, **kwargs):
         """Initialize the NautobotDiffSync."""
         super().__init__(*args, **kwargs)
         self.job = job

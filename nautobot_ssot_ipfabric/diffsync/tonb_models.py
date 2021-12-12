@@ -12,7 +12,7 @@ from nautobot.ipam.models import VLAN
 
 import nautobot_ssot_ipfabric.utilities.nbutils as tonb_nbutils
 
-DEFAULT_DEVICE_ROLE = "Network Device"  # TODO: (HUGO) Do something about this
+DEFAULT_DEVICE_ROLE = "Network Device"
 DEFAULT_DEVICE_ROLE_COLOR = "ff0000"
 DEFAULT_DEVICE_STATUS = "Active"
 DEFAULT_DEVICE_STATUS_COLOR = "ff0000"
@@ -51,7 +51,7 @@ class Device(DiffSyncModel):
 
     _modelname = "device"
     _identifiers = ("name",)
-    _attributes = ("location_name", "model", "vendor")
+    _attributes = ("location_name", "model", "vendor", "serial_number")
     _children = {"interface": "interfaces"}
 
     name: str

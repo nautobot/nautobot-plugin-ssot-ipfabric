@@ -1,12 +1,11 @@
 """DiffSync adapter class for Nautobot as source-of-truth."""
 import logging
 
-from diffsync import DiffSync
 from diffsync.exceptions import ObjectNotFound
 from nautobot.dcim.models import Device, Site
 from nautobot.ipam.models import VLAN
 
-from . import tonb_models
+from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
 # from netutils.ip import cidr_to_netmask
 
@@ -17,19 +16,10 @@ from . import tonb_models
 logger = logging.getLogger("adapter_nautobot")
 
 
-class NautobotDiffSync(DiffSync):
+class NautobotDiffSync(DiffSyncModelAdapters):
     """Nautobot adapter for DiffSync."""
 
-    location = tonb_models.Location
-    device = tonb_models.Device
-    interface = tonb_models.Interface
-    vlan = tonb_models.Vlan
-
-    top_level = [
-        "location",
-    ]
-
-    def __init__(self, *args, job, sync, **kwargs):
+    def __init__(self, job, sync, *args, **kwargs):
         """Initialize the NautobotDiffSync."""
         super().__init__(*args, **kwargs)
         self.job = job
