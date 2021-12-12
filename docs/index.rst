@@ -14,6 +14,7 @@ Contents
 
    Home <self>
    Readme <README>
+   Plugin Overview <plugin>
 
 Changelog
 =========

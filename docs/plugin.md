@@ -23,8 +23,8 @@ pip install nautobot-ssot-ipfabric
 
 To ensure Nautobot SSoT IPFabric is automatically re-installed during future upgrades, create a file named `local_requirements.txt` (if not already existing) in the Nautobot root directory (alongside `requirements.txt`) and list the `nautobot-ssot-ipfabric` package:
 
-```no-highlight
-# echo nautobot-ssot-ipfabric >> local_requirements.txt
+```bash
+echo nautobot-ssot-ipfabric >> local_requirements.txt
 ```
 
 Once installed, the plugin needs to be enabled in your `nautobot_config.py` as well as the **IP Fabric Host** and **IP Fabric API Token**.
@@ -47,7 +47,7 @@ Nautobot SSoT IP Fabric provides a user interface to interact with the underlyin
 
 ### Single Source of Truth Dashboard
 
-This plugin leverages the [Single Source of Truth](https://github.com/nautobot/nautobot-plugin-ssot) plugin that provides a dashboard that provides a fantastic entrypoint for seeing the status of the synchronization between **IP Fabric** and **Nautobot**.
+This plugin leverages the [Single Source of Truth](https://github.com/nautobot/nautobot-plugin-ssot) plugin that provides a dashboard with a fantastic entrypoint for seeing the status of the synchronization between **IP Fabric** and **Nautobot**.
 
 You can navigate to the SSoT Dashboard with the following steps:
 
@@ -93,6 +93,7 @@ If you're interested in more details, click **SSoT Sync Details**.
 You can then views the details of each object.
 
 ![Sync Details](./images/sync_details.png)
+
 ## DiffSync Models
 
 ### IPFabric Site

@@ -3,6 +3,7 @@ import uuid
 from typing import List, Optional
 
 from diffsync import DiffSyncModel
+from django.utils.text import slugify
 
 # from django.conf import settings
 # from requests.api import delete
@@ -45,6 +46,15 @@ class Location(DiffSyncModel):
         super().delete()
         return self
 
+    def update(self, attrs):
+        """Update Site Object in Nautobot."""
+        site = Site.objects.get(name=self.name)
+        if attrs.get("site_id"):
+            site.object.update(name=self.name)
+            site.object.update(slug=slugify(self.name))
+        site.validated_save()
+        return super().update(attrs)
+
 
 class Device(DiffSyncModel):
     """Device model."""
@@ -71,7 +81,6 @@ class Device(DiffSyncModel):
     @classmethod
     def create(cls, diffsync, ids, attrs):
         """Create Device in Nautobot under its parent site."""
-        # TODO: Update creation of device role to be dynamic somehow.
         device_type_object = tonb_nbutils.create_device_type_object(
             device_type=attrs["model"], vendor_name=attrs["vendor"]
         )
@@ -79,7 +88,9 @@ class Device(DiffSyncModel):
             role_name=DEFAULT_DEVICE_ROLE, role_color=DEFAULT_DEVICE_ROLE_COLOR
         )
         device_status_object = tonb_nbutils.create_status(DEFAULT_DEVICE_STATUS, DEFAULT_DEVICE_STATUS_COLOR)
+
         site_object = tonb_nbutils.create_site(attrs["location_name"])
+        print(site_object)
 
         new_device = NautobotDevice(
             status=device_status_object,
@@ -100,6 +111,37 @@ class Device(DiffSyncModel):
         device.delete()
         super().delete()
         return super().delete()
+
+    def update(self, attrs):
+        """Update devices in Nautbot based on Source."""
+        _device = NautobotDevice.objects.get(name=self.name)
+
+        if attrs.get("model"):
+            device_type_object = tonb_nbutils.create_device_type_object(
+                device_type=attrs["model"], vendor_name=attrs["vendor"]
+            )
+            _device.type = device_type_object
+
+        if attrs.get("location_name"):
+            site_object = tonb_nbutils.create_site(attrs["location_name"])
+            _device.site = site_object
+
+        if attrs.get("serial_number"):
+            _device.serial = attrs.get("serial_number", "")
+
+        device_role_object = tonb_nbutils.create_device_role_object(
+            role_name=DEFAULT_DEVICE_ROLE, role_color=DEFAULT_DEVICE_ROLE_COLOR
+        )
+        if _device.device_role != device_role_object:
+            _device.device_role = device_role_object
+
+        # TODO: Compare, if not == update
+        device_status_object = tonb_nbutils.create_status(DEFAULT_DEVICE_STATUS, DEFAULT_DEVICE_STATUS_COLOR)
+        _device.status = device_status_object
+
+        _device.validated_save()
+        # Call the super().update() method to update the in-memory DiffSyncModel instance
+        return super().update(attrs)
 
 
 class Interface(DiffSyncModel):
@@ -163,12 +205,12 @@ class Interface(DiffSyncModel):
 
         return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
 
-    # def delete(self) -> Optional["DiffSyncModel"]:
-    #     """Delete."""
-    #     device = NautobotDevice.objects.get(name=self.device_name)
-    #     interface = device.interfaces.get(name=self.name)
-    #     interface.delete()
-    #     return super().delete()
+    def delete(self) -> Optional["DiffSyncModel"]:
+        """Delete Interface Object."""
+        device = NautobotDevice.objects.get(name=self.device_name)
+        interface = device.interfaces.get(name=self.name)
+        interface.delete()
+        return super().delete()
 
 
 class Vlan(DiffSyncModel):

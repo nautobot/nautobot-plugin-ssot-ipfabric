@@ -2,6 +2,10 @@
 
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
+# import logging
+
+# logger = logging.getLogger("nautobot.jobs")
+
 
 class IPFabricDiffSync(DiffSyncModelAdapters):
     """Nautobot adapter for DiffSync."""
@@ -17,7 +21,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
         """Add IP Fabric Site objects as DiffSync Location models."""
         sites = self.client.get_sites()
         for site in sites:
-            self.job.log_debug(message=f"Loading Site {site['siteName']}")
+            # logger.log_debug(message=f"Loading Site {site['siteName']}")
             location = self.location(diffsync=self, name=site["siteName"], site_id=site["id"])
             self.add(location)
 

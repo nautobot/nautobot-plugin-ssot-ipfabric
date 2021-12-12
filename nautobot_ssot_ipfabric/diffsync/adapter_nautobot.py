@@ -1,5 +1,5 @@
 """DiffSync adapter class for Nautobot as source-of-truth."""
-import logging
+# import logging
 
 from diffsync.exceptions import ObjectNotFound
 from nautobot.dcim.models import Device, Site
@@ -12,8 +12,7 @@ from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
 # from django.utils.text import slugify
 
-
-logger = logging.getLogger("adapter_nautobot")
+# logger = logging.getLogger("nautobot.jobs")
 
 
 class NautobotDiffSync(DiffSyncModelAdapters):
@@ -28,7 +27,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
     def load_sites(self):
         """Add Nautobot Site objects as DiffSync Location models."""
         for site_record in Site.objects.all():
-            self.job.log_debug(message=f"Loading Site {site_record.name}")
+            # logger.log_debug(message=f"Loading Site {site_record.name}")
             # A Site and a Region may share the same name; if so they become part of the same Location record.
             try:
                 location = self.get(self.location, site_record.name)
@@ -73,7 +72,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
     def load_devices(self):
         """Add Nautobot Device objects as DiffSync Device models."""
         for device_record in Device.objects.all():
-            self.job.log_debug(message=f"Loading Device {device_record.name}")
+            # self.job.log_debug(message=f"Loading Device {device_record.name}")
             location = self.get(self.location, device_record.site.name)
             try:
                 device = self.get(self.device, device_record.name)

@@ -27,13 +27,13 @@ Now you can access the documentation locally at `http://localhost:8000/`
 
 To install the plugin from Pypi
 
-```bash
-pip install nautobot-plugin-ssot-ipfabric
+```shell
+pip install nautobot-ssot-ipfabric
 ```
 
 To install the plugin manually from repository code
 
-```bash
+```shell
 git clone git@github.com:networktocode-llc/nautobot-plugin-ssot-ipfabric.git
 ```
 
@@ -41,7 +41,7 @@ git clone git@github.com:networktocode-llc/nautobot-plugin-ssot-ipfabric.git
 cd nautobot_plugin_ssot_ipfabric
 ```
 
-```bash
+```shell
 pip install .
 ```
 
@@ -55,7 +55,8 @@ This plugin relies on user provided environment variables to interact with IP Fa
 - `IPFABRIC_HOST` - IP Fabric URL
 - `NAUTOBOT_HOST` - Nautobot URL (This is used to generate url links for chatops)
 
-Example `PLUGINS_CONFIG` to be updated in `nautobot_config.py` after successful installation
+Example `PLUGINS_CONFIG` to be updated in `nautobot_config.py` after successful installation. The chatops configuration is optional, but if you'd like to have the
+ability to call the sync job through chatops, you will be required to configure it.
 
 ```json
 PLUGINS_CONFIG = {
@@ -78,7 +79,7 @@ PLUGINS_CONFIG = {
 }
 ```
 
-## Chatops
+## ChatOps
 
 As part of the SSoT synchronization capabilities with IP Fabric, this plugin extends the [Nautobot Plugin Chatops IPFabric](https://github.com/nautobot/nautobot-plugin-chatops-ipfabric) by providing users with the ability to begin the sync job from a chatops command (Slack).
 
@@ -105,12 +106,12 @@ Below is a quick start guide if you're already familiar with the development env
 
 The [PyInvoke](http://www.pyinvoke.org/) library is used to provide some helper commands based on the environment.  There are a few configuration parameters which can be passed to PyInvoke to override the default configuration:
 
-* `nautobot_ver`: the version of Nautobot to use as a base for any built docker containers (default: 1.1.4)
-* `project_name`: the default docker compose project name (default: nautobot_ssot_ipfabric)
-* `python_ver`: the version of Python to use as a base for any built docker containers (default: 3.6)
-* `local`: a boolean flag indicating if invoke tasks should be run on the host or inside the docker containers (default: False, commands will be run in docker containers)
-* `compose_dir`: the full path to a directory containing the project compose files
-* `compose_files`: a list of compose files applied in order (see [Multiple Compose files](https://docs.docker.com/compose/extends/#multiple-compose-files) for more information)
+- `nautobot_ver`: the version of Nautobot to use as a base for any built docker containers (default: 1.1.4)
+- `project_name`: the default docker compose project name (default: nautobot_ssot_ipfabric)
+- `python_ver`: the version of Python to use as a base for any built docker containers (default: 3.6)
+- `local`: a boolean flag indicating if invoke tasks should be run on the host or inside the docker containers (default: False, commands will be run in docker containers)
+- `compose_dir`: the full path to a directory containing the project compose files
+- `compose_files`: a list of compose files applied in order (see [Multiple Compose files](https://docs.docker.com/compose/extends/#multiple-compose-files) for more information)
 
 Using **PyInvoke** these configuration options can be overridden using [several methods](http://docs.pyinvoke.org/en/stable/concepts/configuration.html).  Perhaps the simplest is simply setting an environment variable `INVOKE_NAUTOBOT_SSOT_IPFABRIC_VARIABLE_NAME` where `VARIABLE_NAME` is the variable you are trying to override.  The only exception is `compose_files`, because it is a list it must be overridden in a yaml file.  There is an example `invoke.yml` (`invoke.example.yml`) in this directory which can be used as a starting point.
 
@@ -128,13 +129,13 @@ nautobot_ssot_ipfabric:
     - "docker-compose.requirements.yml"
 ```
 
-3. Run the following commands:
+4. Run the following commands:
 
 ```shell
 poetry shell
 poetry install --extras nautobot
 export $(cat development/dev.env | xargs)
-export $(cat development/creds.env | xargs) 
+export $(cat development/creds.env | xargs)
 invoke start && sleep 5
 nautobot-server migrate
 ```

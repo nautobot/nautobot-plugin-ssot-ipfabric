@@ -1,5 +1,6 @@
 """IP Fabric Data Target Job."""
 from diffsync.enum import DiffSyncFlags
+from diffsync.exceptions import ObjectNotCreated
 from django.conf import settings
 from django.templatetags.static import static
 from django.urls import reverse
@@ -58,12 +59,10 @@ class IpFabricDataSource(DataSource, Job):
         client = IpFabricClient(CONFIG["IPFABRIC_HOST"], CONFIG["IPFABRIC_API_TOKEN"])
 
         ipfabric_source = IPFabricDiffSync(job=self, sync=self.sync, client=client)
-
         self.log_info(message="Loading current data from IP Fabric...")
         ipfabric_source.load()
 
         dest = NautobotDiffSync(job=self, sync=self.sync)
-
         self.log_info(message="Loading current data from Nautobot.")
         dest.load()
 
@@ -71,15 +70,25 @@ class IpFabricDataSource(DataSource, Job):
 
         self.log_info(message="Calculating diffs...")
         diff = dest.diff_from(ipfabric_source)
-        self.log_info(message=f"Diff: {diff.dict()}")
+        self.log_debug(message=f"Diff: {diff.dict()}")
 
         self.sync.diff = diff.dict()
         self.sync.save()
+        create = diff.summary().get("create")
+        update = diff.summary().get("update")
+        delete = diff.summary().get("delete")
+        no_change = diff.summary().get("no-change")
+        self.log_info(
+            message=f"DiffSync Summary: Create: {create}, Update: {update}, Delete: {delete}, No Change: {no_change}"
+        )
 
         if not self.kwargs["dry_run"]:
             self.log_info(message="Syncing from IP Fabric to Nautobot")
-            dest.sync_from(ipfabric_source, flags=diffsync_flags)
-            self.log_info(message="Sync complete")
+            try:
+                dest.sync_from(ipfabric_source, flags=diffsync_flags)
+            except ObjectNotCreated as err:
+                self.log_debug(f"Unable to create object. {err}")
+            self.log_success(message="Sync complete.")
 
 
 jobs = [IpFabricDataSource]

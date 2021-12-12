@@ -35,7 +35,7 @@ class IpFabricClient(IpFabric):
 
         return self.get_response("/api/v1/tables/inventory/sites", payload)
 
-    # pylint: disable=arguments-renamed
+    # pylint: disable=arguments-differ
     def get_device_inventory(
         self,
         search_key=None,
