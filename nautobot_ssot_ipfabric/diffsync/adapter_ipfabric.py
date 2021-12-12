@@ -1,23 +1,16 @@
 """DiffSync adapter class for Ip Fabric."""
 
-from diffsync import DiffSync
+from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
-from . import tonb_models
+# import logging
+
+# logger = logging.getLogger("nautobot.jobs")
 
 
-class IPFabricDiffSync(DiffSync):
+class IPFabricDiffSync(DiffSyncModelAdapters):
     """Nautobot adapter for DiffSync."""
 
-    location = tonb_models.Location
-    device = tonb_models.Device
-    interface = tonb_models.Interface
-    vlan = tonb_models.Vlan
-
-    top_level = [
-        "location",
-    ]
-
-    def __init__(self, *args, job, sync, client, **kwargs):
+    def __init__(self, job, sync, client, *args, **kwargs):
         """Initialize the NautobotDiffSync."""
         super().__init__(*args, **kwargs)
         self.job = job
@@ -28,7 +21,7 @@ class IPFabricDiffSync(DiffSync):
         """Add IP Fabric Site objects as DiffSync Location models."""
         sites = self.client.get_sites()
         for site in sites:
-            self.job.log_debug(message=f"Loading Site {site['siteName']}")
+            # logger.log_debug(message=f"Loading Site {site['siteName']}")
             location = self.location(diffsync=self, name=site["siteName"], site_id=site["id"])
             self.add(location)
 

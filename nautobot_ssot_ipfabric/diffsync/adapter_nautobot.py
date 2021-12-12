@@ -1,35 +1,24 @@
 """DiffSync adapter class for Nautobot as source-of-truth."""
-import logging
+# import logging
 
-from diffsync import DiffSync
 from diffsync.exceptions import ObjectNotFound
 from nautobot.dcim.models import Device, Site
 from nautobot.ipam.models import VLAN
 
-from . import tonb_models
+from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
 # from netutils.ip import cidr_to_netmask
 
 
 # from django.utils.text import slugify
 
+# logger = logging.getLogger("nautobot.jobs")
 
-logger = logging.getLogger("adapter_nautobot")
 
-
-class NautobotDiffSync(DiffSync):
+class NautobotDiffSync(DiffSyncModelAdapters):
     """Nautobot adapter for DiffSync."""
 
-    location = tonb_models.Location
-    device = tonb_models.Device
-    interface = tonb_models.Interface
-    vlan = tonb_models.Vlan
-
-    top_level = [
-        "location",
-    ]
-
-    def __init__(self, *args, job, sync, **kwargs):
+    def __init__(self, job, sync, *args, **kwargs):
         """Initialize the NautobotDiffSync."""
         super().__init__(*args, **kwargs)
         self.job = job
@@ -38,7 +27,7 @@ class NautobotDiffSync(DiffSync):
     def load_sites(self):
         """Add Nautobot Site objects as DiffSync Location models."""
         for site_record in Site.objects.all():
-            self.job.log_debug(message=f"Loading Site {site_record.name}")
+            # logger.log_debug(message=f"Loading Site {site_record.name}")
             # A Site and a Region may share the same name; if so they become part of the same Location record.
             try:
                 location = self.get(self.location, site_record.name)
@@ -83,7 +72,7 @@ class NautobotDiffSync(DiffSync):
     def load_devices(self):
         """Add Nautobot Device objects as DiffSync Device models."""
         for device_record in Device.objects.all():
-            self.job.log_debug(message=f"Loading Device {device_record.name}")
+            # self.job.log_debug(message=f"Loading Device {device_record.name}")
             location = self.get(self.location, device_record.site.name)
             try:
                 device = self.get(self.device, device_record.name)

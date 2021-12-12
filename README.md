@@ -11,15 +11,69 @@ A plugin for [Nautobot](https://github.com/nautobot/nautobot).
 
 ## Documentation
 
-Documentation is hosted with Github Pages: [Nautobot SSoT IP Fabric Documentation](https://networktocode-llc.github.io/nautobot-plugin-ssot-ipfabric/)
+Documentation is hosted with Github Pages at [Nautobot SSoT IP Fabric Documentation](https://networktocode-llc.github.io/nautobot-plugin-ssot-ipfabric/)
 
-To build docs locally
+## Installation
+
+To install the plugin from Pypi
 
 ```shell
-sphinx-build -vvv -b html ./docs docs/public
-cd docs/public
-python -m http.server
+pip install nautobot-ssot-ipfabric
 ```
+
+To install the plugin manually from repository code
+
+```shell
+git clone git@github.com:networktocode-llc/nautobot-plugin-ssot-ipfabric.git
+```
+
+```bash
+cd nautobot-plugin-ssot-ipfabric
+```
+
+```shell
+pip install .
+```
+
+For additional detailed instructions on how to install Nautobot Plugins, checkout the [official documentation](https://nautobot.readthedocs.io/en/latest/plugins/#installing-plugins)
+
+### Environment Variables
+
+This plugin relies on user provided environment variables to interact with IP Fabric.
+
+- `IPFABRIC_API_TOKEN` - API Token for IP Fabric
+- `IPFABRIC_HOST` - IP Fabric URL
+- `NAUTOBOT_HOST` - Nautobot URL (This is used to generate url links for chatops)
+
+Example `PLUGINS_CONFIG` to be updated in `nautobot_config.py` after successful installation. The chatops configuration is optional, but if you'd like to have the
+ability to call the sync job through chatops, you will be required to configure it.
+
+```python
+PLUGINS_CONFIG = {
+    "nautobot_chatops": {
+        "enable_slack": True,
+        "slack_api_token": os.environ.get("SLACK_API_TOKEN"),
+        "slack_signing_secret": os.environ.get("SLACK_SIGNING_SECRET"),
+        "session_cache_timeout": 3600,
+    },
+    "nautobot_ssot_ipfabric": {
+        "IPFABRIC_API_TOKEN": os.environ.get("IPFABRIC_API_TOKEN"),
+        "IPFABRIC_HOST": os.environ.get("IPFABRIC_HOST"),
+        "NAUTOBOT_HOST": os.environ.get("NAUTOBOT_HOST"),
+    },
+    "nautobot_ssot": {"hide_example_jobs": True},
+    "nautobot_chatops_ipfabric": {
+        "IPFABRIC_API_TOKEN": os.environ.get("IPFABRIC_API_TOKEN"),
+        "IPFABRIC_HOST": os.environ.get("IPFABRIC_HOST"),
+    },
+}
+```
+
+## ChatOps
+
+As part of the SSoT synchronization capabilities with IP Fabric, this plugin extends the [Nautobot Plugin Chatops IPFabric](https://github.com/nautobot/nautobot-plugin-chatops-ipfabric) by providing users with the ability to begin the sync job from a chatops command (Slack).
+
+## TODO: /slash command screenshot
 
 ## Contributing
 
@@ -42,12 +96,12 @@ Below is a quick start guide if you're already familiar with the development env
 
 The [PyInvoke](http://www.pyinvoke.org/) library is used to provide some helper commands based on the environment.  There are a few configuration parameters which can be passed to PyInvoke to override the default configuration:
 
-* `nautobot_ver`: the version of Nautobot to use as a base for any built docker containers (default: 1.1.4)
-* `project_name`: the default docker compose project name (default: nautobot_ssot_ipfabric)
-* `python_ver`: the version of Python to use as a base for any built docker containers (default: 3.6)
-* `local`: a boolean flag indicating if invoke tasks should be run on the host or inside the docker containers (default: False, commands will be run in docker containers)
-* `compose_dir`: the full path to a directory containing the project compose files
-* `compose_files`: a list of compose files applied in order (see [Multiple Compose files](https://docs.docker.com/compose/extends/#multiple-compose-files) for more information)
+- `nautobot_ver`: the version of Nautobot to use as a base for any built docker containers (default: 1.1.4)
+- `project_name`: the default docker compose project name (default: nautobot_ssot_ipfabric)
+- `python_ver`: the version of Python to use as a base for any built docker containers (default: 3.6)
+- `local`: a boolean flag indicating if invoke tasks should be run on the host or inside the docker containers (default: False, commands will be run in docker containers)
+- `compose_dir`: the full path to a directory containing the project compose files
+- `compose_files`: a list of compose files applied in order (see [Multiple Compose files](https://docs.docker.com/compose/extends/#multiple-compose-files) for more information)
 
 Using **PyInvoke** these configuration options can be overridden using [several methods](http://docs.pyinvoke.org/en/stable/concepts/configuration.html).  Perhaps the simplest is simply setting an environment variable `INVOKE_NAUTOBOT_SSOT_IPFABRIC_VARIABLE_NAME` where `VARIABLE_NAME` is the variable you are trying to override.  The only exception is `compose_files`, because it is a list it must be overridden in a yaml file.  There is an example `invoke.yml` (`invoke.example.yml`) in this directory which can be used as a starting point.
 
@@ -65,13 +119,13 @@ nautobot_ssot_ipfabric:
     - "docker-compose.requirements.yml"
 ```
 
-3. Run the following commands:
+4. Run the following commands:
 
 ```shell
 poetry shell
 poetry install --extras nautobot
 export $(cat development/dev.env | xargs)
-export $(cat development/creds.env | xargs) 
+export $(cat development/creds.env | xargs)
 invoke start && sleep 5
 nautobot-server migrate
 ```
@@ -151,7 +205,15 @@ Each command can be executed with `invoke <command>`. Environment variables `INV
 
 ### Project Documentation
 
-Project documentation is generated by [mkdocs](https://www.mkdocs.org/) from the documentation located in the docs folder.  You can configure [readthedocs.io](https://readthedocs.io/) to point at this folder in your repo.  A container hosting the docs will be started using the invoke commands on [http://localhost:8001](http://localhost:8001), as changes are saved the docs will be automatically reloaded.
+Documentation is auto-generated with Sphinx, myst-paerser and sphinx-autoapi. The latest code in the `main` branch is providing the documentation with Github Pages. To build documentation locally as you are developing, perform the following commands.
+
+```shell
+sphinx-build -vvv -b html ./docs docs/public
+cd docs/public
+python -m http.server
+```
+
+Now you can access the documentation locally at `http://localhost:8000/` or the IP of the server hosting the development environment.
 
 ## Questions
 
@@ -160,4 +222,8 @@ Sign up [here](http://slack.networktocode.com/)
 
 ## Screenshots
 
-TODO
+Main SSoT IP Fabric Dashboard
+![Dashboard](docs/images/dashboard.png)
+
+Sync Details
+![Dashboard](docs/images/sync_details.png)

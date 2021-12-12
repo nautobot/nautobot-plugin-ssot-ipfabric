@@ -5,11 +5,11 @@ import uuid
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django_rq import job
-
 from nautobot.core.settings_funcs import is_truthy
 from nautobot.extras.models import JobResult
-from nautobot_chatops.workers import handle_subcommands, subcommand_of
 from nautobot_chatops.choices import CommandStatusChoices
+from nautobot_chatops.workers import handle_subcommands, subcommand_of
+
 from nautobot_ssot_ipfabric.jobs import IpFabricDataSource
 
 configs = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})

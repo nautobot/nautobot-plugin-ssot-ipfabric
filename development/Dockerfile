@@ -27,7 +27,9 @@ RUN poetry install --no-interaction --no-ansi --no-root
 
 # Copy in the rest of the source code and install local Nautobot plugin
 COPY . /source
-RUN poetry install --no-interaction --no-ansi && \
-    pip install plugins/*.whl
 
+# RUN poetry install --no-interaction --no-ansi && \
+#     pip install plugins/*.whl
+
+RUN poetry install --no-interaction --no-ansi
 COPY development/nautobot_config.py ${NAUTOBOT_ROOT}/nautobot_config.py

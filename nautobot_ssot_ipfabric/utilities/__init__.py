@@ -1,4 +1,5 @@
 """Utilities."""
+from .ipfabric_client import IpFabricClient
 from .nbutils import (
     create_device_role_object,
     create_device_type_object,
@@ -12,7 +13,6 @@ from .nbutils import (
     create_vlan,
 )
 from .test_utils import json_fixture
-from .ipfabric_client import IpFabricClient
 
 __all__ = (
     "create_site",
