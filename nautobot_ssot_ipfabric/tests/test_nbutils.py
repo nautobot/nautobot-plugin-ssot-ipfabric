@@ -5,7 +5,7 @@ from django.utils.text import slugify
 from nautobot.dcim.models import DeviceRole, DeviceType, Manufacturer, Region, Site
 from nautobot.dcim.models.devices import Device
 from nautobot.extras.models.statuses import Status
-from nautobot.ipam.models import IPAddress
+from nautobot.ipam.models import VLAN, IPAddress
 from nautobot.tenancy.models import Tenant
 from nautobot.utilities.choices import ColorChoices
 
@@ -19,6 +19,7 @@ from nautobot_ssot_ipfabric.utilities import (
     create_site,
     create_status,
     create_tenant,
+    create_vlan,
 )
 
 
@@ -59,20 +60,34 @@ class TestNautobotUtils(TestCase):
         )
 
         self.device.interfaces.create(name="Test-Interface")
-        # self.vlan_content_type = ContentType.objects.get(app_label="ipam", model="vlan")
-        # self.vlan_status = Status.objects.create(
-        #     name="Test-Vlan-Status",
-        #     slug=slugify("Test-Vlan-Status"),
-        #     color=ColorChoices.COLOR_AMBER,
-        #     description="Test-Description",
-        # )
-        # self.vlan_status.content_types.set([self.vlan_content_type])
-        # self.site.vlans.create("Test-Vlan", 100, self.vlan_status)
+        self.vlan_content_type = ContentType.objects.get(app_label="ipam", model="vlan")
+        self.vlan_status = Status.objects.create(
+            name="Test-Vlan-Status",
+            slug=slugify("Test-Vlan-Status"),
+            color=ColorChoices.COLOR_AMBER,
+            description="Test-Description",
+        )
+        self.vlan_status.content_types.set([self.vlan_content_type])
+
+    def test_create_vlan(self):
+        """Test `create_vlan` Utility."""
+        vlan = create_vlan(vlan_name="Test-Vlan", vlan_id=100, vlan_status="Test-Vlan-Status", site_obj=self.site)
+        self.assertEqual(VLAN.objects.get(name="Test-Vlan").pk, vlan.pk)
 
     def test_create_site(self):
         """Test `create_site` Utility."""
         test_site = create_site(site_name="Test-Site")
         self.assertEqual(test_site.id, self.site.id)
+
+    def test_create_site_exception(self):
+        """Test `create_site` Utility exception."""
+        site = create_site(
+            site_name="Test-Site-100",
+            site_id=123456,
+            region_obj=Region.objects.first(),
+            tenant_obj=Tenant.objects.first(),
+        )
+        self.assertEqual(Site.objects.get(name="Test-Site-100").pk, site.pk)
 
     def test_create_region(self):
         """Test `create_region` Utility."""
