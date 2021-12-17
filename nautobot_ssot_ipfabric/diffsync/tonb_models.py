@@ -98,7 +98,7 @@ class Device(DiffSyncModel):
             device_role=device_role_object,
             site=site_object,
             name=ids["name"],
-            serial=ids.get("serial_number", ""),
+            serial=attrs.get("serial_number", ""),
         )
 
         new_device.validated_save()
@@ -127,7 +127,7 @@ class Device(DiffSyncModel):
             _device.site = site_object
 
         if attrs.get("serial_number"):
-            _device.serial = attrs.get("serial_number", "")
+            _device.serial = attrs.get("serial_number")
 
         device_role_object = tonb_nbutils.create_device_role_object(
             role_name=DEFAULT_DEVICE_ROLE, role_color=DEFAULT_DEVICE_ROLE_COLOR

@@ -31,7 +31,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
             # A Site and a Region may share the same name; if so they become part of the same Location record.
             try:
                 location = self.get(self.location, site_record.name)
-                location.site_pk = site_record.pk
             except ObjectNotFound:
                 location = self.location(
                     diffsync=self,
@@ -39,7 +38,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                     region_name=site_record.region.name if site_record.region else None,
                     container_name=site_record.tenant.name if site_record.tenant else None,
                     site_id=site_record.custom_field_data.get("ipfabric_site_id", ""),
-                    site_pk=site_record.pk,
                 )
                 self.add(location)
 
@@ -76,7 +74,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
             location = self.get(self.location, device_record.site.name)
             try:
                 device = self.get(self.device, device_record.name)
-                device.pk = device_record.pk
             except ObjectNotFound:
                 device = self.device(
                     diffsync=self,
@@ -87,7 +84,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                     location_name=device_record.site.name,
                     vendor=str(device_record.device_type.manufacturer),
                     # status=device_record.status,
-                    pk=device_record.pk,
                     serial_number=device_record.serial if device_record.serial else "",
                 )
 
@@ -101,14 +97,12 @@ class NautobotDiffSync(DiffSyncModelAdapters):
             location = self.get(self.location, vlan_record.site.name)
             try:
                 vlan = self.get(self.vlan, vlan_record.name)
-                vlan.pk = vlan_record.pk
             except ObjectNotFound:
                 vlan = self.vlan(
                     diffsync=self,
                     name=vlan_record.name,
                     site=vlan_record.site.name,
                     status=vlan_record.status.slug,
-                    pk=vlan_record.pk,
                     vid=vlan_record.vid,
                 )
 
