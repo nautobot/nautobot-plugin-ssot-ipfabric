@@ -44,6 +44,7 @@ class IPFabricDiffSyncTestCase(TestCase):
 
         nautobot = NautobotDiffSync(job=job, sync=None)
         nautobot.load()
+
         self.assertEqual(
             set(["Site 1", "Site 2"]),
             {site.get_unique_id() for site in nautobot.get_all("location")},
