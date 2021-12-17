@@ -24,10 +24,11 @@ def create_site(site_name, site_id=None, region_obj=None, tenant_obj=None):
             name=site_name,
             slug=slugify(site_name),
             status=Status.objects.get(name="Active"),
-            facility=site_id if site_id is not None else "",
             region=region_obj,
             tenant=tenant_obj,
         )
+        site_obj.custom_field_data.update({"ipfabric_site_id": site_id} if site_id is not None else "")
+        site_obj.save()
     return site_obj
 
 

@@ -38,7 +38,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                     name=site_record.name,
                     region_name=site_record.region.name if site_record.region else None,
                     container_name=site_record.tenant.name if site_record.tenant else None,
-                    site_id=site_record.facility if site_record.facility else "",
+                    site_id=site_record.custom_field_data.get("ipfabric_site_id", ""),
                     site_pk=site_record.pk,
                 )
                 self.add(location)
