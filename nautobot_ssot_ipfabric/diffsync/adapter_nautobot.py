@@ -58,10 +58,10 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                         device_name=device_record.name,
                         description=interface_record.description if interface_record.description else None,
                         enabled=True,
-                        # mac_address=str(interface_record.mac_address)
-                        # if str(interface_record.mac_address)
-                        # else "00:00:00:00:00:01",
-                        mac_address="00:00:00:00:00:01",
+                        mac_address=str(interface_record.mac_address)
+                        if str(interface_record.mac_address)
+                        else "00:00:00:00:00:01",
+                        # mac_address="00:00:00:00:00:01",
                         # mtu=interface_record.mtu,
                         type="1000base-t",
                         mtu=1500,
