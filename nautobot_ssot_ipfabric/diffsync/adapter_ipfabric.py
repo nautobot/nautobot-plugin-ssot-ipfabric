@@ -35,23 +35,23 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
             device_interfaces.append(pseudo_interface)
 
         for iface in device_interfaces:
-            ip_address = iface.get("primaryIp")
             interface = self.interface(
                 diffsync=self,
                 name=iface.get("intName"),
                 device_name=iface.get("hostname"),
                 description=iface.get("dscr"),
-                enabled=not iface.get("reason") == "admin",
-                mac_address=iface.get("mac"),
-                mtu=iface.get("mtu"),
+                enabled=True,
+                mac_address=iface.get("mac") if iface.get("mac") else "00:00:00:00:00:01",
+                # mtu=iface.get("mtu"),
+                mtu=1500,
                 # TODO: (GREG) Determine how to handle interface type.
                 type=iface.get("type", "1000base-t"),
                 mgmt_only=iface.get("mgmt_only", False),
                 ip_address=iface.get("primaryIp"),
                 # TODO: (GREG) Determine how to handle mask.
-                subnet_mask="255.255.255.255",
+                # subnet_mask="255.255.255.255",
                 # TODO: (GREG) Determine how to handle type.
-                ip_is_primary=ip_address == device_primary_ip,
+                # ip_is_primary=ip_address == device_primary_ip,
             )
             self.add(interface)
             device_model.add_child(interface)

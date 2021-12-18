@@ -3,7 +3,6 @@ from copy import deepcopy
 
 from django.conf import settings
 from django.test import TestCase
-
 from django.urls import reverse
 
 from nautobot_ssot_ipfabric import jobs

@@ -49,9 +49,10 @@ class Location(DiffSyncModel):
     def update(self, attrs):
         """Update Site Object in Nautobot."""
         site = Site.objects.get(name=self.name)
-        if attrs.get("site_id"):
+        if attrs.get("name"):
             site.object.update(name=self.name)
             site.object.update(slug=slugify(self.name))
+            # site.custom_data_field.update({"ipfabric-site-id": self.site_id})
         site.validated_save()
         return super().update(attrs)
 
@@ -92,13 +93,13 @@ class Device(DiffSyncModel):
 
         site_object = tonb_nbutils.create_site(attrs["location_name"])
 
-        new_device = NautobotDevice(
+        new_device = NautobotDevice.objects.create(
             status=device_status_object,
             device_type=device_type_object,
             device_role=device_role_object,
             site=site_object,
             name=ids["name"],
-            serial=ids.get("serial_number", ""),
+            serial=attrs.get("serial_number", ""),
         )
 
         new_device.validated_save()
@@ -159,8 +160,8 @@ class Interface(DiffSyncModel):
         "type",
         "mgmt_only",
         "ip_address",
-        "subnet_mask",
-        "ip_is_primary",
+        # "subnet_mask",
+        # "ip_is_primary",
     )
     _children = {}
 
@@ -169,12 +170,12 @@ class Interface(DiffSyncModel):
     description: Optional[str]
     enabled: Optional[bool]
     mac_address: Optional[str]
-    mtu: Optional[str]
+    mtu: Optional[int]
     type: Optional[str]
     mgmt_only: Optional[bool]
     ip_address: Optional[str]
-    subnet_mask: Optional[str]
-    ip_is_primary: Optional[bool]
+    # subnet_mask: Optional[str]
+    # ip_is_primary: Optional[bool]
 
     # sys_id: Optional[str] = None
     pk: Optional[uuid.UUID] = None
@@ -183,23 +184,31 @@ class Interface(DiffSyncModel):
     def create(cls, diffsync, ids, attrs):
         """Create interface in Nautobot under its parent device."""
         device_obj = NautobotDevice.objects.get(name=ids["device_name"])
-        interface_obj = tonb_nbutils.create_interface(device_obj=device_obj, interface_details=dict(**ids, **attrs))
+        if not attrs.get("mac_address"):
+            attrs["mac_address"] = "00:00:00:00:00:01"
+        interface_obj = tonb_nbutils.create_interface(
+            device_obj=device_obj,
+            interface_details=dict(**ids, **attrs),
+        )
 
         ip_address = attrs["ip_address"]
         if ip_address:
             ip_address_obj = tonb_nbutils.create_ip(
                 ip_address=attrs["ip_address"],
-                subnet_mask=attrs["subnet_mask"],
+                # subnet_mask=attrs["subnet_mask"],
+                subnet_mask="255.255.255.0",
                 status="Active",
                 object_pk=interface_obj,
+                # description=attrs.get("description"),
+                # type=attrs.get("type", "1000base-t"),
             )
             interface_obj.ip_addresses.add(ip_address_obj)
-            if attrs["ip_is_primary"]:
-                if ip_address_obj.family == 4:
-                    device_obj.primary_ip4 = ip_address_obj
-                if ip_address_obj.family == 6:
-                    device_obj.primary_ip6 = ip_address_obj
-                device_obj.validated_save()
+            # if attrs["ip_is_primary"]:
+            #     if ip_address_obj.family == 4:
+            #         device_obj.primary_ip4 = ip_address_obj
+            #     if ip_address_obj.family == 6:
+            #         device_obj.primary_ip6 = ip_address_obj
+            device_obj.validated_save()
 
         return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
 
@@ -209,6 +218,29 @@ class Interface(DiffSyncModel):
         interface = device.interfaces.get(name=self.name)
         interface.delete()
         return super().delete()
+
+    def update(self, attrs):
+        """Update Interface object in Nautobot."""
+        device = NautobotDevice.objects.get(name=self.device_name)
+        interface = device.interfaces.get(name=self.name)
+        if attrs.get("description"):
+            interface.description = attrs["description"]
+        if attrs.get("enabled"):
+            interface.enabled = attrs["enabled"]
+        if attrs.get("mac_address"):
+            interface.mac_address = attrs["mac_address"]
+        if attrs.get("mtu"):
+            interface.mtu = attrs["mtu"]
+        if attrs.get("mode"):
+            interface.mode = attrs["mode"]
+        if attrs.get("lag"):
+            interface.lag = attrs["lag"]
+        if attrs.get("type"):
+            interface.type = attrs["type"]
+        if attrs.get("mgmt_only"):
+            interface.mgmt_only = attrs["mgmt_only"]
+        interface.validated_save()
+        return super().update(attrs)
 
 
 class Vlan(DiffSyncModel):
