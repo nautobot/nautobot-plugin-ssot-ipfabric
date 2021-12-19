@@ -1,5 +1,7 @@
 """DiffSync adapter class for Ip Fabric."""
 
+from netutils.mac import mac_to_format
+
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
 # import logging
@@ -41,7 +43,9 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                 device_name=iface.get("hostname"),
                 description=iface.get("dscr"),
                 enabled=True,
-                mac_address=iface.get("mac") if iface.get("mac") else "00:00:00:00:00:01",
+                mac_address=mac_to_format(iface.get("mac"), "MAC_COLON_TWO").upper()
+                if iface.get("mac")
+                else "00:00:00:00:00:01",
                 # mtu=iface.get("mtu"),
                 mtu=1500,
                 # TODO: (GREG) Determine how to handle interface type.

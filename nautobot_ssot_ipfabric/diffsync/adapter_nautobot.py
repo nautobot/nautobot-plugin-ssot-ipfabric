@@ -4,6 +4,7 @@
 from diffsync.exceptions import ObjectNotFound
 from nautobot.dcim.models import Device, Site
 from nautobot.ipam.models import VLAN
+from netutils.mac import mac_to_format
 
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
@@ -58,7 +59,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                         device_name=device_record.name,
                         description=interface_record.description if interface_record.description else None,
                         enabled=True,
-                        mac_address=str(interface_record.mac_address)
+                        mac_address=mac_to_format(str(interface_record.mac_address), "MAC_COLON_TWO").upper()
                         if str(interface_record.mac_address)
                         else "00:00:00:00:00:01",
                         # mac_address="00:00:00:00:00:01",
