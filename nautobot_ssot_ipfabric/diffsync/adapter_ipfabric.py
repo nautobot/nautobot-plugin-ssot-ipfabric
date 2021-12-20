@@ -1,5 +1,6 @@
 """DiffSync adapter class for Ip Fabric."""
 
+from django.conf import settings
 from netutils.mac import mac_to_format
 
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
@@ -7,6 +8,11 @@ from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 # import logging
 
 # logger = logging.getLogger("nautobot.jobs")
+
+CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
+DEFAULT_INTERFACE_TYPE = CONFIG.get("DEFAULT_INTERFACE_TYPE", "1000base-t")
+DEFAULT_INTERFACE_MTU = CONFIG.get("DEFAULT_INTERFACE_MTU", 1500)
+DEFAULT_INTERFACE_MAC = CONFIG.get("DEFAULT_INTERFACE_MAC", "00:00:00:00:00:01")
 
 
 class IPFabricDiffSync(DiffSyncModelAdapters):
@@ -45,16 +51,12 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                 enabled=True,
                 mac_address=mac_to_format(iface.get("mac"), "MAC_COLON_TWO").upper()
                 if iface.get("mac")
-                else "00:00:00:00:00:01",
-                # mtu=iface.get("mtu"),
-                mtu=1500,
-                # TODO: (GREG) Determine how to handle interface type.
-                type=iface.get("type", "1000base-t"),
+                else DEFAULT_INTERFACE_MAC,
+                mtu=iface.get("mtu") if iface.get("mtu") else DEFAULT_INTERFACE_MTU,
+                type=DEFAULT_INTERFACE_TYPE,
                 mgmt_only=iface.get("mgmt_only", False),
                 ip_address=iface.get("primaryIp"),
-                # TODO: (GREG) Determine how to handle mask.
-                # subnet_mask="255.255.255.255",
-                # TODO: (GREG) Determine how to handle type.
+                subnet_mask="255.255.255.255",
                 # ip_is_primary=ip_address == device_primary_ip,
             )
             self.add(interface)

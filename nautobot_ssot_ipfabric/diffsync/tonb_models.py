@@ -160,7 +160,7 @@ class Interface(DiffSyncModel):
         "type",
         "mgmt_only",
         "ip_address",
-        # "subnet_mask",
+        "subnet_mask",
         # "ip_is_primary",
     )
     _children = {}
@@ -174,7 +174,7 @@ class Interface(DiffSyncModel):
     type: Optional[str]
     mgmt_only: Optional[bool]
     ip_address: Optional[str]
-    # subnet_mask: Optional[str]
+    subnet_mask: Optional[str]
     # ip_is_primary: Optional[bool]
 
     # sys_id: Optional[str] = None
@@ -195,12 +195,9 @@ class Interface(DiffSyncModel):
         if ip_address:
             ip_address_obj = tonb_nbutils.create_ip(
                 ip_address=attrs["ip_address"],
-                # subnet_mask=attrs["subnet_mask"],
-                subnet_mask="255.255.255.0",
+                subnet_mask=attrs["subnet_mask"],
                 status="Active",
                 object_pk=interface_obj,
-                # description=attrs.get("description"),
-                # type=attrs.get("type", "1000base-t"),
             )
             interface_obj.ip_addresses.add(ip_address_obj)
             # if attrs["ip_is_primary"]:

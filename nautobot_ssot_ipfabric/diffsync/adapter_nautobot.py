@@ -2,6 +2,7 @@
 # import logging
 
 from diffsync.exceptions import ObjectNotFound
+from django.conf import settings
 from nautobot.dcim.models import Device, Site
 from nautobot.ipam.models import VLAN
 from netutils.mac import mac_to_format
@@ -14,6 +15,10 @@ from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 # from django.utils.text import slugify
 
 # logger = logging.getLogger("nautobot.jobs")
+CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
+DEFAULT_INTERFACE_TYPE = CONFIG.get("DEFAULT_INTERFACE_TYPE", "1000base-t")
+DEFAULT_INTERFACE_MTU = CONFIG.get("DEFAULT_INTERFACE_MTU", 1500)
+DEFAULT_INTERFACE_MAC = CONFIG.get("DEFAULT_INTERFACE_MAC", "00:00:00:00:00:01")
 
 
 class NautobotDiffSync(DiffSyncModelAdapters):
@@ -61,11 +66,10 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                         enabled=True,
                         mac_address=mac_to_format(str(interface_record.mac_address), "MAC_COLON_TWO").upper()
                         if str(interface_record.mac_address)
-                        else "00:00:00:00:00:01",
-                        # mac_address="00:00:00:00:00:01",
-                        # mtu=interface_record.mtu,
-                        type="1000base-t",
-                        mtu=1500,
+                        else DEFAULT_INTERFACE_MAC,
+                        subnet_mask="255.255.255.255",
+                        mtu=interface_record.mtu if interface_record.mtu else DEFAULT_INTERFACE_MTU,
+                        type=DEFAULT_INTERFACE_TYPE,
                         mgmt_only=interface_record.mgmt_only if interface_record.mgmt_only else False,
                         pk=interface_record.pk,
                     )
