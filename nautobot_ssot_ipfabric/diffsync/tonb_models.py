@@ -4,6 +4,7 @@ from typing import List, Optional
 
 from diffsync import DiffSyncModel
 from django.utils.text import slugify
+from django.conf import settings
 
 # from django.conf import settings
 # from requests.api import delete
@@ -13,9 +14,10 @@ from nautobot.ipam.models import VLAN
 
 import nautobot_ssot_ipfabric.utilities.nbutils as tonb_nbutils
 
-DEFAULT_DEVICE_ROLE = "Network Device"
+CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
+DEFAULT_DEVICE_ROLE = CONFIG.get("DEFAULT_DEVICE_ROLE", "Network Device")
 DEFAULT_DEVICE_ROLE_COLOR = "ff0000"
-DEFAULT_DEVICE_STATUS = "Active"
+DEFAULT_DEVICE_STATUS = CONFIG.get("DEFAULT_DEVICE_STATUS", "Active")
 DEFAULT_DEVICE_STATUS_COLOR = "ff0000"
 
 
@@ -175,7 +177,7 @@ class Interface(DiffSyncModel):
     mgmt_only: Optional[bool]
     ip_address: Optional[str]
     subnet_mask: Optional[str]
-    # ip_is_primary: Optional[bool]
+    ip_is_primary: Optional[bool]
 
     # sys_id: Optional[str] = None
     pk: Optional[uuid.UUID] = None
@@ -200,11 +202,11 @@ class Interface(DiffSyncModel):
                 object_pk=interface_obj,
             )
             interface_obj.ip_addresses.add(ip_address_obj)
-            # if attrs["ip_is_primary"]:
-            #     if ip_address_obj.family == 4:
-            #         device_obj.primary_ip4 = ip_address_obj
-            #     if ip_address_obj.family == 6:
-            #         device_obj.primary_ip6 = ip_address_obj
+            if attrs["ip_is_primary"]:
+                if ip_address_obj.family == 4:
+                    device_obj.primary_ip4 = ip_address_obj
+                if ip_address_obj.family == 6:
+                    device_obj.primary_ip6 = ip_address_obj
             device_obj.validated_save()
 
         return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
@@ -291,3 +293,4 @@ class MgmtInterface(Interface):
 Location.update_forward_refs()
 Device.update_forward_refs()
 Interface.update_forward_refs()
+MgmtInterface.update_forward_refs()

@@ -9,7 +9,7 @@ from netutils.mac import mac_to_format
 
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
-# from netutils.ip import cidr_to_netmask
+from netutils.ip import cidr_to_netmask
 
 
 # from django.utils.text import slugify
@@ -19,6 +19,7 @@ CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
 DEFAULT_INTERFACE_TYPE = CONFIG.get("DEFAULT_INTERFACE_TYPE", "1000base-t")
 DEFAULT_INTERFACE_MTU = CONFIG.get("DEFAULT_INTERFACE_MTU", 1500)
 DEFAULT_INTERFACE_MAC = CONFIG.get("DEFAULT_INTERFACE_MAC", "00:00:00:00:00:01")
+DEFAULT_DEVICE_ROLE = CONFIG.get("DEFAULT_DEVICE_ROLE", "Network Device")
 
 
 class NautobotDiffSync(DiffSyncModelAdapters):
@@ -76,19 +77,19 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                     self.add(interface)
                     device.add_child(interface)
 
-    # def load_primary_ip_interface(self, interface_record, device_model, device_record):
-    #     """Import a Nautobot primary IP interface object as a DiffSync MgmtInterface model."""
-    #     interface = self.mgmt_interface(
-    #         diffsync=self,
-    #         name=interface_record.name,
-    #         device_name=device_model.name,
-    #         ip_address=device_record.primary_ip4.host,
-    #         subnet_mask=cidr_to_netmask(device_record.primary_ip4.prefix_length),
-    #         description=interface_record.description,
-    #         pk=interface_record.pk,
-    #     )
-    #     self.add(interface)
-    #     device_model.add_child(interface)
+    def load_primary_ip_interface(self, interface_record, device_model, device_record):
+        """Import a Nautobot primary IP interface object as a DiffSync MgmtInterface model."""
+        interface = self.mgmt_interface(
+            diffsync=self,
+            name=interface_record.name,
+            device_name=device_model.name,
+            ip_address=device_record.primary_ip4.host,
+            subnet_mask=cidr_to_netmask(device_record.primary_ip4.prefix_length),
+            description=interface_record.description,
+            pk=interface_record.pk,
+        )
+        self.add(interface)
+        device_model.add_child(interface)
 
     def load_devices(self):
         """Add Nautobot Device objects as DiffSync Device models."""
@@ -104,7 +105,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                     name=device_record.name,
                     # platform=str(device_record.platform) if device_record.platform else None,
                     model=str(device_record.device_type),
-                    role=str(device_record.device_role),
+                    role=str(device_record.device_role) if str(device_record.device_role) else DEFAULT_DEVICE_ROLE,
                     location_name=device_record.site.name,
                     vendor=str(device_record.device_type.manufacturer),
                     # status=device_record.status,
@@ -142,6 +143,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
         self.load_devices()
         self.load_vlans()
         self.load_interface()
+        self.load_primary_ip_interface()
 
 
 #                for interface_record in Interface.objects.filter(device=device_record):

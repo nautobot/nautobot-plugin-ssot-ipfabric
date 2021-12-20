@@ -13,6 +13,7 @@ CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
 DEFAULT_INTERFACE_TYPE = CONFIG.get("DEFAULT_INTERFACE_TYPE", "1000base-t")
 DEFAULT_INTERFACE_MTU = CONFIG.get("DEFAULT_INTERFACE_MTU", 1500)
 DEFAULT_INTERFACE_MAC = CONFIG.get("DEFAULT_INTERFACE_MAC", "00:00:00:00:00:01")
+DEFAULT_DEVICE_ROLE = CONFIG.get("DEFAULT_DEVICE_ROLE", "Network Device")
 
 
 class IPFabricDiffSync(DiffSyncModelAdapters):
@@ -96,7 +97,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                     model=device["model"],
                     vendor=device["vendor"],
                     serial_number=device["sn"],
-                    role="Network Device",
+                    role=DEFAULT_DEVICE_ROLE,
                 )
                 self.add(device_model)
                 location.add_child(device_model)
