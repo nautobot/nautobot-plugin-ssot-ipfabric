@@ -77,20 +77,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                     self.add(interface)
                     device.add_child(interface)
 
-    def load_primary_ip_interface(self, interface_record, device_model, device_record):
-        """Import a Nautobot primary IP interface object as a DiffSync MgmtInterface model."""
-        interface = self.mgmt_interface(
-            diffsync=self,
-            name=interface_record.name,
-            device_name=device_model.name,
-            ip_address=device_record.primary_ip4.host,
-            subnet_mask=cidr_to_netmask(device_record.primary_ip4.prefix_length),
-            description=interface_record.description,
-            pk=interface_record.pk,
-        )
-        self.add(interface)
-        device_model.add_child(interface)
-
     def load_devices(self):
         """Add Nautobot Device objects as DiffSync Device models."""
         for device_record in Device.objects.all():
@@ -143,7 +129,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
         self.load_devices()
         self.load_vlans()
         self.load_interface()
-        self.load_primary_ip_interface()
 
 
 #                for interface_record in Interface.objects.filter(device=device_record):
@@ -155,3 +140,21 @@ class NautobotDiffSync(DiffSyncModelAdapters):
 #                        pass
 #                        # Pass for now but can uncomment to load all interfaces for a device.
 #                        # self.load_interface(interface_record, device)
+
+
+# def load_primary_ip_interface(self):
+#     """Import a Nautobot primary IP interface object as a DiffSync MgmtInterface model."""
+#     for device_record in Device.objects.all():
+#         device_model = self.get(self.device, device_record.name)
+#         for interface_record in device_record.interfaces.all():
+#             interface = self.mgmt_int(
+#                 diffsync=self,
+#                 name=interface_record.name,
+#                 device_name=device_model.name,
+#                 ip_address=device_record.primary_ip4.host,
+#                 subnet_mask=cidr_to_netmask(device_record.primary_ip4.prefix_length),
+#                 description=interface_record.description,
+#                 pk=interface_record.pk,
+#             )
+#             self.add(interface)
+#             device_model.add_child(interface)
