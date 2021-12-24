@@ -9,7 +9,7 @@ from netutils.mac import mac_to_format
 
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
-from netutils.ip import cidr_to_netmask
+# from netutils.ip import cidr_to_netmask
 
 
 # from django.utils.text import slugify

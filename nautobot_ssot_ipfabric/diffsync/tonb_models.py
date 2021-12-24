@@ -163,7 +163,7 @@ class Interface(DiffSyncModel):
         "mgmt_only",
         "ip_address",
         "subnet_mask",
-        # "ip_is_primary",
+        "ip_is_primary",
     )
     _children = {}
 
