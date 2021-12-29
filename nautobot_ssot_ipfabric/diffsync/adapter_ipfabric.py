@@ -1,10 +1,19 @@
 """DiffSync adapter class for Ip Fabric."""
 
+from django.conf import settings
+from netutils.mac import mac_to_format
+
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
 # import logging
 
 # logger = logging.getLogger("nautobot.jobs")
+
+CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
+DEFAULT_INTERFACE_TYPE = CONFIG.get("DEFAULT_INTERFACE_TYPE", "1000base-t")
+DEFAULT_INTERFACE_MTU = CONFIG.get("DEFAULT_INTERFACE_MTU", 1500)
+DEFAULT_INTERFACE_MAC = CONFIG.get("DEFAULT_INTERFACE_MAC", "00:00:00:00:00:01")
+DEFAULT_DEVICE_ROLE = CONFIG.get("DEFAULT_DEVICE_ROLE", "Network Device")
 
 
 class IPFabricDiffSync(DiffSyncModelAdapters):
@@ -41,16 +50,15 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                 name=iface.get("intName"),
                 device_name=iface.get("hostname"),
                 description=iface.get("dscr"),
-                enabled=not iface.get("reason") == "admin",
-                mac_address=iface.get("mac"),
-                mtu=iface.get("mtu"),
-                # TODO: (GREG) Determine how to handle interface type.
-                type=iface.get("type", "1000base-t"),
+                enabled=True,
+                mac_address=mac_to_format(iface.get("mac"), "MAC_COLON_TWO").upper()
+                if iface.get("mac")
+                else DEFAULT_INTERFACE_MAC,
+                mtu=iface.get("mtu") if iface.get("mtu") else DEFAULT_INTERFACE_MTU,
+                type=DEFAULT_INTERFACE_TYPE,
                 mgmt_only=iface.get("mgmt_only", False),
-                ip_address=iface.get("primaryIp"),
-                # TODO: (GREG) Determine how to handle mask.
+                ip_address=ip_address,
                 subnet_mask="255.255.255.255",
-                # TODO: (GREG) Determine how to handle type.
                 ip_is_primary=ip_address == device_primary_ip,
             )
             self.add(interface)
@@ -89,6 +97,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                     model=device["model"],
                     vendor=device["vendor"],
                     serial_number=device["sn"],
+                    role=DEFAULT_DEVICE_ROLE,
                 )
                 self.add(device_model)
                 location.add_child(device_model)

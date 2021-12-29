@@ -12,7 +12,7 @@ from .nbutils import (
     create_tenant,
     create_vlan,
 )
-from .test_utils import json_fixture
+from .test_utils import clean_slate, json_fixture
 
 __all__ = (
     "create_site",
@@ -27,4 +27,5 @@ __all__ = (
     "json_fixture",
     "IpFabricClient",
     "create_vlan",
+    "clean_slate",
 )

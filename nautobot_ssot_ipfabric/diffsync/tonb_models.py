@@ -4,6 +4,7 @@ from typing import List, Optional
 
 from diffsync import DiffSyncModel
 from django.utils.text import slugify
+from django.conf import settings
 
 # from django.conf import settings
 # from requests.api import delete
@@ -13,9 +14,10 @@ from nautobot.ipam.models import VLAN
 
 import nautobot_ssot_ipfabric.utilities.nbutils as tonb_nbutils
 
-DEFAULT_DEVICE_ROLE = "Network Device"
+CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
+DEFAULT_DEVICE_ROLE = CONFIG.get("DEFAULT_DEVICE_ROLE", "Network Device")
 DEFAULT_DEVICE_ROLE_COLOR = "ff0000"
-DEFAULT_DEVICE_STATUS = "Active"
+DEFAULT_DEVICE_STATUS = CONFIG.get("DEFAULT_DEVICE_STATUS", "Active")
 DEFAULT_DEVICE_STATUS_COLOR = "ff0000"
 
 
@@ -49,9 +51,10 @@ class Location(DiffSyncModel):
     def update(self, attrs):
         """Update Site Object in Nautobot."""
         site = Site.objects.get(name=self.name)
-        if attrs.get("site_id"):
+        if attrs.get("name"):
             site.object.update(name=self.name)
             site.object.update(slug=slugify(self.name))
+            # site.custom_data_field.update({"ipfabric-site-id": self.site_id})
         site.validated_save()
         return super().update(attrs)
 
@@ -61,7 +64,7 @@ class Device(DiffSyncModel):
 
     _modelname = "device"
     _identifiers = ("name",)
-    _attributes = ("location_name", "model", "vendor", "serial_number")
+    _attributes = ("location_name", "model", "vendor", "serial_number", "role")
     _children = {"interface": "interfaces"}
 
     name: str
@@ -69,8 +72,9 @@ class Device(DiffSyncModel):
     model: Optional[str]
     vendor: Optional[str]
     serial_number: Optional[str]
+    role: Optional[str]
 
-    mgmt_int: List["MgmtInterface"] = list()  # pylint: disable=use-list-literal
+    # mgmt_int: List["MgmtInterface"] = list()  # pylint: disable=use-list-literal
     mgmt_address: Optional[str]
 
     interfaces: List["Interface"] = list()  # pylint: disable=use-list-literal
@@ -90,9 +94,8 @@ class Device(DiffSyncModel):
         device_status_object = tonb_nbutils.create_status(DEFAULT_DEVICE_STATUS, DEFAULT_DEVICE_STATUS_COLOR)
 
         site_object = tonb_nbutils.create_site(attrs["location_name"])
-        print(site_object)
 
-        new_device = NautobotDevice(
+        new_device = NautobotDevice.objects.create(
             status=device_status_object,
             device_type=device_type_object,
             device_role=device_role_object,
@@ -132,10 +135,8 @@ class Device(DiffSyncModel):
         device_role_object = tonb_nbutils.create_device_role_object(
             role_name=DEFAULT_DEVICE_ROLE, role_color=DEFAULT_DEVICE_ROLE_COLOR
         )
-        if _device.device_role != device_role_object:
-            _device.device_role = device_role_object
+        _device.device_role = device_role_object
 
-        # TODO: Compare, if not == update
         device_status_object = tonb_nbutils.create_status(DEFAULT_DEVICE_STATUS, DEFAULT_DEVICE_STATUS_COLOR)
         _device.status = device_status_object
 
@@ -171,7 +172,7 @@ class Interface(DiffSyncModel):
     description: Optional[str]
     enabled: Optional[bool]
     mac_address: Optional[str]
-    mtu: Optional[str]
+    mtu: Optional[int]
     type: Optional[str]
     mgmt_only: Optional[bool]
     ip_address: Optional[str]
@@ -185,7 +186,12 @@ class Interface(DiffSyncModel):
     def create(cls, diffsync, ids, attrs):
         """Create interface in Nautobot under its parent device."""
         device_obj = NautobotDevice.objects.get(name=ids["device_name"])
-        interface_obj = tonb_nbutils.create_interface(device_obj=device_obj, interface_details=dict(**ids, **attrs))
+        if not attrs.get("mac_address"):
+            attrs["mac_address"] = "00:00:00:00:00:01"
+        interface_obj = tonb_nbutils.create_interface(
+            device_obj=device_obj,
+            interface_details=dict(**ids, **attrs),
+        )
 
         ip_address = attrs["ip_address"]
         if ip_address:
@@ -201,7 +207,7 @@ class Interface(DiffSyncModel):
                     device_obj.primary_ip4 = ip_address_obj
                 if ip_address_obj.family == 6:
                     device_obj.primary_ip6 = ip_address_obj
-                device_obj.validated_save()
+            device_obj.validated_save()
 
         return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
 
@@ -211,6 +217,29 @@ class Interface(DiffSyncModel):
         interface = device.interfaces.get(name=self.name)
         interface.delete()
         return super().delete()
+
+    def update(self, attrs):
+        """Update Interface object in Nautobot."""
+        device = NautobotDevice.objects.get(name=self.device_name)
+        interface = device.interfaces.get(name=self.name)
+        if attrs.get("description"):
+            interface.description = attrs["description"]
+        if attrs.get("enabled"):
+            interface.enabled = attrs["enabled"]
+        if attrs.get("mac_address"):
+            interface.mac_address = attrs["mac_address"]
+        if attrs.get("mtu"):
+            interface.mtu = attrs["mtu"]
+        if attrs.get("mode"):
+            interface.mode = attrs["mode"]
+        if attrs.get("lag"):
+            interface.lag = attrs["lag"]
+        if attrs.get("type"):
+            interface.type = attrs["type"]
+        if attrs.get("mgmt_only"):
+            interface.mgmt_only = attrs["mgmt_only"]
+        interface.validated_save()
+        return super().update(attrs)
 
 
 class Vlan(DiffSyncModel):
@@ -252,14 +281,7 @@ class Vlan(DiffSyncModel):
         return super().delete()
 
 
-class MgmtInterface(Interface):
-    """MgmtInterface class renamed to Interface.
-
-    For compatibility until references are removed.
-    """
-
-    _modelname = "mgmt_interface"
-
-
 Location.update_forward_refs()
 Device.update_forward_refs()
+Interface.update_forward_refs()
+Vlan.update_forward_refs()

@@ -141,7 +141,6 @@ def create_interface(device_obj, interface_details):
         "lag",
         "type",
         "mgmt_only",
-        "untagged_vlan",
     )
     fields = {k: v for k, v in interface_details.items() if k in interface_fields and v}
     interface_obj, _ = device_obj.interfaces.get_or_create(**fields)

@@ -2,8 +2,10 @@
 # import logging
 
 from diffsync.exceptions import ObjectNotFound
+from django.conf import settings
 from nautobot.dcim.models import Device, Site
 from nautobot.ipam.models import VLAN
+from netutils.mac import mac_to_format
 
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
@@ -13,6 +15,11 @@ from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 # from django.utils.text import slugify
 
 # logger = logging.getLogger("nautobot.jobs")
+CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
+DEFAULT_INTERFACE_TYPE = CONFIG.get("DEFAULT_INTERFACE_TYPE", "1000base-t")
+DEFAULT_INTERFACE_MTU = CONFIG.get("DEFAULT_INTERFACE_MTU", 1500)
+DEFAULT_INTERFACE_MAC = CONFIG.get("DEFAULT_INTERFACE_MAC", "00:00:00:00:00:01")
+DEFAULT_DEVICE_ROLE = CONFIG.get("DEFAULT_DEVICE_ROLE", "Network Device")
 
 
 class NautobotDiffSync(DiffSyncModelAdapters):
@@ -41,31 +48,40 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 )
                 self.add(location)
 
-    # def load_interface(self, interface_record, device_model):
-    #     """Import a single Nautobot Interface object as a DiffSync Interface model."""
-    #     interface = self.interface(
-    #         diffsync=self,
-    #         name=interface_record.name,
-    #         device_name=device_model.name,
-    #         description=interface_record.description,
-    #         pk=interface_record.pk,
-    #     )
-    #     self.add(interface)
-    #     device_model.add_child(interface)
-
-    # def load_primary_ip_interface(self, interface_record, device_model, device_record):
-    #     """Import a Nautobot primary IP interface object as a DiffSync MgmtInterface model."""
-    #     interface = self.mgmt_interface(
-    #         diffsync=self,
-    #         name=interface_record.name,
-    #         device_name=device_model.name,
-    #         ip_address=device_record.primary_ip4.host,
-    #         subnet_mask=cidr_to_netmask(device_record.primary_ip4.prefix_length),
-    #         description=interface_record.description,
-    #         pk=interface_record.pk,
-    #     )
-    #     self.add(interface)
-    #     device_model.add_child(interface)
+    def load_interface(self):
+        """Import a single Nautobot Interface object as a DiffSync Interface model."""
+        for device_record in Device.objects.all():
+            # Get MGMT IP
+            mgmt_int_qset = device_record.interfaces.filter(mgmt_only=True)
+            device = self.get(self.device, device_record.name)
+            for interface_record in device_record.interfaces.all():
+                try:
+                    interface = self.get(self.interface, self.name)
+                    interface.pk = interface_record.pk
+                except ObjectNotFound:
+                    interface = self.interface(
+                        diffsync=self,
+                        name=interface_record.name,
+                        device_name=device_record.name,
+                        description=interface_record.description if interface_record.description else None,
+                        enabled=True,
+                        mac_address=mac_to_format(str(interface_record.mac_address), "MAC_COLON_TWO").upper()
+                        if str(interface_record.mac_address)
+                        else DEFAULT_INTERFACE_MAC,
+                        subnet_mask="255.255.255.255",
+                        mtu=interface_record.mtu if interface_record.mtu else DEFAULT_INTERFACE_MTU,
+                        type=DEFAULT_INTERFACE_TYPE,
+                        mgmt_only=interface_record.mgmt_only if interface_record.mgmt_only else False,
+                        pk=interface_record.pk,
+                        ip_is_primary=bool(
+                            any(interface for interface in mgmt_int_qset if interface.name == interface_record.name)
+                        ),
+                        ip_address=str(interface_record.ip_addresses.first().host)
+                        if interface_record.ip_addresses.first()
+                        else None,
+                    )
+                    self.add(interface)
+                    device.add_child(interface)
 
     def load_devices(self):
         """Add Nautobot Device objects as DiffSync Device models."""
@@ -80,13 +96,12 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                     name=device_record.name,
                     # platform=str(device_record.platform) if device_record.platform else None,
                     model=str(device_record.device_type),
-                    # role=str(device_record.device_role),
+                    role=str(device_record.device_role) if str(device_record.device_role) else DEFAULT_DEVICE_ROLE,
                     location_name=device_record.site.name,
                     vendor=str(device_record.device_type.manufacturer),
                     # status=device_record.status,
                     serial_number=device_record.serial if device_record.serial else "",
                 )
-
                 self.add(device)
                 location.add_child(device)
 
@@ -105,7 +120,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                     status=vlan_record.status.slug,
                     vid=vlan_record.vid,
                 )
-
                 self.add(vlan)
                 location.add_child(vlan)
 
@@ -114,14 +128,4 @@ class NautobotDiffSync(DiffSyncModelAdapters):
         self.load_sites()
         self.load_devices()
         self.load_vlans()
-
-
-#                for interface_record in Interface.objects.filter(device=device_record):
-#                    try:
-#                        if interface_record.ip_addresses.get(host=device_record.primary_ip.host):
-#                            self.load_primary_ip_interface(interface_record, device, device_record)
-#                    except (IPAddress.DoesNotExist, AttributeError) as e:
-#                        print(e)
-#                        pass
-#                        # Pass for now but can uncomment to load all interfaces for a device.
-#                        # self.load_interface(interface_record, device)
+        self.load_interface()
