@@ -135,14 +135,3 @@ class NautobotDiffSync(DiffSyncModelAdapters):
         self.load_devices()
         self.load_vlans()
         self.load_interface()
-
-
-#                for interface_record in Interface.objects.filter(device=device_record):
-#                    try:
-#                        if interface_record.ip_addresses.get(host=device_record.primary_ip.host):
-#                            self.load_primary_ip_interface(interface_record, device, device_record)
-#                    except (IPAddress.DoesNotExist, AttributeError) as e:
-#                        print(e)
-#                        pass
-#                        # Pass for now but can uncomment to load all interfaces for a device.
-#                        # self.load_interface(interface_record, device)
