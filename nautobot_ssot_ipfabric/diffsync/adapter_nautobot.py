@@ -53,6 +53,8 @@ class NautobotDiffSync(DiffSyncModelAdapters):
     def load_interface(self):
         """Import a single Nautobot Interface object as a DiffSync Interface model."""
         for device_record in Device.objects.all():
+            # Get MGMT IP
+            mgmt_int_qset = device_record.interfaces.filter(mgmt_only=True)
             device = self.get(self.device, device_record.name)
             for interface_record in device_record.interfaces.all():
                 try:
@@ -73,6 +75,12 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                         type=DEFAULT_INTERFACE_TYPE,
                         mgmt_only=interface_record.mgmt_only if interface_record.mgmt_only else False,
                         pk=interface_record.pk,
+                        ip_is_primary=bool(
+                            any(interface for interface in mgmt_int_qset if interface.name == interface_record.name)
+                        ),
+                        ip_address=str(interface_record.ip_addresses.first().host)
+                        if interface_record.ip_addresses.first()
+                        else None,
                     )
                     self.add(interface)
                     device.add_child(interface)
@@ -98,7 +106,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                     pk=device_record.pk,
                     serial_number=device_record.serial if device_record.serial else "",
                 )
-
                 self.add(device)
                 location.add_child(device)
 
@@ -119,7 +126,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                     pk=vlan_record.pk,
                     vid=vlan_record.vid,
                 )
-
                 self.add(vlan)
                 location.add_child(vlan)
 
@@ -140,21 +146,3 @@ class NautobotDiffSync(DiffSyncModelAdapters):
 #                        pass
 #                        # Pass for now but can uncomment to load all interfaces for a device.
 #                        # self.load_interface(interface_record, device)
-
-
-# def load_primary_ip_interface(self):
-#     """Import a Nautobot primary IP interface object as a DiffSync MgmtInterface model."""
-#     for device_record in Device.objects.all():
-#         device_model = self.get(self.device, device_record.name)
-#         for interface_record in device_record.interfaces.all():
-#             interface = self.mgmt_int(
-#                 diffsync=self,
-#                 name=interface_record.name,
-#                 device_name=device_model.name,
-#                 ip_address=device_record.primary_ip4.host,
-#                 subnet_mask=cidr_to_netmask(device_record.primary_ip4.prefix_length),
-#                 description=interface_record.description,
-#                 pk=interface_record.pk,
-#             )
-#             self.add(interface)
-#             device_model.add_child(interface)

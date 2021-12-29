@@ -74,7 +74,7 @@ class Device(DiffSyncModel):
     serial_number: Optional[str]
     role: Optional[str]
 
-    mgmt_int: List["MgmtInterface"] = list()  # pylint: disable=use-list-literal
+    # mgmt_int: List["MgmtInterface"] = list()  # pylint: disable=use-list-literal
     mgmt_address: Optional[str]
 
     interfaces: List["Interface"] = list()  # pylint: disable=use-list-literal
@@ -281,16 +281,7 @@ class Vlan(DiffSyncModel):
         return super().delete()
 
 
-class MgmtInterface(Interface):
-    """MgmtInterface class renamed to Interface.
-
-    For compatibility until references are removed.
-    """
-
-    _modelname = "mgmt_interface"
-
-
 Location.update_forward_refs()
 Device.update_forward_refs()
 Interface.update_forward_refs()
-MgmtInterface.update_forward_refs()
+Vlan.update_forward_refs()
