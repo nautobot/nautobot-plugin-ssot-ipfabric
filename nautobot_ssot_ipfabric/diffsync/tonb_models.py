@@ -1,18 +1,19 @@
 """DiffSyncModel subclasses for Nautobot-to-IPFabric data sync."""
+# import logging
 import uuid
 from typing import List, Optional
 
 from diffsync import DiffSyncModel
-from django.utils.text import slugify
 from django.conf import settings
-
-# from django.conf import settings
-# from requests.api import delete
+from django.utils.text import slugify
 from nautobot.dcim.models import Device as NautobotDevice
 from nautobot.dcim.models import Site
 from nautobot.ipam.models import VLAN
 
 import nautobot_ssot_ipfabric.utilities.nbutils as tonb_nbutils
+
+# logger = logging.getLogger("nautobot.jobs")
+
 
 CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
 DEFAULT_DEVICE_ROLE = CONFIG.get("DEFAULT_DEVICE_ROLE", "Network Device")
@@ -38,13 +39,11 @@ class Location(DiffSyncModel):
     def create(cls, diffsync, ids, attrs):
         """Create Site in Nautobot."""
         tonb_nbutils.create_site(site_name=ids["name"], site_id=attrs["site_id"])
-
         return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
 
     def delete(self) -> Optional["DiffSyncModel"]:
         """Delete Site in Nautobot."""
-        site = Site.objects.get(name=self.name)
-        site.delete()
+        Site.objects.get(name=self.name).delete()
         super().delete()
         return self
 
@@ -54,7 +53,7 @@ class Location(DiffSyncModel):
         if attrs.get("name"):
             site.object.update(name=self.name)
             site.object.update(slug=slugify(self.name))
-            # site.custom_data_field.update({"ipfabric-site-id": self.site_id})
+            site.custom_data_field.update({"ipfabric-site-id": self.site_id})
         site.validated_save()
         return super().update(attrs)
 
@@ -192,7 +191,6 @@ class Interface(DiffSyncModel):
             device_obj=device_obj,
             interface_details=dict(**ids, **attrs),
         )
-
         ip_address = attrs["ip_address"]
         if ip_address:
             ip_address_obj = tonb_nbutils.create_ip(
@@ -207,7 +205,9 @@ class Interface(DiffSyncModel):
                     device_obj.primary_ip4 = ip_address_obj
                 if ip_address_obj.family == 6:
                     device_obj.primary_ip6 = ip_address_obj
-            device_obj.validated_save()
+
+        interface_obj.validated_save()
+        device_obj.validated_save()
 
         return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
 
@@ -238,6 +238,15 @@ class Interface(DiffSyncModel):
             interface.type = attrs["type"]
         if attrs.get("mgmt_only"):
             interface.mgmt_only = attrs["mgmt_only"]
+        if attrs.get("ip_address"):
+            ip_address_obj = tonb_nbutils.create_ip(
+                ip_address=attrs.get("ip_address"),
+                subnet_mask=attrs.get("subnet_mask") if attrs.get("subnet_mask") else "255.255.255.255",
+                status="Active",
+            )
+            interface.ip_addresses.add(ip_address_obj)
+
+        device.validated_save()
         interface.validated_save()
         return super().update(attrs)
 

@@ -1,4 +1,5 @@
 """Utility functions for Nautobot ORM."""
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.utils.text import slugify
 from nautobot.dcim.models import DeviceRole, DeviceType, Manufacturer, Region, Site
@@ -6,6 +7,9 @@ from nautobot.extras.models.statuses import Status
 from nautobot.ipam.models import IPAddress
 from nautobot.tenancy.models import Tenant
 from netutils.ip import netmask_to_cidr
+
+CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
+ALLOW_DUPLICATE_IPS = CONFIG.get("ALLOW_DUPLICATE_ADDRESSES", True)
 
 
 def create_site(site_name, site_id=None, region_obj=None, tenant_obj=None):
@@ -110,6 +114,8 @@ def create_status(status_name, status_color, description="", app_label="dcim", m
 def create_ip(ip_address, subnet_mask, status="Active", object_pk=None):
     """Verifies ip address exists in Nautobot. If not, creates specified ip.
 
+    Utility behvariour is manipulated by `settings` if duplicate ip's are allowed.
+
     Args:
         ip_address (str): IP address.
         subnet_mask (str): Subnet mask used for IP Address.
@@ -118,7 +124,20 @@ def create_ip(ip_address, subnet_mask, status="Active", object_pk=None):
     """
     status_obj = Status.objects.get_for_model(IPAddress).get(slug=slugify(status))
     cidr = netmask_to_cidr(subnet_mask)
-    ip_obj, _ = IPAddress.objects.get_or_create(address=f"{ip_address}/{cidr}", status=status_obj)
+    if ALLOW_DUPLICATE_IPS:
+        try:
+            addr = IPAddress.objects.filter(host=ip_address)
+            if addr.exists():
+                if addr.first().assigned_object:  # If one is assigned, assume the rest are for now.
+                    ip_obj = IPAddress.objects.create(
+                        address=f"{ip_address}/{cidr}", status=status_obj, description="Duplicate by IPFabric SSoT"
+                    )
+            else:
+                ip_obj = IPAddress.objects.get(address=f"{ip_address}/{cidr}", status=status_obj)
+        except IPAddress.DoesNotExist:
+            ip_obj = IPAddress.objects.create(address=f"{ip_address}/{cidr}", status=status_obj)
+    else:
+        ip_obj, _ = IPAddress.objects.get_or_create(address=f"{ip_address}/{cidr}", status=status_obj)
     if object_pk:
         ip_obj.assigned_object_id = object_pk
     return ip_obj
