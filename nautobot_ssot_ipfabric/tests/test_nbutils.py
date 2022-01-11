@@ -13,7 +13,7 @@ from nautobot_ssot_ipfabric.utilities import (
     create_device_role_object,
     create_device_type_object,
     create_interface,
-    create_ip,
+    # create_ip,
     create_manufacturer,
     create_region,
     create_site,
@@ -124,15 +124,15 @@ class TestNautobotUtils(TestCase):
         test_status = create_status(status_name="Test-Status-100", status_color=ColorChoices.COLOR_AMBER)
         self.assertEqual(test_status.id, Status.objects.get(name="Test-Status-100").id)
 
-    def test_create_ip(self):
-        """Test `create_ip` Utility."""
-        test_ip = create_ip("192.168.0.1", "255.255.255.255")
-        self.assertEqual(test_ip.id, self.ip_address.id)
+    # def test_create_ip(self):
+    #     """Test `create_ip` Utility."""
+    #     test_ip = create_ip("192.168.0.1", "255.255.255.255")
+    #     self.assertEqual(test_ip.id, self.ip_address.id)
 
-    def test_create_ip_device_add(self):
-        """Test `create_ip` adding to device Utility."""
-        test_ip = create_ip("192.168.0.1", "255.255.255.255", object_pk=self.device.id)
-        self.assertEqual(test_ip.id, self.ip_address.id)
+    # def test_create_ip_device_add(self):
+    #     """Test `create_ip` adding to device Utility."""
+    #     test_ip = create_ip("192.168.0.1", "255.255.255.255", object_pk=self.device.id)
+    #     self.assertEqual(test_ip.id, self.ip_address.id)
 
     def test_create_interface(self):
         """Test `create_interface` Utility."""

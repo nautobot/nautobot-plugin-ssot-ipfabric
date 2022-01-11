@@ -1,13 +1,13 @@
 """DiffSync adapter class for Ip Fabric."""
 
+import logging
+
 from django.conf import settings
 from netutils.mac import mac_to_format
 
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
-# import logging
-
-# logger = logging.getLogger("nautobot.jobs")
+logger = logging.getLogger("nautobot.jobs")
 
 CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
 DEFAULT_INTERFACE_TYPE = CONFIG.get("DEFAULT_INTERFACE_TYPE", "1000base-t")
@@ -37,11 +37,12 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
     def load_device_interfaces(self, device_model, interfaces, device_primary_ip):
         """Create and load DiffSync Interface model objects for a specific device."""
         device_interfaces = [iface for iface in interfaces if iface.get("hostname") == device_model.name]
-        self.job.log_debug(message=f"Loading {len(device_interfaces)} interfaces for device '{device_model.name}'")
+        # self.job.log_debug(message=f"Loading {len(device_interfaces)} interfaces for device '{device_model.name}'")
 
         pseudo_interface = pseudo_management_interface(device_model.name, device_interfaces, device_primary_ip)
         if pseudo_interface:
             device_interfaces.append(pseudo_interface)
+            logger.info("Pseudo MGMT Interface: %s", pseudo_interface)
 
         for iface in device_interfaces:
             ip_address = iface.get("primaryIp")
@@ -76,7 +77,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                 continue
             location_vlans = [vlan for vlan in vlans if vlan["siteName"] == location.name]
             for vlan in location_vlans:
-                self.job.log_debug(message=f"Loading VLAN {vlan['vlanName']}")
+                # self.job.log_debug(message=f"Loading VLAN {vlan['vlanName']}")
                 vlan = self.vlan(
                     diffsync=self,
                     name=vlan["vlanName"],
@@ -88,7 +89,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                 location.add_child(vlan)
             location_devices = [device for device in devices if device["siteName"] == location.name]
             for device in location_devices:
-                self.job.log_debug(message=f"Loading Device {device['hostname']}")
+                # self.job.log_debug(message=f"Loading Device {device['hostname']}")
                 device_primary_ip = device["loginIp"]
                 device_model = self.device(
                     diffsync=self,
@@ -102,7 +103,6 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                 self.add(device_model)
                 location.add_child(device_model)
                 self.load_device_interfaces(device_model, interfaces, device_primary_ip)
-                self.job.log_debug(message=device_model)
 
 
 def pseudo_management_interface(hostname, device_interfaces, device_primary_ip):

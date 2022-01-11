@@ -41,6 +41,33 @@ PLUGINS_CONFIG = {
 }
 ```
 
+Additional plugin configuration parameters are able to be provided to manipulate the behavior of the SSoT functionality.
+The parameters below are self explanatory. Below is how the plugin accesses the values.
+
+```bash
+ALLOW_DUPLICATE_ADDRESSES = CONFIG.get("ALLOW_DUPLICATE_ADDRESSES", True)
+DEFAULT_INTERFACE_TYPE = CONFIG.get("DEFAULT_INTERFACE_TYPE", "1000base-t")
+DEFAULT_INTERFACE_MTU = CONFIG.get("DEFAULT_INTERFACE_MTU", 1500)
+DEFAULT_INTERFACE_MAC = CONFIG.get("DEFAULT_INTERFACE_MAC", "00:00:00:00:00:01")
+DEFAULT_DEVICE_ROLE = CONFIG.get("DEFAULT_DEVICE_ROLE", "Network Device")
+```
+
+To set any or all, append to the plugin configuration dictionary as followed:
+
+```python
+PLUGINS_CONFIG = {
+  "nautobot_ssot_ipfabric": {
+      "IPFABRIC_HOST": os.environ.get("IPFABRIC_HOST"),
+      "IPFABRIC_API_TOKEN": os.environ.get("IPFABRIC_API_TOKEN"),
+      "ALLOW_DUPLICATE_ADDRESSES" = os.environ.get("ALLOW_DUPLICATE_ADDRESSES"),
+      "DEFAULT_INTERFACE_TYPE" = os.environ.get("DEFAULT_INTERFACE_TYPE"),
+      "DEFAULT_INTERFACE_MTU" = os.environ.get("DEFAULT_INTERFACE_MTU"),
+      "DEFAULT_INTERFACE_MAC" = os.environ.get("DEFAULT_INTERFACE_MAC"),
+      "DEFAULT_DEVICE_ROLE" = os.environ.get("DEFAULT_DEVICE_ROLE"),
+  }
+}
+```
+
 ## Usage
 
 Nautobot SSoT IP Fabric provides a user interface to interact with the underlying job that executes the synchronization from **IP Fabric** into **Nautobot**.
