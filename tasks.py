@@ -42,7 +42,7 @@ namespace.configure(
         "nautobot_ssot_ipfabric": {
             "nautobot_ver": "1.1.4",
             "project_name": "nautobot_ssot_ipfabric",
-            "python_ver": "3.6",
+            "python_ver": "3.7",
             "local": False,
             "compose_dir": os.path.join(os.path.dirname(__file__), "development"),
             "compose_files": [

@@ -19,12 +19,12 @@ packages = [
 [tool.poetry.dependencies]
 # Used for local development
 nautobot = { version = "*", optional = true }
-python = ">=3.6.2,<4.0"
+python = ">=3.7,<4.0"
 nautobot-ssot = "^1.0.1"
-netutils = "^0.2.3"
 nautobot-chatops = "^1.5.0"
 nautobot-chatops-ipfabric = "^1.0.0"
 Markdown = "3.3.4"
+netutils = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
 bandit = "*"
