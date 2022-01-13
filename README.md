@@ -1,6 +1,6 @@
 # Nautobot SSoT IPFabric
 
-A plugin for [Nautobot](https://github.com/nautobot/nautobot).
+An [SSoT](https://blog.networktocode.com/post/nautobot-ssot-plugin/) plugin providing a simple way to synchronize data between [IPFabric](https://ipfabric.io/) and [Nautobot](https://github.com/nautobot/nautobot). Ensure data stays consistent between the two platforms by leveraging [DiffSync](https://github.com/networktocode/diffsync) capabilities and allowing users to take full advantage of both platforms with up-to-date, synchronized data.
 
 ## Build Status
 
@@ -41,9 +41,9 @@ For additional detailed instructions on how to install Nautobot Plugins, checkou
 
 This plugin relies on user provided environment variables to interact with IP Fabric.
 
-- `IPFABRIC_API_TOKEN` - API Token for IP Fabric
-- `IPFABRIC_HOST` - IP Fabric URL
-- `NAUTOBOT_HOST` - Nautobot URL (This is used to generate url links for chatops)
+- `ipfabric_api_token` - API Token for IP Fabric
+- `ipfabric_host` - IP Fabric URL
+- `nautobot_host` - Nautobot URL (This is used to generate url links for chatops)
 
 Example `PLUGINS_CONFIG` to be updated in `nautobot_config.py` after successful installation. The chatops configuration is optional, but if you'd like to have the
 ability to call the sync job through chatops, you will be required to configure it.
@@ -57,9 +57,9 @@ PLUGINS_CONFIG = {
         "session_cache_timeout": 3600,
     },
     "nautobot_ssot_ipfabric": {
-        "IPFABRIC_API_TOKEN": os.environ.get("IPFABRIC_API_TOKEN"),
-        "IPFABRIC_HOST": os.environ.get("IPFABRIC_HOST"),
-        "NAUTOBOT_HOST": os.environ.get("NAUTOBOT_HOST"),
+        "ipfabric_api_token": os.environ.get("IPFABRIC_API_TOKEN"),
+        "ipfabric_host": os.environ.get("IPFABRIC_HOST"),
+        "nautobot_host": os.environ.get("NAUTOBOT_HOST"),
     },
     "nautobot_ssot": {"hide_example_jobs": True},
     "nautobot_chatops_ipfabric": {
@@ -73,7 +73,7 @@ PLUGINS_CONFIG = {
 
 As part of the SSoT synchronization capabilities with IP Fabric, this plugin extends the [Nautobot Plugin Chatops IPFabric](https://github.com/nautobot/nautobot-plugin-chatops-ipfabric) by providing users with the ability to begin the sync job from a chatops command (Slack).
 
-## TODO: /slash command screenshot
+![ssot-chatops-sync](docs/images/chatops-ssot-ipfabric.png)
 
 ## Contributing
 

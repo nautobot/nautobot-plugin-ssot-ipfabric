@@ -16,10 +16,10 @@ from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
 # logger = logging.getLogger("nautobot.jobs")
 CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
-DEFAULT_INTERFACE_TYPE = CONFIG.get("DEFAULT_INTERFACE_TYPE", "1000base-t")
-DEFAULT_INTERFACE_MTU = CONFIG.get("DEFAULT_INTERFACE_MTU", 1500)
-DEFAULT_INTERFACE_MAC = CONFIG.get("DEFAULT_INTERFACE_MAC", "00:00:00:00:00:01")
-DEFAULT_DEVICE_ROLE = CONFIG.get("DEFAULT_DEVICE_ROLE", "Network Device")
+DEFAULT_INTERFACE_TYPE = CONFIG.get("default_interface_type", "1000base-t")
+DEFAULT_INTERFACE_MTU = CONFIG.get("default_interface_mtu", 1500)
+DEFAULT_INTERFACE_MAC = CONFIG.get("default_interface_mac", "00:00:00:00:00:01")
+DEFAULT_DEVICE_ROLE = CONFIG.get("default_device_role", "Network Device")
 
 
 class NautobotDiffSync(DiffSyncModelAdapters):

@@ -12,7 +12,9 @@ from nautobot_chatops.workers import handle_subcommands, subcommand_of
 
 from nautobot_ssot_ipfabric.jobs import IpFabricDataSource
 
-configs = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
+CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
+NAUTOBOT_HOST = CONFIG.get("nautobot_host")
+
 BASE_CMD = "ipfabric"
 IPFABRIC_LOGO_PATH = "nautobot_ssot_ipfabric/ipfabric_logo.png"
 IPFABRIC_LOGO_ALT = "IPFabric Logo"
@@ -76,12 +78,10 @@ def ssot_sync_to_nautobot(dispatcher, dry_run=None):
     dispatcher.send_blocks(blocks)
     if sync_job.job_result.status == "completed":
         dispatcher.send_markdown(
-            f"Sync completed succesfully. Here is the link to your job: {configs['NAUTOBOT_HOST']}{sync_job.sync.get_absolute_url()}."
+            f"Sync completed succesfully. Here is the link to your job: {NAUTOBOT_HOST}{sync_job.sync.get_absolute_url()}."
         )
     else:
         dispatcher.send_warning(
-            f"Sync failed. Here is the link to your job: {configs['NAUTOBOT_HOST']}{sync_job.sync.get_absolute_url()}"
+            f"Sync failed. Here is the link to your job: {NAUTOBOT_HOST}{sync_job.sync.get_absolute_url()}"
         )
     return CommandStatusChoices.STATUS_SUCCEEDED
-    # To get the url of JOB:
-    # sync_job.job_result.get_absolute_url()
