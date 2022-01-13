@@ -60,7 +60,7 @@ class IPFabricJobTest(TestCase):
     # )
     def test_config_information(self):
         """Verify the config_information() API."""
-        CONFIG["IPFABRIC_HOST"] = "https://ipfabric.networktocode.com"
+        CONFIG["ipfabric_host"] = "https://ipfabric.networktocode.com"
         config_information = jobs.IpFabricDataSource.config_information()
         self.assertEqual(
             config_information,
@@ -69,4 +69,4 @@ class IPFabricJobTest(TestCase):
             },
         )
         # CLEANUP
-        CONFIG["IPFABRIC_HOST"] = BACKUP_CONFIG["IPFABRIC_HOST"]
+        CONFIG["ipfabric_host"] = BACKUP_CONFIG["ipfabric_host"]

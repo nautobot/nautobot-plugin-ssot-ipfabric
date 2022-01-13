@@ -1,6 +1,6 @@
 # Nautobot SSoT IPFabric
 
-A plugin for [Nautobot](https://github.com/nautobot/nautobot).
+An [SSoT](https://blog.networktocode.com/post/nautobot-ssot-plugin/) plugin providing a simple way to synchronize data between [IPFabric](https://ipfabric.io/) and [Nautobot](https://github.com/nautobot/nautobot). Ensure data stays consistent between the two platforms by leveraging [DiffSync](https://github.com/networktocode/diffsync) capabilities and allowing users to take full advantage of both platforms with up-to-date, synchronized data.
 
 ## Build Status
 
@@ -73,7 +73,7 @@ PLUGINS_CONFIG = {
 
 As part of the SSoT synchronization capabilities with IP Fabric, this plugin extends the [Nautobot Plugin Chatops IPFabric](https://github.com/nautobot/nautobot-plugin-chatops-ipfabric) by providing users with the ability to begin the sync job from a chatops command (Slack).
 
-## TODO: /slash command screenshot
+![ssot-chatops-sync](docs/images/chatops-ssot-ipfabric.png)
 
 ## Contributing
 

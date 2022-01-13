@@ -16,10 +16,10 @@ import nautobot_ssot_ipfabric.utilities.nbutils as tonb_nbutils
 
 
 CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
-DEFAULT_DEVICE_ROLE = CONFIG.get("DEFAULT_DEVICE_ROLE", "Network Device")
-DEFAULT_DEVICE_ROLE_COLOR = "ff0000"
-DEFAULT_DEVICE_STATUS = CONFIG.get("DEFAULT_DEVICE_STATUS", "Active")
-DEFAULT_DEVICE_STATUS_COLOR = "ff0000"
+DEFAULT_DEVICE_ROLE = CONFIG.get("default_device_role", "Network Device")
+DEFAULT_DEVICE_ROLE_COLOR = CONFIG.get("default_device_role_color", "ff0000")
+DEFAULT_DEVICE_STATUS = CONFIG.get("default_device_status", "Active")
+DEFAULT_DEVICE_STATUS_COLOR = CONFIG.get("default_device_status_color", "ff0000")
 
 
 class Location(DiffSyncModel):

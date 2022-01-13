@@ -12,6 +12,8 @@ from nautobot_ssot_ipfabric.diffsync.adapter_nautobot import NautobotDiffSync
 from nautobot_ssot_ipfabric.utilities.ipfabric_client import IpFabricClient
 
 CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
+IPFABRIC_HOST = CONFIG["ipfabric_host"]
+IPFABRIC_API_TOKEN = CONFIG["ipfabric_api_token"]
 
 
 # pylint:disable=too-few-public-methods
@@ -37,19 +39,19 @@ class IpFabricDataSource(DataSource, Job):
             DataMapping("Interfaces", None, "Interfaces", reverse("dcim:interface_list")),
             DataMapping("IP Addresses", None, "IP Addresses", reverse("ipam:ipaddress_list")),
             DataMapping("VLANs", None, "VLANs", reverse("ipam:vlan_list")),
-            DataMapping("Network Diagram", None, "Graph", f"{CONFIG['IPFABRIC_HOST']}/graph"),
+            DataMapping("Network Diagram", None, "Graph", f"{IPFABRIC_HOST}/graph"),
         )
 
     @classmethod
     def config_information(cls):
         """Dictionary describing the configuration of this DataSource."""
         return {
-            "IP Fabric host": CONFIG.get("IPFABRIC_HOST"),
+            "IP Fabric host": CONFIG["ipfabric_host"],
         }
 
     def sync_data(self):
         """Sync a device data from IP Fabric into Nautobot."""
-        client = IpFabricClient(CONFIG["IPFABRIC_HOST"], CONFIG["IPFABRIC_API_TOKEN"])
+        client = IpFabricClient(IPFABRIC_HOST, IPFABRIC_API_TOKEN)
 
         ipfabric_source = IPFabricDiffSync(job=self, sync=self.sync, client=client)
         self.log_info(message="Loading current data from IP Fabric...")

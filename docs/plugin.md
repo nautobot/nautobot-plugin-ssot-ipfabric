@@ -35,37 +35,49 @@ PLUGINS = ["nautobot_ssot_ipfabric"]
 
 PLUGINS_CONFIG = {
   "nautobot_ssot_ipfabric": {
-      "IPFABRIC_HOST": os.environ.get("IPFABRIC_HOST"),
-      "IPFABRIC_API_TOKEN": os.environ.get("IPFABRIC_API_TOKEN"),
+      "ipfabric_host": os.environ.get("IPFABRIC_HOST"),
+      "ipfabric_api_token": os.environ.get("IPFABRIC_API_TOKEN"),
   }
 }
 ```
 
-Additional plugin configuration parameters are able to be provided to manipulate the behavior of the SSoT functionality.
-The parameters below are self explanatory. Below is how the plugin accesses the values.
-
-```bash
-ALLOW_DUPLICATE_ADDRESSES = CONFIG.get("ALLOW_DUPLICATE_ADDRESSES", True)
-DEFAULT_INTERFACE_TYPE = CONFIG.get("DEFAULT_INTERFACE_TYPE", "1000base-t")
-DEFAULT_INTERFACE_MTU = CONFIG.get("DEFAULT_INTERFACE_MTU", 1500)
-DEFAULT_INTERFACE_MAC = CONFIG.get("DEFAULT_INTERFACE_MAC", "00:00:00:00:00:01")
-DEFAULT_DEVICE_ROLE = CONFIG.get("DEFAULT_DEVICE_ROLE", "Network Device")
-```
-
-To set any or all, append to the plugin configuration dictionary as followed:
+There are many additional configuration environment variables you are able to modify.
+To set any or all, update the plugin configuration dictionary as followed inside of your `nautobot_config.py` configuration settings file:
 
 ```python
 PLUGINS_CONFIG = {
   "nautobot_ssot_ipfabric": {
-      "IPFABRIC_HOST": os.environ.get("IPFABRIC_HOST"),
-      "IPFABRIC_API_TOKEN": os.environ.get("IPFABRIC_API_TOKEN"),
-      "ALLOW_DUPLICATE_ADDRESSES" = os.environ.get("ALLOW_DUPLICATE_ADDRESSES"),
-      "DEFAULT_INTERFACE_TYPE" = os.environ.get("DEFAULT_INTERFACE_TYPE"),
-      "DEFAULT_INTERFACE_MTU" = os.environ.get("DEFAULT_INTERFACE_MTU"),
-      "DEFAULT_INTERFACE_MAC" = os.environ.get("DEFAULT_INTERFACE_MAC"),
-      "DEFAULT_DEVICE_ROLE" = os.environ.get("DEFAULT_DEVICE_ROLE"),
+      "ipfabric_host": os.environ.get("IPFABRIC_HOST"),
+      "ipfabric_api_token": os.environ.get("IPFABRIC_API_TOKEN"),
+      "nautobot_host" = os.environ.get("NAUTOBOT_HOST"),
+      "default_interface_type" = os.environ.get("DEFAULT_INTERFACE_TYPE"),
+      "default_interface_mtu" = os.environ.get("DEFAULT_INTERFACE_MTU"),
+      "default_interface_mac" = os.environ.get("DEFAULT_INTERFACE_MAC"),
+      "default_device_status" = os.environ.get("DEFAULT_DEVICE_STATUS"),
+      "default_device_status_color" = os.environ.get("DEFAULT_DEVICE_STATUS_COLOR"),
+      "default_device_role" = os.environ.get("DEFAULT_DEVICE_ROLE"),
+      "default_device_role_color" = os.environ.get("DEFAULT_DEVICE_ROLE_COLOR"),
+      "allow_duplicate_addresses" = os.environ.get("ALLOW_DUPLICATE_ADDRESSES")
   }
 }
+```
+
+The `nautobot_host` variable should be a FQDN of your Nautobot instance. This is used to provide a URL to the job results via Chatops and it's not required.
+
+Here are the default values set while performing the synchronization job and importing data into Nautobot: Notice how these values are extracted from the settings of our specific application, `nautobot_ssot_ipfabric`.
+
+```python
+CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
+
+DEFAULT_INTERFACE_TYPE = CONFIG.get("default_interface_type", "1000base-t")
+DEFAULT_INTERFACE_MTU = CONFIG.get("default_interface_mtu", 1500)
+DEFAULT_INTERFACE_MAC = CONFIG.get("default_interface_mac", "00:00:00:00:00:01")
+DEFAULT_DEVICE_ROLE = CONFIG.get("default_device_role", "Network Device")
+DEFAULT_DEVICE_ROLE_COLOR = CONFIG.get("default_device_role_color", "ff0000")
+DEFAULT_DEVICE_STATUS = CONFIG.get("default_device_status", "Active")
+DEFAULT_DEVICE_STATUS_COLOR = CONFIG.get("default_device_status_color", "ff0000")
+ALLOW_DUPLICATE_ADDRESSES = CONFIG.get("allow_duplicate_addresses", True)
+NAUTOBOT_HOST = CONFIG.get("nautobot_host")
 ```
 
 ## Usage

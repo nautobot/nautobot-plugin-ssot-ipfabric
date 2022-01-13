@@ -273,9 +273,9 @@ PLUGINS_CONFIG = {
         "session_cache_timeout": 3600,
     },
     "nautobot_ssot_ipfabric": {
-        "IPFABRIC_API_TOKEN": os.environ.get("IPFABRIC_API_TOKEN"),
-        "IPFABRIC_HOST": os.environ.get("IPFABRIC_HOST"),
-        "NAUTOBOT_HOST": os.environ.get("NAUTOBOT_HOST"),
+        "ipfabric_api_token": os.environ.get("IPFABRIC_API_TOKEN"),
+        "ipfabric_host": os.environ.get("IPFABRIC_HOST"),
+        "nautobot_host": os.environ.get("NAUTOBOT_HOST"),
     },
     "nautobot_ssot": {"hide_example_jobs": True},
     "nautobot_chatops_ipfabric": {
