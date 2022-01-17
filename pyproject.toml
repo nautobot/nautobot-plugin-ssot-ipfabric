@@ -18,12 +18,10 @@ packages = [
 
 [tool.poetry.dependencies]
 # Used for local development
-nautobot = { version = "*", optional = true }
 python = ">=3.7,<4.0"
+nautobot = "^1.2.0"
 nautobot-ssot = "^1.0.1"
-nautobot-chatops = "^1.5.0"
 nautobot-chatops-ipfabric = "^1.0.0"
-Markdown = "3.3.4"
 netutils = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
@@ -46,6 +44,7 @@ Sphinx = "^4.3.1"
 myst-parser = "^0.15.2"
 sphinx-autoapi = "^1.8.4"
 sphinx-rtd-theme = "^1.0.0"
+nautobot-chatops = "^1.5.1"
 
 [tool.poetry.extras]
 nautobot = ["nautobot"]

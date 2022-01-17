@@ -2,23 +2,19 @@
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.utils.text import slugify
-from nautobot.dcim.models import DeviceRole, DeviceType, Manufacturer, Region, Site
+from nautobot.dcim.models import DeviceRole, DeviceType, Manufacturer, Site
 from nautobot.dcim.models.devices import Device
 from nautobot.extras.models.statuses import Status
 from nautobot.ipam.models import VLAN, IPAddress
-from nautobot.tenancy.models import Tenant
 from nautobot.utilities.choices import ColorChoices
 
-from nautobot_ssot_ipfabric.utilities import (
+from nautobot_ssot_ipfabric.utilities import (  # create_ip,
     create_device_role_object,
     create_device_type_object,
     create_interface,
-    # create_ip,
     create_manufacturer,
-    create_region,
     create_site,
     create_status,
-    create_tenant,
     create_vlan,
 )
 
@@ -33,12 +29,8 @@ class TestNautobotUtils(TestCase):
             name="Test-Site",
             slug="test-site",
             status=Status.objects.get(name="Active"),
-            region=None,
-            tenant=None,
         )
 
-        self.region = Region.objects.create(name="Test-Region", slug="test-region")
-        self.tenant = Tenant.objects.create(name="Test-Tenant", slug="test-tenant")
         self.manufacturer = Manufacturer.objects.create(name="Test-Manufacturer", slug="test-manufacturer")
         self.device_type = DeviceType.objects.create(
             model="Test-DeviceType", slug="test-devicetype", manufacturer=self.manufacturer
@@ -84,20 +76,8 @@ class TestNautobotUtils(TestCase):
         site = create_site(
             site_name="Test-Site-100",
             site_id=123456,
-            region_obj=Region.objects.first(),
-            tenant_obj=Tenant.objects.first(),
         )
         self.assertEqual(Site.objects.get(name="Test-Site-100").pk, site.pk)
-
-    def test_create_region(self):
-        """Test `create_region` Utility."""
-        test_region = create_region(region_name="Test-Region")
-        self.assertEqual(test_region.id, self.region.id)
-
-    def test_create_tenant(self):
-        """Test `create_tenant` Utility."""
-        test_tenant = create_tenant(tenant_name="Test-Tenant")
-        self.assertEqual(test_tenant.id, self.tenant.id)
 
     def test_create_device_type_object(self):
         """Test `create_device_type_object` Utility."""

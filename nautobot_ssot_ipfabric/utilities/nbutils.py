@@ -1,59 +1,44 @@
 """Utility functions for Nautobot ORM."""
+import datetime
+from typing import Optional
+
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.utils.text import slugify
-from nautobot.dcim.models import DeviceRole, DeviceType, Manufacturer, Region, Site
+from nautobot.dcim.models import DeviceRole, DeviceType, Manufacturer, Site
+from nautobot.extras.models import Tag
 from nautobot.extras.models.statuses import Status
 from nautobot.ipam.models import IPAddress
-from nautobot.tenancy.models import Tenant
 from netutils.ip import netmask_to_cidr
 
 CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
 ALLOW_DUPLICATE_IPS = CONFIG.get("ALLOW_DUPLICATE_ADDRESSES", True)
 
 
-def create_site(site_name, site_id=None, region_obj=None, tenant_obj=None):
+def create_site(site_name, site_id=None):
     """Creates a specified site in Nautobot.
 
     Args:
         site_name (str): Name of the site.
         site_id (str): ID of the site.
-        region_obj (Region): Region Nautobot Object
-        tenant_obj (Tenant): Tenant Nautobot Object
     """
-    try:
-        site_obj = Site.objects.get(name=site_name)
-    except Site.DoesNotExist:
-        site_obj = Site.objects.create(
-            name=site_name,
-            slug=slugify(site_name),
-            status=Status.objects.get(name="Active"),
-            region=region_obj,
-            tenant=tenant_obj,
-        )
-        site_obj.custom_field_data.update({"ipfabric_site_id": site_id} if site_id is not None else "")
-        site_obj.save()
+    site_obj, _ = Site.objects.get_or_create(name=site_name)
+    site_obj.slug = slugify(site_name)
+    site_obj.status = Status.objects.get(name="Active")
+    if site_id:
+        site_obj.cf["ipfabric-site-id"] = site_id
+    # Tag object with SSOT Synced from and Timestamp Custom Field
+    tag_object(nautobot_object=site_obj, custom_field="ssot-synced-from-ipfabric")
+    site_obj.validated_save()
     return site_obj
 
 
-def create_region(region_name):
-    """Creates a specified region in Nautobot.
-
-    Args:
-        region_name (str): Name of the site.
-    """
-    region_obj, _ = Region.objects.get_or_create(name=region_name, slug=slugify(region_name))
-    return region_obj
-
-
-def create_tenant(tenant_name):
-    """Create a specified tenant in Nautobot.
-
-    Args:
-        tenant_name (str): The name of the tenant.
-    """
-    tenant_obj, _ = Tenant.objects.get_or_create(name=tenant_name, slug=slugify(tenant_name))
-    return tenant_obj
+def create_manufacturer(vendor_name):
+    """Create specified manufacturer in Nautobot."""
+    mf_name, _ = Manufacturer.objects.get_or_create(name=vendor_name, slug=slugify(vendor_name))
+    # tag_object(nautobot_object=mf_name, custom_field="ssot-synced-from-ipfabric")
+    # mf_name.validated_save()
+    return mf_name
 
 
 def create_device_type_object(device_type, vendor_name):
@@ -70,12 +55,6 @@ def create_device_type_object(device_type, vendor_name):
     return device_type_obj
 
 
-def create_manufacturer(vendor_name):
-    """Create specified manufacturer in Nautobot."""
-    mf_name, _ = Manufacturer.objects.get_or_create(name=vendor_name, slug=slugify(vendor_name))
-    return mf_name
-
-
 def create_device_role_object(role_name, role_color):
     """Create specified device role in Nautobot.
 
@@ -84,6 +63,8 @@ def create_device_role_object(role_name, role_color):
         role_color (str): Role color.
     """
     role_obj, _ = DeviceRole.objects.get_or_create(name=role_name, slug=slugify(role_name), color=role_color)
+    # tag_object(nautobot_object=role_obj, custom_field="ssot-synced-from-ipfabric")
+    # role_obj.validated_save()
     return role_obj
 
 
@@ -163,6 +144,8 @@ def create_interface(device_obj, interface_details):
     )
     fields = {k: v for k, v in interface_details.items() if k in interface_fields and v}
     interface_obj, _ = device_obj.interfaces.get_or_create(**fields)
+    tag_object(nautobot_object=interface_obj, custom_field="ssot-synced-from-ipfabric")
+    interface_obj.validated_save()
     return interface_obj
 
 
@@ -180,4 +163,22 @@ def create_vlan(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: Site):
     """
     status = Status.objects.get(name=vlan_status)
     vlan_obj, _ = site_obj.vlans.get_or_create(name=vlan_name, vid=vlan_id, status=status)
+    tag_object(nautobot_object=vlan_obj, custom_field="ssot-synced-from-ipfabric")
+    vlan_obj.validated_save()
     return vlan_obj
+
+
+def tag_object(nautobot_object, custom_field: str, tag_slug: Optional[str] = "ssot-synced-from-ipfabric"):
+    """Apply the given tag and custom field to the identified object."""
+    tag = Tag.objects.get(slug=tag_slug)
+    today = datetime.date.today().isoformat()
+
+    def _tag_object(nautobot_object):
+        """Apply custom field and tag to object, if applicable."""
+        if hasattr(nautobot_object, "tags"):
+            nautobot_object.tags.add(tag)
+        if hasattr(nautobot_object, "cf"):
+            nautobot_object.cf[custom_field] = today
+        nautobot_object.validated_save()
+
+    _tag_object(nautobot_object)

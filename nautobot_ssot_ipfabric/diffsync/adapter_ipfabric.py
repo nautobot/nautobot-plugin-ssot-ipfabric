@@ -14,6 +14,7 @@ DEFAULT_INTERFACE_TYPE = CONFIG.get("default_interface_type", "1000base-t")
 DEFAULT_INTERFACE_MTU = CONFIG.get("default_interface_mtu", 1500)
 DEFAULT_INTERFACE_MAC = CONFIG.get("default_interface_mac", "00:00:00:00:00:01")
 DEFAULT_DEVICE_ROLE = CONFIG.get("default_device_role", "Network Device")
+DEFAULT_DEVICE_STATUS = CONFIG.get("default_device_status", "Active")
 
 
 class IPFabricDiffSync(DiffSyncModelAdapters):
@@ -30,16 +31,14 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
         """Add IP Fabric Site objects as DiffSync Location models."""
         sites = self.client.get_sites()
         for site in sites:
-            # logger.log_debug(message=f"Loading Site {site['siteName']}")
             location = self.location(diffsync=self, name=site["siteName"], site_id=site["id"])
             self.add(location)
 
     def load_device_interfaces(self, device_model, interfaces, device_primary_ip):
         """Create and load DiffSync Interface model objects for a specific device."""
         device_interfaces = [iface for iface in interfaces if iface.get("hostname") == device_model.name]
-        # self.job.log_debug(message=f"Loading {len(device_interfaces)} interfaces for device '{device_model.name}'")
-
         pseudo_interface = pseudo_management_interface(device_model.name, device_interfaces, device_primary_ip)
+
         if pseudo_interface:
             device_interfaces.append(pseudo_interface)
             logger.info("Pseudo MGMT Interface: %s", pseudo_interface)
@@ -64,7 +63,6 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
             )
             self.add(interface)
             device_model.add_child(interface)
-            # self.job.log_debug(message=interface)
 
     def load(self):
         """Load data from IP Fabric."""
@@ -77,7 +75,6 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                 continue
             location_vlans = [vlan for vlan in vlans if vlan["siteName"] == location.name]
             for vlan in location_vlans:
-                # self.job.log_debug(message=f"Loading VLAN {vlan['vlanName']}")
                 vlan = self.vlan(
                     diffsync=self,
                     name=vlan["vlanName"],
@@ -89,7 +86,6 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                 location.add_child(vlan)
             location_devices = [device for device in devices if device["siteName"] == location.name]
             for device in location_devices:
-                # self.job.log_debug(message=f"Loading Device {device['hostname']}")
                 device_primary_ip = device["loginIp"]
                 device_model = self.device(
                     diffsync=self,
@@ -99,6 +95,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                     vendor=device["vendor"],
                     serial_number=device["sn"],
                     role=DEFAULT_DEVICE_ROLE,
+                    status=DEFAULT_DEVICE_STATUS,
                 )
                 self.add(device_model)
                 location.add_child(device_model)

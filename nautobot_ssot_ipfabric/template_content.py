@@ -13,7 +13,7 @@ class SiteDiagram(PluginTemplateExtension):
         return self.render(
             "nautobot_ssot_ipfabric/inc/diagram.html",
             extra_context={
-                "ipfabric_site": "https://ipfabric.demo.networktocode.com/graph?urls=domains%3Fad%3DvSite%252F55467784%2Btransit%3Fad%3DvSite%252F55467784"
+                "ipfabric_site": "{{ settings.PLUGINS_CONFIG.nautobot_ssot_ipfabric.ipfabric_host }}/graph?urls=domains%3Fad%3DvSite%252F55467784%2Btransit%3Fad%3DvSite%252F55467784"
             },
         )
 

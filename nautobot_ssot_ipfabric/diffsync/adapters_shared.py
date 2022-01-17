@@ -2,16 +2,16 @@
 
 from diffsync import DiffSync
 
-from nautobot_ssot_ipfabric.diffsync import tonb_models
+from nautobot_ssot_ipfabric.diffsync import diffsync_models
 
 
 class DiffSyncModelAdapters(DiffSync):
     """Nautobot adapter for DiffSync."""
 
-    location = tonb_models.Location
-    device = tonb_models.Device
-    interface = tonb_models.Interface
-    vlan = tonb_models.Vlan
+    location = diffsync_models.Location
+    device = diffsync_models.Device
+    interface = diffsync_models.Interface
+    vlan = diffsync_models.Vlan
 
     top_level = [
         "location",

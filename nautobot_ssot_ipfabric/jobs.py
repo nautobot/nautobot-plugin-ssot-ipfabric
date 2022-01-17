@@ -3,7 +3,6 @@ from diffsync.exceptions import ObjectNotCreated
 from django.conf import settings
 from django.templatetags.static import static
 from django.urls import reverse
-
 from nautobot.extras.jobs import BooleanVar, Job
 from nautobot_ssot.jobs.base import DataMapping, DataSource
 
@@ -21,6 +20,16 @@ class IpFabricDataSource(DataSource, Job):
     """Job syncing data from IP Fabric to Nautobot."""
 
     debug = BooleanVar(description="Enable for more verbose debug logging")
+    non_delete_mode = BooleanVar(
+        description="Records are not deleted. Status fields are updated as necessary.",
+        default=True,
+        label="Non-Delete Mode",
+    )
+    sync_ipfabric_tagged_only = BooleanVar(
+        default=True,
+        label="Sync SSoT Tagged Objects Only",
+        description="Sync SSoT tagged objects only.",
+    )
 
     class Meta:
         """Metadata about this Job."""
@@ -29,6 +38,12 @@ class IpFabricDataSource(DataSource, Job):
         data_source = "IP Fabric"
         data_source_icon = static("nautobot_ssot_ipfabric/ipfabric.png")
         description = "Synchronize data from IP Fabric into Nautobot."
+        field_order = (
+            "debug",
+            "non_delete_mode",
+            "sync_ipfabric_tagged_only",
+            "dry_run",
+        )
 
     @classmethod
     def data_mappings(cls):
@@ -57,7 +72,12 @@ class IpFabricDataSource(DataSource, Job):
         self.log_info(message="Loading current data from IP Fabric...")
         ipfabric_source.load()
 
-        dest = NautobotDiffSync(job=self, sync=self.sync)
+        dest = NautobotDiffSync(
+            job=self,
+            sync=self.sync,
+            non_delete_mode=self.kwargs["non_delete_mode"],
+            sync_ipfabric_tagged_only=self.kwargs["sync_ipfabric_tagged_only"],
+        )
         self.log_info(message="Loading current data from Nautobot.")
         dest.load()
 

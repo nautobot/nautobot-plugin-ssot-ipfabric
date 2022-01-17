@@ -1,4 +1,5 @@
 """Unit tests for the IPFabric DiffSync adapter class."""
+
 import uuid
 
 from django.contrib.contenttypes.models import ContentType
@@ -42,7 +43,12 @@ class IPFabricDiffSyncTestCase(TestCase):
             name=job.class_path, obj_type=ContentType.objects.get_for_model(Job), user=None, job_id=uuid.uuid4()
         )
 
-        nautobot = NautobotDiffSync(job=job, sync=None)
+        nautobot = NautobotDiffSync(
+            job=job,
+            sync=None,
+            non_delete_mode=True,
+            sync_ipfabric_tagged_only=True,
+        )
         nautobot.load()
 
         self.assertEqual(
@@ -71,5 +77,3 @@ class IPFabricDiffSyncTestCase(TestCase):
             self.assertTrue(hasattr(vlan, "vid"))
             self.assertTrue(hasattr(vlan, "status"))
             self.assertTrue(hasattr(vlan, "site"))
-
-        # TODO: Add testing for any new models we add
