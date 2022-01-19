@@ -11,9 +11,9 @@ from nautobot.utilities.choices import ColorChoices
 from nautobot_ssot_ipfabric.utilities import (  # create_ip,
     create_device_role_object,
     create_device_type_object,
-    create_interface,
+    # create_interface,
     create_manufacturer,
-    create_site,
+    # create_site,
     create_status,
     create_vlan,
 )
@@ -66,18 +66,18 @@ class TestNautobotUtils(TestCase):
         vlan = create_vlan(vlan_name="Test-Vlan", vlan_id=100, vlan_status="Test-Vlan-Status", site_obj=self.site)
         self.assertEqual(VLAN.objects.get(name="Test-Vlan").pk, vlan.pk)
 
-    def test_create_site(self):
-        """Test `create_site` Utility."""
-        test_site = create_site(site_name="Test-Site")
-        self.assertEqual(test_site.id, self.site.id)
+    # def test_create_site(self):
+    #     """Test `create_site` Utility."""
+    #     test_site = create_site(site_name="Test-Site")
+    #     self.assertEqual(test_site.id, self.site.id)
 
-    def test_create_site_exception(self):
-        """Test `create_site` Utility exception."""
-        site = create_site(
-            site_name="Test-Site-100",
-            site_id=123456,
-        )
-        self.assertEqual(Site.objects.get(name="Test-Site-100").pk, site.pk)
+    # def test_create_site_exception(self):
+    #     """Test `create_site` Utility exception."""
+    #     site = create_site(
+    #         site_name="Test-Site-100",
+    #         site_id=123456,
+    #     )
+    #     self.assertEqual(Site.objects.get(name="Test-Site-100").pk, site.pk)
 
     def test_create_device_type_object(self):
         """Test `create_device_type_object` Utility."""
@@ -114,8 +114,8 @@ class TestNautobotUtils(TestCase):
     #     test_ip = create_ip("192.168.0.1", "255.255.255.255", object_pk=self.device.id)
     #     self.assertEqual(test_ip.id, self.ip_address.id)
 
-    def test_create_interface(self):
-        """Test `create_interface` Utility."""
-        interface_details = {"name": "Test-Interface"}
-        test_interface = create_interface(self.device, interface_details)
-        self.assertEqual(test_interface.id, self.device.interfaces.get(name="Test-Interface").id)
+    # def test_create_interface(self):
+    #     """Test `create_interface` Utility."""
+    #     interface_details = {"name": "Test-Interface"}
+    #     test_interface = create_interface(self.device, interface_details)
+    #     self.assertEqual(test_interface.id, self.device.interfaces.get(name="Test-Interface").id)

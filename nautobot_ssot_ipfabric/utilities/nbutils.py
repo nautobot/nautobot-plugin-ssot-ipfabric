@@ -36,8 +36,6 @@ def create_site(site_name, site_id=None):
 def create_manufacturer(vendor_name):
     """Create specified manufacturer in Nautobot."""
     mf_name, _ = Manufacturer.objects.get_or_create(name=vendor_name, slug=slugify(vendor_name))
-    # tag_object(nautobot_object=mf_name, custom_field="ssot-synced-from-ipfabric")
-    # mf_name.validated_save()
     return mf_name
 
 
@@ -63,8 +61,6 @@ def create_device_role_object(role_name, role_color):
         role_color (str): Role color.
     """
     role_obj, _ = DeviceRole.objects.get_or_create(name=role_name, slug=slugify(role_name), color=role_color)
-    # tag_object(nautobot_object=role_obj, custom_field="ssot-synced-from-ipfabric")
-    # role_obj.validated_save()
     return role_obj
 
 
@@ -101,7 +97,7 @@ def create_ip(ip_address, subnet_mask, status="Active", object_pk=None):
         ip_address (str): IP address.
         subnet_mask (str): Subnet mask used for IP Address.
         status (str): Status to assign to IP Address.
-        object_pk (UUID): Object to assign interface
+        object_pk: Object primary key
     """
     status_obj = Status.objects.get_for_model(IPAddress).get(slug=slugify(status))
     cidr = netmask_to_cidr(subnet_mask)
@@ -179,6 +175,5 @@ def tag_object(nautobot_object, custom_field: str, tag_slug: Optional[str] = "ss
             nautobot_object.tags.add(tag)
         if hasattr(nautobot_object, "cf"):
             nautobot_object.cf[custom_field] = today
-        nautobot_object.validated_save()
 
     _tag_object(nautobot_object)

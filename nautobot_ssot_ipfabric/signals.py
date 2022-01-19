@@ -49,7 +49,14 @@ def nautobot_database_ready_callback(sender, *, apps, **kwargs):  # pylint: disa
             "color": ColorChoices.COLOR_LIGHT_GREEN,
         },
     )
-
+    Tag.objects.get_or_create(
+        slug="ssot-safe-delete",
+        name="SSoT Safe Delete",
+        defaults={
+            "description": "Safe Delete Mode tag to flag an object, but not delete from Nautobot.",
+            "color": ColorChoices.COLOR_RED,
+        },
+    )
     # Ensure that the "ssot-synced-from-ipfabric" custom field is present; as above, it *should* already exist.
     synced_from_models = [Device, DeviceType, Interface, Manufacturer, Site, VLAN, DeviceRole, IPAddress]
     create_custom_field("ssot-synced-from-ipfabric", "Last synced from IPFabric on", synced_from_models, apps=apps)
