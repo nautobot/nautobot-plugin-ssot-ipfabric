@@ -51,7 +51,7 @@ class IpFabricDataSource(DataSource, Job):
 
     def sync_data(self):
         """Sync a device data from IP Fabric into Nautobot."""
-        client = IpFabricClient(IPFABRIC_HOST, IPFABRIC_API_TOKEN)
+        client = IpFabricClient(IPFABRIC_HOST, IPFABRIC_API_TOKEN, IPFABRIC_VERIFY)
 
         ipfabric_source = IPFabricDiffSync(job=self, sync=self.sync, client=client)
         self.log_info(message="Loading current data from IP Fabric...")

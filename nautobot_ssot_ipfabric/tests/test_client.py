@@ -17,7 +17,7 @@ class TestIpFabricClient(unittest.TestCase):
     def setUp(self):
         """Setup."""
         self.uri = "https://ip-fabric-host.com"
-        self.client = IpFabricClient(self.uri, "CrazyTrainToken")
+        self.client = IpFabricClient(self.uri, "CrazyTrainToken", False)
 
     @responses.activate
     def test_get_sites(self):
