@@ -1,7 +1,7 @@
 """DiffSync adapter class for Nautobot as source-of-truth."""
 from typing import List
 
-# from diffsync.exceptions import ObjectNotFound
+from diffsync.exceptions import ObjectAlreadyExists
 from django.conf import settings
 from django.db.models import Q
 from nautobot.dcim.models import Device, Site
@@ -10,9 +10,6 @@ from nautobot.ipam.models import VLAN
 from netutils.mac import mac_to_format
 
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
-
-# from diffsync.enum import DiffSyncModelFlags
-
 
 CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
 DEFAULT_INTERFACE_TYPE = CONFIG.get("default_interface_type", "1000base-t")
@@ -78,23 +75,34 @@ class NautobotDiffSync(DiffSyncModelAdapters):
             )
             if not self.safe_delete_mode:
                 self.device.safe_delete_mode = self.safe_delete_mode
-            self.add(device)
+            try:
+                self.add(device)
+            except ObjectAlreadyExists:
+                self.job.log_warning(message=f"Duplicate device discovered, {device_record.name}")
+                continue
+
             location.add_child(device)
             self.load_interfaces(device_record=device_record, diffsync_device=device)
 
     def load_vlans(self, filtered_vlans: List, location):
         """Add Nautobot VLAN objects as DiffSync VLAN models."""
         for vlan_record in filtered_vlans:
+            if not vlan_record:
+                continue
             vlan = self.vlan(
                 diffsync=self,
                 name=vlan_record.name,
                 site=vlan_record.site.name,
-                status=vlan_record.status.slug,
+                status=vlan_record.status.slug if vlan_record.status else "Active",
                 vid=vlan_record.vid,
             )
             if not self.safe_delete_mode:
                 self.vlan.safe_delete_mode = self.safe_delete_mode
-            self.add(vlan)
+            try:
+                self.add(vlan)
+            except ObjectAlreadyExists:
+                self.job.log_debug(message=f"Duplicate VLAN discovered, {vlan_record.name}")
+                continue
             location.add_child(vlan)
 
     def load_data(self):
@@ -113,6 +121,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                     diffsync=self,
                     name=site_record.name,
                     site_id=site_record.custom_field_data.get("ipfabric-site-id"),
+                    status=site_record.status.name,
                 )
                 if not self.safe_delete_mode:
                     self.location.safe_delete_mode = self.safe_delete_mode

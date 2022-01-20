@@ -31,7 +31,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
         """Add IP Fabric Site objects as DiffSync Location models."""
         sites = self.client.get_sites()
         for site in sites:
-            location = self.location(diffsync=self, name=site["siteName"], site_id=site["id"])
+            location = self.location(diffsync=self, name=site["siteName"], site_id=site["id"], status="Active")
             self.add(location)
 
     def load_device_interfaces(self, device_model, interfaces, device_primary_ip):

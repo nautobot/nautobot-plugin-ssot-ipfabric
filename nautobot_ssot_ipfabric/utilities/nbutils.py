@@ -35,7 +35,7 @@ def create_site(site_name, site_id=None):
 
 def create_manufacturer(vendor_name):
     """Create specified manufacturer in Nautobot."""
-    mf_name, _ = Manufacturer.objects.get_or_create(name=vendor_name, slug=slugify(vendor_name))
+    mf_name, _ = Manufacturer.objects.get_or_create(name=vendor_name)
     return mf_name
 
 

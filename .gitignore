@@ -12,6 +12,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Nautobot Data for Development
+nautobot_backup.dump
+
 # Distribution / packaging
 .Python
 build/

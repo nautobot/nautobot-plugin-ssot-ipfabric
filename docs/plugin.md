@@ -186,6 +186,8 @@ You can then views the details of each object.
 | N/A                | Interface.subnet_mask   | IPAddress.address         |
 | N/A                | Interface.ip_is_primary | Device.primary_ip         |
 
+> Note: Interfaces only support synchronizing 1 IP Address at the moment.
+
 ### IPFabric VLAN
 
 | IP Fabric (Source) | DiffSync Model | Nautobot (Destination) |

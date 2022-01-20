@@ -4,6 +4,7 @@ from typing import Any, ClassVar, List, Optional
 
 from diffsync import DiffSyncModel
 from django.conf import settings
+from django.db.models import Q
 from nautobot.dcim.models import Device as NautobotDevice
 from nautobot.dcim.models import Site
 from nautobot.extras.models import Tag
@@ -69,11 +70,12 @@ class Location(DiffSyncExtras):
 
     _modelname = "location"
     _identifiers = ("name",)
-    _attributes = ("site_id",)
+    _attributes = ("site_id", "status")
     _children = {"device": "devices", "vlan": "vlans"}
 
     name: str
     site_id: Optional[str]
+    status: str
     devices: List["Device"] = list()  # pylint: disable=use-list-literal
     vlans: List["Vlan"] = list()  # pylint: disable=use-list-literal
 
@@ -98,9 +100,10 @@ class Location(DiffSyncExtras):
         site = Site.objects.get(name=self.name)
         if attrs.get("site_id"):
             site.custom_field_data["ipfabric-site-id"] = attrs.get("site_id")
+        if attrs.get("status") == "Active":
+            site.status = Status.objects.get(name="Active")
         tonb_nbutils.tag_object(nautobot_object=site, custom_field="ssot-synced-from-ipfabric")
         site.validated_save()
-
         return super().update(attrs)
 
 
@@ -151,13 +154,16 @@ class Device(DiffSyncExtras):
 
     def delete(self) -> Optional["DiffSyncModel"]:
         """Delete device in Nautobot."""
-        device_object = NautobotDevice.objects.get(name=self.name)
-        self.safe_delete(
-            device_object,
-            self.safe_delete_mode,
-            SAFE_DELETE_DEVICE_STATUS,
-        )
-        return self
+        try:
+            device_object = NautobotDevice.objects.get(name=self.name)
+            self.safe_delete(
+                device_object,
+                self.safe_delete_mode,
+                SAFE_DELETE_DEVICE_STATUS,
+            )
+            return self
+        except NautobotDevice.DoesNotExist:
+            self.diffsync.job.log_warning(f"Unable to match device by name, {self.name}")
 
     def update(self, attrs):
         """Update devices in Nautbot based on Source."""
@@ -230,7 +236,12 @@ class Interface(DiffSyncExtras):
     @classmethod
     def create(cls, diffsync, ids, attrs):
         """Create interface in Nautobot under its parent device."""
-        device_obj = NautobotDevice.objects.get(name=ids["device_name"])
+        try:
+            device_obj = NautobotDevice.objects.get(name=ids["device_name"])
+        except NautobotDevice.MultipleObjectsReturned:
+            tag, _ = Tag.objects.get_or_create(name="SSoT Synced from IPFabric")
+            device_obj = NautobotDevice.objects.filter(Q(name=ids["device_name"]) & Q(tags__slug=tag.slug)).first()
+
         if not attrs.get("mac_address"):
             attrs["mac_address"] = DEFAULT_INTERFACE_MAC
         interface_obj = tonb_nbutils.create_interface(
@@ -257,14 +268,22 @@ class Interface(DiffSyncExtras):
 
     def delete(self) -> Optional["DiffSyncModel"]:
         """Delete Interface Object."""
-        device = NautobotDevice.objects.get(name=self.device_name)
-        interface = device.interfaces.get(name=self.name)
-        self.safe_delete(
-            interface,
-            self.safe_delete_mode,
-            SAFE_DELETE_DEVICE_STATUS,
-        )
-        return self
+        try:
+            device = NautobotDevice.objects.get(name=self.device_name)
+            interface = device.interfaces.get(name=self.name)
+            # Access the addr within an interface, change the status if necessary
+            if interface.ip_addresses.first():
+                self.safe_delete(interface.ip_addresses.first(), self.safe_delete_mode, SAFE_DELETE_IPADDRESS_STATUS)
+            # Then do the parent interface
+            self.safe_delete(
+                interface,
+                self.safe_delete_mode,
+                SAFE_DELETE_DEVICE_STATUS,
+            )
+
+            return self
+        except NautobotDevice.DoesNotExist:
+            self.diffsync.job.log_warning(f"Unable to match device by name, {self.name}")
 
     def update(self, attrs):
         """Update Interface object in Nautobot."""
@@ -288,10 +307,12 @@ class Interface(DiffSyncExtras):
             if attrs.get("mgmt_only"):
                 interface.mgmt_only = attrs["mgmt_only"]
             if attrs.get("ip_address"):
+                interface.ip_addresses.all().delete()
                 ip_address_obj = tonb_nbutils.create_ip(
                     ip_address=attrs.get("ip_address"),
                     subnet_mask=attrs.get("subnet_mask") if attrs.get("subnet_mask") else "255.255.255.255",
                     status="Active",
+                    object_pk=interface,
                 )
                 interface.ip_addresses.add(ip_address_obj)
             tonb_nbutils.tag_object(nautobot_object=interface, custom_field="ssot-synced-from-ipfabric")
@@ -337,6 +358,8 @@ class Vlan(DiffSyncExtras):
         )
         return self
 
+
+# TODO: If necessary add an update, don't see a need at this momemt.
 
 Location.update_forward_refs()
 Device.update_forward_refs()

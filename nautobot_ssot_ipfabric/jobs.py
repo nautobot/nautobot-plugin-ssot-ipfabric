@@ -78,9 +78,20 @@ class IpFabricDataSource(DataSource, Job):
             "Safe Delete VLAN status": CONFIG.get("safe_delete_vlan_status", "Inventory"),
         }
 
+    def log_debug(self, message):
+        """Conditionally log a debug message."""
+        if self.kwargs.get("debug"):
+            super().log_debug(message)
+
     def sync_data(self):
         """Sync a device data from IP Fabric into Nautobot."""
         client = IpFabricClient(IPFABRIC_HOST, IPFABRIC_API_TOKEN)
+
+        dry_run = self.kwargs["dry_run"]
+        safe_mode = self.kwargs["safe_delete_mode"]
+        tagged_only = self.kwargs["safe_delete_mode"]
+        options = f"Dry Run: {dry_run}, Safe Delete Mode: {safe_mode}, Sync Tagged Only: {tagged_only}"
+        self.log_info(message=f"Starting job with the following options: {options}")
 
         ipfabric_source = IPFabricDiffSync(job=self, sync=self.sync, client=client)
         self.log_info(message="Loading current data from IP Fabric...")
@@ -92,7 +103,7 @@ class IpFabricDataSource(DataSource, Job):
             safe_delete_mode=self.kwargs["safe_delete_mode"],
             sync_ipfabric_tagged_only=self.kwargs["sync_ipfabric_tagged_only"],
         )
-        self.log_info(message="Loading current data from Nautobot.")
+        self.log_info(message="Loading current data from Nautobot...")
         dest.load()
 
         self.log_info(message="Calculating diffs...")
