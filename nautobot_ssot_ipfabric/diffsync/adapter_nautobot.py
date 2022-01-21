@@ -2,11 +2,13 @@
 # Load method is packed with conditionals  #  pylint: disable=too-many-branches
 """DiffSync adapter class for Nautobot as source-of-truth."""
 from typing import List
+from collections import defaultdict
+from diffsync import DiffSync
 
 from diffsync.exceptions import ObjectAlreadyExists
 from django.conf import settings
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import ProtectedError, Q
 from nautobot.dcim.models import Device, Site
 from nautobot.extras.models import Tag
 from nautobot.ipam.models import VLAN
@@ -23,6 +25,12 @@ DEFAULT_DEVICE_ROLE = CONFIG.get("default_device_role", "Network Device")
 
 class NautobotDiffSync(DiffSyncModelAdapters):
     """Nautobot adapter for DiffSync."""
+
+    objects_to_delete = defaultdict(list)
+
+    nautobot_site = Site
+    nautobot_device = Device
+    nautobot_vlan = VLAN
 
     def __init__(
         self,
@@ -41,6 +49,29 @@ class NautobotDiffSync(DiffSyncModelAdapters):
         self.safe_delete_mode = safe_delete_mode
         self.sync_ipfabric_tagged_only = sync_ipfabric_tagged_only
         self.site_filter = site_filter
+
+    def sync_complete(self, source: DiffSync, *args, **kwargs):
+        """Clean up function for DiffSync sync.
+
+        Once the sync is complete, this function runs deleting any objects
+        from Nautobot that need to be deleted in a specific order.
+
+        Args:
+            source (DiffSync): DiffSync
+        """
+        for grouping in (
+            "nautobot_vlan",
+            "nautobot_device",
+            "nautobot_site",
+        ):
+            for nautobot_object in self.objects_to_delete[grouping]:
+                try:
+                    nautobot_object.delete()
+                except ProtectedError:
+                    self.job.log_failure(obj=nautobot_object, message="Deletion failed protected object")
+            self.objects_to_delete[grouping] = []
+
+        return super().sync_complete(source, *args, **kwargs)
 
     def load_interfaces(self, device_record: Device, diffsync_device):
         """Import a single Nautobot Interface object as a DiffSync Interface model."""

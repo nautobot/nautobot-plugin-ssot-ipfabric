@@ -38,9 +38,9 @@ class DiffSyncExtras(DiffSyncModel):
         Args:
             nautobot_object (Any): Any type of Nautobot object
             safe_mode (bool): Safe mode or not
-            safe_delete_status (str): Desired status to change to
+            safe_delete_status (Optional[str], optional): Status name, optional as some objects don't have status field. Defaults to None.
         """
-        changed = False
+        update = False
         if safe_delete_status:
             safe_delete_status = Status.objects.get(name=safe_delete_status.capitalize())
 
@@ -61,18 +61,28 @@ class DiffSyncExtras(DiffSyncModel):
             if safe_delete_status:
                 if hasattr(nautobot_object, "status"):
                     if not nautobot_object.status == safe_delete_status:
-                        changed = True
                         nautobot_object.status = safe_delete_status
                         self.diffsync.job.log_warning(
                             message=f"{nautobot_object} has changed status to {safe_delete_status}."
                         )
+                        update = True
+                else:
+                    # Not everything has a status. This may come in handy once more models are synced.
+                    self.diffsync.job.log_warning(message=f"{nautobot_object} has no Status attribute.")
             if hasattr(nautobot_object, "tags"):
-                tag, _ = Tag.objects.get_or_create(name="SSoT Safe Delete")
-                if not any(site_tag for site_tag in nautobot_object.tags.all() if site_tag.name == tag.name):
-                    changed = True
-                    nautobot_object.tags.add(tag)
-            if changed:
+                ssot_safe_tag, _ = Tag.objects.get_or_create(name="SSoT Safe Delete")
+                object_tags = nautobot_object.tags.all()
+                # No exception raised for empty iterator, safe to do this any
+                if not any(obj_tag for obj_tag in object_tags if obj_tag.name == ssot_safe_tag.name):
+                    nautobot_object.tags.add(ssot_safe_tag)
+                    update = True
+            if update:
                 tonb_nbutils.tag_object(nautobot_object=nautobot_object, custom_field="ssot-synced-from-ipfabric")
+            else:
+                self.diffsync.job.log_debug(
+                    message=f"{nautobot_object} has previously been tagged with `ssot-safe-delete`. Skipping.."
+                )
+
         return self
 
 

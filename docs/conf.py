@@ -24,8 +24,6 @@ project = "Nautobot SSOT IPFabric"
 copyright = "2021, Network To Code, LLC"
 author = "Network To Code, LLC"
 
-# release = "0.9.0"
-
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
