@@ -119,7 +119,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                     site=vlan_record.site.name,
                     status=vlan_record.status.slug,
                     vid=vlan_record.vid,
-                    description=vlan_record.description
+                    description=vlan_record.description,
                 )
                 self.add(vlan)
                 location.add_child(vlan)

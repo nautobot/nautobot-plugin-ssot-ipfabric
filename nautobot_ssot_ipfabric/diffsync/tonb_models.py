@@ -257,11 +257,7 @@ class Vlan(DiffSyncModel):
     _modelname = "vlan"
     _identifiers = ("name", "site")
     _shortname = ("name",)
-    _attributes = (
-        "vid",
-        "status",
-        "description"
-    )
+    _attributes = ("vid", "status", "description")
     _children = {}
 
     name: str
@@ -279,8 +275,9 @@ class Vlan(DiffSyncModel):
         status = attrs["status"].lower().capitalize()
         site = Site.objects.get(name=ids["site"])
         name = ids["name"] if ids["name"] else f"VLAN{attrs['vid']}"
-        new_vlan = tonb_nbutils.create_vlan(vlan_name=name, vlan_id=attrs["vid"], vlan_status=status, site_obj=site,
-                                            description=attrs["description"])
+        new_vlan = tonb_nbutils.create_vlan(
+            vlan_name=name, vlan_id=attrs["vid"], vlan_status=status, site_obj=site, description=attrs["description"]
+        )
 
         new_vlan.validated_save()
 

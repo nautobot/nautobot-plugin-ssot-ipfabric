@@ -86,7 +86,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                     site=vlan["siteName"],
                     vid=vlan["vlanId"],
                     status="Active",
-                    description=str(vlan["dscr"] or vlan["vlanId"])
+                    description=str(vlan["dscr"] or vlan["vlanId"]),
                 )
                 self.add(vlan)
                 location.add_child(vlan)
