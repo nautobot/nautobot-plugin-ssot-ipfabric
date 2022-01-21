@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nautobot_ssot_ipfabric.diffsync.diffsync_models &mdash; Nautobot SSOT IPFabric 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> Nautobot SSOT IPFabric
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../plugin.html">Plugin Overview</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Nautobot SSOT IPFabric</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">nautobot_ssot_ipfabric.diffsync.diffsync_models</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/nautobot_ssot_ipfabric/diffsync/diffsync_models/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-nautobot_ssot_ipfabric.diffsync.diffsync_models">
+<span id="nautobot-ssot-ipfabric-diffsync-diffsync-models"></span><h1><a class="reference internal" href="#module-nautobot_ssot_ipfabric.diffsync.diffsync_models" title="nautobot_ssot_ipfabric.diffsync.diffsync_models"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nautobot_ssot_ipfabric.diffsync.diffsync_models</span></code></a><a class="headerlink" href="#module-nautobot_ssot_ipfabric.diffsync.diffsync_models" title="Permalink to this headline"></a></h1>
+<p>DiffSyncModel subclasses for Nautobot-to-IPFabric data sync.</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline"></a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiffSyncExtras</span></code></a></p></td>
+<td><p>Additional components to mix and subclass from with <cite>DiffSyncModel</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Location" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.Location"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Location</span></code></a></p></td>
+<td><p>Location model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Device" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.Device"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Device</span></code></a></p></td>
+<td><p>Device model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Interface</span></code></a></p></td>
+<td><p>Interface model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Vlan</span></code></a></p></td>
+<td><p>VLAN model.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline"></a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.CONFIG" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.CONFIG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CONFIG</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_ROLE" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_ROLE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT_DEVICE_ROLE</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_ROLE_COLOR" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_ROLE_COLOR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT_DEVICE_ROLE_COLOR</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_STATUS" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_STATUS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT_DEVICE_STATUS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_STATUS_COLOR" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_STATUS_COLOR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT_DEVICE_STATUS_COLOR</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_INTERFACE_MAC" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_INTERFACE_MAC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT_INTERFACE_MAC</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_SITE_STATUS" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_SITE_STATUS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAFE_DELETE_SITE_STATUS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_DEVICE_STATUS" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_DEVICE_STATUS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAFE_DELETE_DEVICE_STATUS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_IPADDRESS_STATUS" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_IPADDRESS_STATUS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAFE_DELETE_IPADDRESS_STATUS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_VLAN_STATUS" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_VLAN_STATUS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAFE_DELETE_VLAN_STATUS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py data">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.CONFIG">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.diffsync.diffsync_models.</span></span><span class="sig-name descname"><span class="pre">CONFIG</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.CONFIG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_ROLE">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.diffsync.diffsync_models.</span></span><span class="sig-name descname"><span class="pre">DEFAULT_DEVICE_ROLE</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_ROLE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_ROLE_COLOR">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.diffsync.diffsync_models.</span></span><span class="sig-name descname"><span class="pre">DEFAULT_DEVICE_ROLE_COLOR</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_ROLE_COLOR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_STATUS">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.diffsync.diffsync_models.</span></span><span class="sig-name descname"><span class="pre">DEFAULT_DEVICE_STATUS</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_STATUS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_STATUS_COLOR">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.diffsync.diffsync_models.</span></span><span class="sig-name descname"><span class="pre">DEFAULT_DEVICE_STATUS_COLOR</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_STATUS_COLOR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_INTERFACE_MAC">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.diffsync.diffsync_models.</span></span><span class="sig-name descname"><span class="pre">DEFAULT_INTERFACE_MAC</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_INTERFACE_MAC" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_SITE_STATUS">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.diffsync.diffsync_models.</span></span><span class="sig-name descname"><span class="pre">SAFE_DELETE_SITE_STATUS</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_SITE_STATUS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_DEVICE_STATUS">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.diffsync.diffsync_models.</span></span><span class="sig-name descname"><span class="pre">SAFE_DELETE_DEVICE_STATUS</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_DEVICE_STATUS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_IPADDRESS_STATUS">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.diffsync.diffsync_models.</span></span><span class="sig-name descname"><span class="pre">SAFE_DELETE_IPADDRESS_STATUS</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_IPADDRESS_STATUS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_VLAN_STATUS">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.diffsync.diffsync_models.</span></span><span class="sig-name descname"><span class="pre">SAFE_DELETE_VLAN_STATUS</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_VLAN_STATUS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.diffsync.diffsync_models.</span></span><span class="sig-name descname"><span class="pre">DiffSyncExtras</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">diffsync.DiffSyncModel</span></code></p>
+<p>Additional components to mix and subclass from with <cite>DiffSyncModel</cite>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras.safe_delete_mode">
+<span class="sig-name descname"><span class="pre">safe_delete_mode</span></span><em class="property"><span class="w"> </span><span class="pre">:ClassVar[bool]</span> <span class="pre">=</span> <span class="pre">True</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras.safe_delete_mode" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras.safe_delete">
+<span class="sig-name descname"><span class="pre">safe_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nautobot_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">safe_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">safe_delete_status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras.safe_delete" title="Permalink to this definition"></a></dt>
+<dd><p>Safe delete an object, by adding tags or changing it’s default status.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>nautobot_object (Any): Any type of Nautobot object
+safe_mode (bool): Safe mode or not
+safe_delete_status (str): Desired status to change to</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Location">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.diffsync.diffsync_models.</span></span><span class="sig-name descname"><span class="pre">Location</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Location" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiffSyncExtras</span></code></a></p>
+<p>Location model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Location._modelname">
+<span class="sig-name descname"><span class="pre">_modelname</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">location</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Location._modelname" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Location._identifiers">
+<span class="sig-name descname"><span class="pre">_identifiers</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">['name']</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Location._identifiers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Location._attributes">
+<span class="sig-name descname"><span class="pre">_attributes</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">['site_id',</span> <span class="pre">'status']</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Location._attributes" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Location._children">
+<span class="sig-name descname"><span class="pre">_children</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Location._children" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Location.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Location.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Location.site_id">
+<span class="sig-name descname"><span class="pre">site_id</span></span><em class="property"><span class="w"> </span><span class="pre">:Optional[str]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Location.site_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Location.status">
+<span class="sig-name descname"><span class="pre">status</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Location.status" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Location.devices">
+<span class="sig-name descname"><span class="pre">devices</span></span><em class="property"><span class="w"> </span><span class="pre">:List[Device]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Location.devices" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Location.vlans">
+<span class="sig-name descname"><span class="pre">vlans</span></span><em class="property"><span class="w"> </span><span class="pre">:List[Vlan]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Location.vlans" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Location.create">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffsync</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attrs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Location.create" title="Permalink to this definition"></a></dt>
+<dd><p>Create Site in Nautobot.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Location.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">diffsync.DiffSyncModel</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Location.delete" title="Permalink to this definition"></a></dt>
+<dd><p>Delete Site in Nautobot.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Location.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attrs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Location.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update Site Object in Nautobot.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Device">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.diffsync.diffsync_models.</span></span><span class="sig-name descname"><span class="pre">Device</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Device" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiffSyncExtras</span></code></a></p>
+<p>Device model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Device._modelname">
+<span class="sig-name descname"><span class="pre">_modelname</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">device</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Device._modelname" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Device._identifiers">
+<span class="sig-name descname"><span class="pre">_identifiers</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">['name']</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Device._identifiers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Device._attributes">
+<span class="sig-name descname"><span class="pre">_attributes</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">['location_name',</span> <span class="pre">'model',</span> <span class="pre">'vendor',</span> <span class="pre">'serial_number',</span> <span class="pre">'role',</span> <span class="pre">'status']</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Device._attributes" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Device._children">
+<span class="sig-name descname"><span class="pre">_children</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Device._children" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.location_name">
+<span class="sig-name descname"><span class="pre">location_name</span></span><em class="property"><span class="w"> </span><span class="pre">:Optional[str]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.location_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.model">
+<span class="sig-name descname"><span class="pre">model</span></span><em class="property"><span class="w"> </span><span class="pre">:Optional[str]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.vendor">
+<span class="sig-name descname"><span class="pre">vendor</span></span><em class="property"><span class="w"> </span><span class="pre">:Optional[str]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.vendor" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.serial_number">
+<span class="sig-name descname"><span class="pre">serial_number</span></span><em class="property"><span class="w"> </span><span class="pre">:Optional[str]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.serial_number" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.role">
+<span class="sig-name descname"><span class="pre">role</span></span><em class="property"><span class="w"> </span><span class="pre">:Optional[str]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.role" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.status">
+<span class="sig-name descname"><span class="pre">status</span></span><em class="property"><span class="w"> </span><span class="pre">:Optional[str]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.status" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.mgmt_address">
+<span class="sig-name descname"><span class="pre">mgmt_address</span></span><em class="property"><span class="w"> </span><span class="pre">:Optional[str]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.mgmt_address" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.interfaces">
+<span class="sig-name descname"><span class="pre">interfaces</span></span><em class="property"><span class="w"> </span><span class="pre">:List[Interface]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.interfaces" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.create">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffsync</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attrs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.create" title="Permalink to this definition"></a></dt>
+<dd><p>Create Device in Nautobot under its parent site.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">diffsync.DiffSyncModel</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.delete" title="Permalink to this definition"></a></dt>
+<dd><p>Delete device in Nautobot.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attrs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Device.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update devices in Nautbot based on Source.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.diffsync.diffsync_models.</span></span><span class="sig-name descname"><span class="pre">Interface</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiffSyncExtras</span></code></a></p>
+<p>Interface model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface._modelname">
+<span class="sig-name descname"><span class="pre">_modelname</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">interface</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface._modelname" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface._identifiers">
+<span class="sig-name descname"><span class="pre">_identifiers</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">['name',</span> <span class="pre">'device_name']</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface._identifiers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface._shortname">
+<span class="sig-name descname"><span class="pre">_shortname</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">['name']</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface._shortname" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface._attributes">
+<span class="sig-name descname"><span class="pre">_attributes</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">['description',</span> <span class="pre">'enabled',</span> <span class="pre">'mac_address',</span> <span class="pre">'mtu',</span> <span class="pre">'type',</span> <span class="pre">'mgmt_only',</span> <span class="pre">'ip_address',...</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface._attributes" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.device_name">
+<span class="sig-name descname"><span class="pre">device_name</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.device_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="w"> </span><span class="pre">:Optional[str]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.description" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.enabled">
+<span class="sig-name descname"><span class="pre">enabled</span></span><em class="property"><span class="w"> </span><span class="pre">:Optional[bool]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.enabled" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.mac_address">
+<span class="sig-name descname"><span class="pre">mac_address</span></span><em class="property"><span class="w"> </span><span class="pre">:Optional[str]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.mac_address" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.mtu">
+<span class="sig-name descname"><span class="pre">mtu</span></span><em class="property"><span class="w"> </span><span class="pre">:Optional[int]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.mtu" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.type">
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="w"> </span><span class="pre">:Optional[str]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.type" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.mgmt_only">
+<span class="sig-name descname"><span class="pre">mgmt_only</span></span><em class="property"><span class="w"> </span><span class="pre">:Optional[bool]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.mgmt_only" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.ip_address">
+<span class="sig-name descname"><span class="pre">ip_address</span></span><em class="property"><span class="w"> </span><span class="pre">:Optional[str]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.ip_address" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.subnet_mask">
+<span class="sig-name descname"><span class="pre">subnet_mask</span></span><em class="property"><span class="w"> </span><span class="pre">:Optional[str]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.subnet_mask" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.ip_is_primary">
+<span class="sig-name descname"><span class="pre">ip_is_primary</span></span><em class="property"><span class="w"> </span><span class="pre">:Optional[bool]</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.ip_is_primary" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.status">
+<span class="sig-name descname"><span class="pre">status</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.status" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.create">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffsync</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attrs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.create" title="Permalink to this definition"></a></dt>
+<dd><p>Create interface in Nautobot under its parent device.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">diffsync.DiffSyncModel</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.delete" title="Permalink to this definition"></a></dt>
+<dd><p>Delete Interface Object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attrs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update Interface object in Nautobot.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.diffsync.diffsync_models.</span></span><span class="sig-name descname"><span class="pre">Vlan</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras" title="nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiffSyncExtras</span></code></a></p>
+<p>VLAN model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan._modelname">
+<span class="sig-name descname"><span class="pre">_modelname</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">vlan</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan._modelname" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan._identifiers">
+<span class="sig-name descname"><span class="pre">_identifiers</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">['name',</span> <span class="pre">'site']</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan._identifiers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan._shortname">
+<span class="sig-name descname"><span class="pre">_shortname</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">['name']</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan._shortname" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan._attributes">
+<span class="sig-name descname"><span class="pre">_attributes</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">['vid',</span> <span class="pre">'status']</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan._attributes" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan.vid">
+<span class="sig-name descname"><span class="pre">vid</span></span><em class="property"><span class="w"> </span><span class="pre">:int</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan.vid" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan.status">
+<span class="sig-name descname"><span class="pre">status</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan.status" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan.site">
+<span class="sig-name descname"><span class="pre">site</span></span><em class="property"><span class="w"> </span><span class="pre">:str</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan.site" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan.create">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffsync</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attrs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan.create" title="Permalink to this definition"></a></dt>
+<dd><p>Create VLANs in Nautobot under the site.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">diffsync.DiffSyncModel</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan.delete" title="Permalink to this definition"></a></dt>
+<dd><p>Delete.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attrs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update VLAN object in Nautobot.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Network To Code, LLC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -38,7 +38,10 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../README.html">Readme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../plugin.html">Plugin Overview</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
@@ -81,20 +84,14 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_site" title="nautobot_ssot_ipfabric.utilities.nbutils.create_site"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_site</span></code></a>(site_name, site_id=None, region_obj=None, tenant_obj=None)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_site" title="nautobot_ssot_ipfabric.utilities.nbutils.create_site"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_site</span></code></a>(site_name, site_id=None)</p></td>
 <td><p>Creates a specified site in Nautobot.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_region" title="nautobot_ssot_ipfabric.utilities.nbutils.create_region"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_region</span></code></a>(region_name)</p></td>
-<td><p>Creates a specified region in Nautobot.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_tenant" title="nautobot_ssot_ipfabric.utilities.nbutils.create_tenant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_tenant</span></code></a>(tenant_name)</p></td>
-<td><p>Create a specified tenant in Nautobot.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_device_type_object" title="nautobot_ssot_ipfabric.utilities.nbutils.create_device_type_object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_device_type_object</span></code></a>(device_type, vendor_name)</p></td>
-<td><p>Create a specified device type in Nautobot.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_manufacturer" title="nautobot_ssot_ipfabric.utilities.nbutils.create_manufacturer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_manufacturer</span></code></a>(vendor_name)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_manufacturer" title="nautobot_ssot_ipfabric.utilities.nbutils.create_manufacturer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_manufacturer</span></code></a>(vendor_name)</p></td>
 <td><p>Create specified manufacturer in Nautobot.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_device_type_object" title="nautobot_ssot_ipfabric.utilities.nbutils.create_device_type_object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_device_type_object</span></code></a>(device_type, vendor_name)</p></td>
+<td><p>Create a specified device type in Nautobot.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_device_role_object" title="nautobot_ssot_ipfabric.utilities.nbutils.create_device_role_object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_device_role_object</span></code></a>(role_name, role_color)</p></td>
 <td><p>Create specified device role in Nautobot.</p></td>
@@ -111,39 +108,53 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_vlan" title="nautobot_ssot_ipfabric.utilities.nbutils.create_vlan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_vlan</span></code></a>(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: nautobot.dcim.models.Site)</p></td>
 <td><p>Creates or obtains VLAN object.</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.tag_object" title="nautobot_ssot_ipfabric.utilities.nbutils.tag_object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tag_object</span></code></a>(nautobot_object: Any, custom_field: str, tag_slug: Optional[str] = 'ssot-synced-from-ipfabric')</p></td>
+<td><p>Apply the given tag and custom field to the identified object.</p></td>
+</tr>
 </tbody>
 </table>
+</section>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline"></a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.CONFIG" title="nautobot_ssot_ipfabric.utilities.nbutils.CONFIG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CONFIG</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.ALLOW_DUPLICATE_IPS" title="nautobot_ssot_ipfabric.utilities.nbutils.ALLOW_DUPLICATE_IPS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ALLOW_DUPLICATE_IPS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py data">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.utilities.nbutils.CONFIG">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.utilities.nbutils.</span></span><span class="sig-name descname"><span class="pre">CONFIG</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.utilities.nbutils.CONFIG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.utilities.nbutils.ALLOW_DUPLICATE_IPS">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.utilities.nbutils.</span></span><span class="sig-name descname"><span class="pre">ALLOW_DUPLICATE_IPS</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.utilities.nbutils.ALLOW_DUPLICATE_IPS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.utilities.nbutils.create_site">
-<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.utilities.nbutils.</span></span><span class="sig-name descname"><span class="pre">create_site</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">site_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tenant_obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_site" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.utilities.nbutils.</span></span><span class="sig-name descname"><span class="pre">create_site</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">site_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_site" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a specified site in Nautobot.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>site_name (str): Name of the site.
-site_id (str): ID of the site.
-region_obj (Region): Region Nautobot Object
-tenant_obj (Tenant): Tenant Nautobot Object</p>
+site_id (str): ID of the site.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.utilities.nbutils.create_region">
-<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.utilities.nbutils.</span></span><span class="sig-name descname"><span class="pre">create_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_region" title="Permalink to this definition"></a></dt>
-<dd><p>Creates a specified region in Nautobot.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>region_name (str): Name of the site.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.utilities.nbutils.create_tenant">
-<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.utilities.nbutils.</span></span><span class="sig-name descname"><span class="pre">create_tenant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tenant_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_tenant" title="Permalink to this definition"></a></dt>
-<dd><p>Create a specified tenant in Nautobot.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>tenant_name (str): The name of the tenant.</p>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.utilities.nbutils.create_manufacturer">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.utilities.nbutils.</span></span><span class="sig-name descname"><span class="pre">create_manufacturer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vendor_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_manufacturer" title="Permalink to this definition"></a></dt>
+<dd><p>Create specified manufacturer in Nautobot.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -155,12 +166,6 @@ tenant_obj (Tenant): Tenant Nautobot Object</p>
 vendor_name (str): Vendor Name</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.utilities.nbutils.create_manufacturer">
-<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.utilities.nbutils.</span></span><span class="sig-name descname"><span class="pre">create_manufacturer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vendor_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_manufacturer" title="Permalink to this definition"></a></dt>
-<dd><p>Create specified manufacturer in Nautobot.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -192,11 +197,12 @@ model (str): Django Model (“DEVICE”)</p>
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.utilities.nbutils.create_ip">
 <span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.utilities.nbutils.</span></span><span class="sig-name descname"><span class="pre">create_ip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subnet_mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Active'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_pk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_ip" title="Permalink to this definition"></a></dt>
 <dd><p>Verifies ip address exists in Nautobot. If not, creates specified ip.</p>
+<p>Utility behvariour is manipulated by <cite>settings</cite> if duplicate ip’s are allowed.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>ip_address (str): IP address.
 subnet_mask (str): Subnet mask used for IP Address.
 status (str): Status to assign to IP Address.
-object_pk (UUID): Object to assign interface</p>
+object_pk: Object primary key</p>
 </dd>
 </dl>
 </dd></dl>
@@ -223,6 +229,18 @@ vlan_status (str): VLAN Status
 site_obj (Site): Site Django Model</p>
 </dd>
 <dt>Returns:</dt><dd><p>(VLAN): Returns created or obtained VLAN object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.utilities.nbutils.tag_object">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.utilities.nbutils.</span></span><span class="sig-name descname"><span class="pre">tag_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nautobot_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_slug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ssot-synced-from-ipfabric'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.utilities.nbutils.tag_object" title="Permalink to this definition"></a></dt>
+<dd><p>Apply the given tag and custom field to the identified object.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>nautobot_object (Any): Nautobot ORM Object
+custom_field (str): Name of custom field to update
+tag_slug (Optional[str], optional): Tag slug to use as tag. Defaults to “ssot-synced-from-ipfabric”.</p>
 </dd>
 </dl>
 </dd></dl>

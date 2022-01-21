@@ -30,13 +30,19 @@ Attributes
 
 .. autoapisummary::
 
-   nautobot_ssot_ipfabric.workers.configs
+   nautobot_ssot_ipfabric.workers.CONFIG
+   nautobot_ssot_ipfabric.workers.NAUTOBOT_HOST
    nautobot_ssot_ipfabric.workers.BASE_CMD
    nautobot_ssot_ipfabric.workers.IPFABRIC_LOGO_PATH
    nautobot_ssot_ipfabric.workers.IPFABRIC_LOGO_ALT
 
 
-.. py:data:: configs
+.. py:data:: CONFIG
+   
+
+   
+
+.. py:data:: NAUTOBOT_HOST
    
 
    

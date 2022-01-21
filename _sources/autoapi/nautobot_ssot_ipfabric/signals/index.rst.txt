@@ -1,0 +1,41 @@
+:py:mod:`nautobot_ssot_ipfabric.signals`
+========================================
+
+.. py:module:: nautobot_ssot_ipfabric.signals
+
+.. autoapi-nested-parse::
+
+   Signal handlers for nautobot_ssot_ipfabric.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.signals.create_custom_field
+   nautobot_ssot_ipfabric.signals.nautobot_database_ready_callback
+
+
+
+.. py:function:: create_custom_field(field_name: str, label: str, models: List, apps)
+
+   Create custom field on a given model instance type.
+
+   Args:
+       field_name (str): Field Name
+       label (str): Label description
+       models (List): List of Django Models
+       apps: Django Apps
+
+
+.. py:function:: nautobot_database_ready_callback(sender, *, apps, **kwargs)
+
+   Callback function triggered by the nautobot_database_ready signal when the Nautobot database is fully ready.
+
+

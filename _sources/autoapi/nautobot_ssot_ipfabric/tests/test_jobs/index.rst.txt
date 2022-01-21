@@ -22,6 +22,25 @@ Classes
 
 
 
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.tests.test_jobs.CONFIG
+   nautobot_ssot_ipfabric.tests.test_jobs.BACKUP_CONFIG
+
+
+.. py:data:: CONFIG
+   
+
+   
+
+.. py:data:: BACKUP_CONFIG
+   
+
+   
+
 .. py:class:: IPFabricJobTest(methodName='runTest')
 
    Bases: :py:obj:`django.test.TestCase`
@@ -36,11 +55,6 @@ Classes
    .. py:method:: test_data_mapping(self)
 
       Verify correctness of the data_mappings() API.
-
-
-   .. py:method:: test_config_information(self)
-
-      Verify the config_information() API.
 
 
 

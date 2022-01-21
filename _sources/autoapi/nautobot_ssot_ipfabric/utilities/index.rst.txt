@@ -42,12 +42,38 @@ Functions
    nautobot_ssot_ipfabric.utilities.create_interface
    nautobot_ssot_ipfabric.utilities.create_ip
    nautobot_ssot_ipfabric.utilities.create_manufacturer
-   nautobot_ssot_ipfabric.utilities.create_region
    nautobot_ssot_ipfabric.utilities.create_site
    nautobot_ssot_ipfabric.utilities.create_status
-   nautobot_ssot_ipfabric.utilities.create_tenant
    nautobot_ssot_ipfabric.utilities.create_vlan
+   nautobot_ssot_ipfabric.utilities.clean_slate
    nautobot_ssot_ipfabric.utilities.json_fixture
+
+
+
+.. py:class:: IpFabricClient(host_url, token)
+
+   Bases: :py:obj:`nautobot_chatops_ipfabric.ipfabric.IpFabric`
+
+   Class for interfacing with IP Fabric API.
+
+   .. py:method:: get_sites(self, snapshot_id='$last')
+
+      Return Site info.
+
+
+   .. py:method:: get_device_inventory(self, search_key=None, filters=None, snapshot_id='$last')
+
+      Return Device info.
+
+
+   .. py:method:: get_interface_inventory(self, search_key=None, filters=None, device=None, snapshot_id='$last')
+
+      Return Interface info.
+
+
+   .. py:method:: get_vlans(self, filters=None, snapshot_id='$last')
+
+      Return VLAN info.
 
 
 
@@ -82,11 +108,13 @@ Functions
 
    Verifies ip address exists in Nautobot. If not, creates specified ip.
 
+   Utility behvariour is manipulated by `settings` if duplicate ip's are allowed.
+
    Args:
        ip_address (str): IP address.
        subnet_mask (str): Subnet mask used for IP Address.
        status (str): Status to assign to IP Address.
-       object_pk (UUID): Object to assign interface
+       object_pk: Object primary key
 
 
 .. py:function:: create_manufacturer(vendor_name)
@@ -94,23 +122,13 @@ Functions
    Create specified manufacturer in Nautobot.
 
 
-.. py:function:: create_region(region_name)
-
-   Creates a specified region in Nautobot.
-
-   Args:
-       region_name (str): Name of the site.
-
-
-.. py:function:: create_site(site_name, site_id=None, region_obj=None, tenant_obj=None)
+.. py:function:: create_site(site_name, site_id=None)
 
    Creates a specified site in Nautobot.
 
    Args:
        site_name (str): Name of the site.
        site_id (str): ID of the site.
-       region_obj (Region): Region Nautobot Object
-       tenant_obj (Tenant): Tenant Nautobot Object
 
 
 .. py:function:: create_status(status_name, status_color, description='', app_label='dcim', model='device')
@@ -123,14 +141,6 @@ Functions
        description (str): Description
        app_label (str): App Label ("DCIM")
        model (str): Django Model ("DEVICE")
-
-
-.. py:function:: create_tenant(tenant_name)
-
-   Create a specified tenant in Nautobot.
-
-   Args:
-       tenant_name (str): The name of the tenant.
 
 
 .. py:function:: create_vlan(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: nautobot.dcim.models.Site)
@@ -147,35 +157,15 @@ Functions
        (VLAN): Returns created or obtained VLAN object.
 
 
+.. py:function:: clean_slate()
+
+   Delete all objects synced.
+
+   Use this with caution. Never use in production env.
+
+
 .. py:function:: json_fixture(json_file_path)
 
    Load and return JSON Fixture.
-
-
-.. py:class:: IpFabricClient(host_url, token)
-
-   Bases: :py:obj:`nautobot_chatops_ipfabric.ipfabric.IpFabric`
-
-   Class for interfacing with IP Fabric API.
-
-   .. py:method:: get_sites(self, snapshot_id='$last')
-
-      Return Site info.
-
-
-   .. py:method:: get_device_inventory(self, search_key=None, filters=None, snapshot_id='$last')
-
-      Return Device info.
-
-
-   .. py:method:: get_interface_inventory(self, search_key=None, filters=None, device=None, snapshot_id='$last')
-
-      Return Interface info.
-
-
-   .. py:method:: get_vlans(self, filters=None, snapshot_id='$last')
-
-      Return VLAN info.
-
 
 

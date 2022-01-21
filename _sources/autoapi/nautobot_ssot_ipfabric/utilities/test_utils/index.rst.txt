@@ -19,11 +19,19 @@ Functions
 .. autoapisummary::
 
    nautobot_ssot_ipfabric.utilities.test_utils.json_fixture
+   nautobot_ssot_ipfabric.utilities.test_utils.clean_slate
 
 
 
 .. py:function:: json_fixture(json_file_path)
 
    Load and return JSON Fixture.
+
+
+.. py:function:: clean_slate()
+
+   Delete all objects synced.
+
+   Use this with caution. Never use in production env.
 
 

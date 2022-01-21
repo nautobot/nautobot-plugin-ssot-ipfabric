@@ -38,7 +38,10 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../README.html">Readme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugin.html">Plugin Overview</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../index.html">API Reference</a></li>
@@ -75,11 +78,11 @@
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nautobot_ssot_ipfabric.api</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="diffsync/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nautobot_ssot_ipfabric.diffsync</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="diffsync/adapter_ipfabric/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nautobot_ssot_ipfabric.diffsync.adapter_ipfabric</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="diffsync/adapter_nautobot/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nautobot_ssot_ipfabric.diffsync.adapter_nautobot</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="diffsync/tonb_models/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nautobot_ssot_ipfabric.diffsync.tonb_models</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffsync/adapters_shared/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nautobot_ssot_ipfabric.diffsync.adapters_shared</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffsync/diffsync_models/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nautobot_ssot_ipfabric.diffsync.diffsync_models</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tests/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nautobot_ssot_ipfabric.tests</span></code></a><ul>
@@ -105,6 +108,7 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="jobs/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nautobot_ssot_ipfabric.jobs</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="signals/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nautobot_ssot_ipfabric.signals</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="template_content/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nautobot_ssot_ipfabric.template_content</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="workers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nautobot_ssot_ipfabric.workers</span></code></a></li>
 </ul>
@@ -122,6 +126,20 @@
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.NautobotSSoTIPFabricConfig" title="nautobot_ssot_ipfabric.NautobotSSoTIPFabricConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NautobotSSoTIPFabricConfig</span></code></a></p></td>
 <td><p>Plugin configuration for the nautobot_ssot_ipfabric plugin.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.nautobot_database_ready_callback" title="nautobot_ssot_ipfabric.nautobot_database_ready_callback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nautobot_database_ready_callback</span></code></a>(sender, *, apps, **kwargs)</p></td>
+<td><p>Callback function triggered by the nautobot_database_ready signal when the Nautobot database is fully ready.</p></td>
 </tr>
 </tbody>
 </table>
@@ -146,6 +164,12 @@
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.__version__">
 <span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.</span></span><span class="sig-name descname"><span class="pre">__version__</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.__version__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.nautobot_database_ready_callback">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.</span></span><span class="sig-name descname"><span class="pre">nautobot_database_ready_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sender</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apps</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.nautobot_database_ready_callback" title="Permalink to this definition"></a></dt>
+<dd><p>Callback function triggered by the nautobot_database_ready signal when the Nautobot database is fully ready.</p>
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.NautobotSSoTIPFabricConfig">
@@ -184,12 +208,12 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.NautobotSSoTIPFabricConfig.required_settings">
-<span class="sig-name descname"><span class="pre">required_settings</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">['IPFABRIC_HOST',</span> <span class="pre">'IPFABRIC_API_TOKEN']</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.NautobotSSoTIPFabricConfig.required_settings" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">required_settings</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">['ipfabric_host',</span> <span class="pre">'ipfabric_api_token']</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.NautobotSSoTIPFabricConfig.required_settings" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.NautobotSSoTIPFabricConfig.min_version">
-<span class="sig-name descname"><span class="pre">min_version</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">1.1.0</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.NautobotSSoTIPFabricConfig.min_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">min_version</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">1.2.0</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.NautobotSSoTIPFabricConfig.min_version" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -206,6 +230,12 @@
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.NautobotSSoTIPFabricConfig.caching_config">
 <span class="sig-name descname"><span class="pre">caching_config</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.NautobotSSoTIPFabricConfig.caching_config" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.NautobotSSoTIPFabricConfig.ready">
+<span class="sig-name descname"><span class="pre">ready</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.NautobotSSoTIPFabricConfig.ready" title="Permalink to this definition"></a></dt>
+<dd><p>Callback when this plugin is loaded.</p>
+</dd></dl>
 
 </dd></dl>
 

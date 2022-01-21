@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nautobot SSoT Plugin - IPFabric &mdash; Nautobot SSOT IPFabric 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Changelog" href="changelog.html" />
+    <link rel="prev" title="Welcome to Nautobot SSoT IP Fabric documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Nautobot SSOT IPFabric
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Home</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Plugin Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-configuration">Installation &amp; Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#safe-delete-mode">Safe Delete Mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#single-source-of-truth-dashboard">Single Source of Truth Dashboard</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#diffsync-models">DiffSync Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ipfabric-site">IPFabric Site</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ipfabric-device">IPFabric Device</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ipfabric-interface">IPFabric Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ipfabric-vlan">IPFabric VLAN</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Nautobot SSOT IPFabric</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Nautobot SSoT Plugin - IPFabric</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/plugin.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="nautobot-ssot-plugin-ipfabric">
+<h1>Nautobot SSoT Plugin - IPFabric<a class="headerlink" href="#nautobot-ssot-plugin-ipfabric" title="Permalink to this headline"></a></h1>
+<p>This plugin was created to allow users to sync data from IP Fabric into Nautobot.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline"></a></h2>
+<p>Currently this plugin will provide the ability to sync the following IP Fabric models into Nautobot.</p>
+<ul class="simple">
+<li><p>Site -&gt; Nautobot Site</p></li>
+<li><p>Device -&gt; Nautobot Device</p></li>
+<li><p>Part Numbers -&gt; Nautobot Manufacturer/Device Type/Platform</p></li>
+<li><p>Interfaces -&gt; Nautobot Device Interfaces</p></li>
+<li><p>IPAddresses -&gt; Nautobot IPAddresses</p></li>
+</ul>
+</section>
+<section id="installation-configuration">
+<h2>Installation &amp; Configuration<a class="headerlink" href="#installation-configuration" title="Permalink to this headline"></a></h2>
+<p>The plugin is available as a Python package in pypi and can be installed with pip</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install nautobot-ssot-ipfabric
+</pre></div>
+</div>
+<blockquote>
+<div><p>The plugin is compatible with Nautobot 1.1.0 and higher</p>
+</div></blockquote>
+<p>To ensure Nautobot SSoT IPFabric is automatically re-installed during future upgrades, create a file named <code class="docutils literal notranslate"><span class="pre">local_requirements.txt</span></code> (if not already existing) in the Nautobot root directory (alongside <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>) and list the <code class="docutils literal notranslate"><span class="pre">nautobot-ssot-ipfabric</span></code> package:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span> nautobot-ssot-ipfabric &gt;&gt; local_requirements.txt
+</pre></div>
+</div>
+<p>Once installed, the plugin needs to be enabled in your <code class="docutils literal notranslate"><span class="pre">nautobot_config.py</span></code> as well as the <strong>IP Fabric Host</strong> and <strong>IP Fabric API Token</strong>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># In your nautobot_config.py</span>
+<span class="n">PLUGINS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;nautobot_ssot_ipfabric&quot;</span><span class="p">]</span>
+
+<span class="n">PLUGINS_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">&quot;nautobot_ssot_ipfabric&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;ipfabric_host&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;IPFABRIC_HOST&quot;</span><span class="p">),</span>
+      <span class="s2">&quot;ipfabric_api_token&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;IPFABRIC_API_TOKEN&quot;</span><span class="p">),</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>There are many additional configuration environment variables you are able to modify.
+To set any or all, update the plugin configuration dictionary as followed inside of your <code class="docutils literal notranslate"><span class="pre">nautobot_config.py</span></code> configuration settings file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">PLUGINS_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">&quot;nautobot_ssot_ipfabric&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;ipfabric_host&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;IPFABRIC_HOST&quot;</span><span class="p">),</span>
+      <span class="s2">&quot;ipfabric_api_token&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;IPFABRIC_API_TOKEN&quot;</span><span class="p">),</span>
+      <span class="s2">&quot;nautobot_host&quot;</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NAUTOBOT_HOST&quot;</span><span class="p">),</span>
+      <span class="s2">&quot;default_interface_type&quot;</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DEFAULT_INTERFACE_TYPE&quot;</span><span class="p">),</span>
+      <span class="s2">&quot;default_interface_mtu&quot;</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DEFAULT_INTERFACE_MTU&quot;</span><span class="p">),</span>
+      <span class="s2">&quot;default_interface_mac&quot;</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DEFAULT_INTERFACE_MAC&quot;</span><span class="p">),</span>
+      <span class="s2">&quot;default_device_status&quot;</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DEFAULT_DEVICE_STATUS&quot;</span><span class="p">),</span>
+      <span class="s2">&quot;default_device_status_color&quot;</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DEFAULT_DEVICE_STATUS_COLOR&quot;</span><span class="p">),</span>
+      <span class="s2">&quot;default_device_role&quot;</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DEFAULT_DEVICE_ROLE&quot;</span><span class="p">),</span>
+      <span class="s2">&quot;default_device_role_color&quot;</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DEFAULT_DEVICE_ROLE_COLOR&quot;</span><span class="p">),</span>
+      <span class="s2">&quot;safe_delete_device_status&quot;</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SAFE_DELETE_DEVICE_STATUS&quot;</span><span class="p">)</span>
+      <span class="s2">&quot;safe_delete_site_status&quot;</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SAFE_DELETE_SITE_STATUS&quot;</span><span class="p">)</span>
+      <span class="s2">&quot;safe_delete_ipaddress_status&quot;</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SAFE_DELETE_IPADDRESS_STATUS&quot;</span><span class="p">)</span>
+      <span class="s2">&quot;safe_delete_vlan_status&quot;</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SAFE_DELETE_VLAN_STATUS&quot;</span><span class="p">)</span>
+
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">nautobot_host</span></code> variable should be a FQDN of your Nautobot instance. This is used to provide a URL to the job results via Chatops and it’s not required.</p>
+<p>Here are the default values set while performing the synchronization job and importing data into Nautobot: Notice how these values are extracted from the settings of our specific application, <code class="docutils literal notranslate"><span class="pre">nautobot_ssot_ipfabric</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">CONFIG</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">PLUGINS_CONFIG</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;nautobot_ssot_ipfabric&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+<span class="n">DEFAULT_INTERFACE_TYPE</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default_interface_type&quot;</span><span class="p">,</span> <span class="s2">&quot;1000base-t&quot;</span><span class="p">)</span>
+<span class="n">DEFAULT_INTERFACE_MTU</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default_interface_mtu&quot;</span><span class="p">,</span> <span class="mi">1500</span><span class="p">)</span>
+<span class="n">DEFAULT_INTERFACE_MAC</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default_interface_mac&quot;</span><span class="p">,</span> <span class="s2">&quot;00:00:00:00:00:01&quot;</span><span class="p">)</span>
+<span class="n">DEFAULT_DEVICE_ROLE</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default_device_role&quot;</span><span class="p">,</span> <span class="s2">&quot;Network Device&quot;</span><span class="p">)</span>
+<span class="n">DEFAULT_DEVICE_ROLE_COLOR</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default_device_role_color&quot;</span><span class="p">,</span> <span class="s2">&quot;ff0000&quot;</span><span class="p">)</span>
+<span class="n">DEFAULT_DEVICE_STATUS</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default_device_status&quot;</span><span class="p">,</span> <span class="s2">&quot;Active&quot;</span><span class="p">)</span>
+<span class="n">DEFAULT_DEVICE_STATUS_COLOR</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default_device_status_color&quot;</span><span class="p">,</span> <span class="s2">&quot;ff0000&quot;</span><span class="p">)</span>
+<span class="n">ALLOW_DUPLICATE_ADDRESSES</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;allow_duplicate_addresses&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">NAUTOBOT_HOST</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;nautobot_host&quot;</span><span class="p">)</span>
+<span class="n">SAFE_DELETE_DEVICE_STATUS</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;safe_delete_device_status&quot;</span><span class="p">,</span> <span class="s2">&quot;Offline&quot;</span><span class="p">)</span>
+<span class="n">SAFE_DELETE_SITE_STATUS</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;safe_delete_site_status&quot;</span><span class="p">,</span> <span class="s2">&quot;Decommissioning&quot;</span><span class="p">)</span>
+<span class="n">SAFE_DELETE_IPADDRESS_STATUS</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;safe_ipaddress_interfaces_status&quot;</span><span class="p">,</span> <span class="s2">&quot;Deprecated&quot;</span><span class="p">)</span>
+<span class="n">SAFE_DELETE_VLAN_STATUS</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;safe_delete_vlan_status&quot;</span><span class="p">,</span> <span class="s2">&quot;Deprecated&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="safe-delete-mode">
+<h2>Safe Delete Mode<a class="headerlink" href="#safe-delete-mode" title="Permalink to this headline"></a></h2>
+<p>By design, an SSoT Plugin using Diffsync will Create, Update or Delete when synchronizing two data sources. However, this may not always be what we want to happen with our Source of Truth (Nautobot). A job configuration option is available and enabled by default to prevent deleting objects from the database and instead, update the <code class="docutils literal notranslate"><span class="pre">Status</span></code> of said object alongside assigning a default tag, <code class="docutils literal notranslate"><span class="pre">ssot-safe-delete</span></code>. For example, if an additional snapshot is created from IPFabric, synchronized with Nautobot and, it just so happens that a device was unreachable, down for maintenance, etc., This doesn’t <code class="docutils literal notranslate"><span class="pre">always</span></code> mean that our Source of Truth should delete this object, but we may need to bring attention to this matter. We let you decide what should happen. One thing to note is that some of the objects will auto recover from the changed status, if a new job shows the object is present. However, currently IPAddresses and Interfaces will not auto update to remove the <code class="docutils literal notranslate"><span class="pre">ssot-safe-delete</span></code> tag. The user is responsible for reviewing and updating accordingly.</p>
+<p>The default status change if an object were to be <code class="docutils literal notranslate"><span class="pre">deleted</span></code> by SSoT Diffsync operations, will be specified below. These are the default transitions states, unless otherwise specified in the configuration options of the plugin by a user.</p>
+<ul class="simple">
+<li><p>Device -&gt; Offline (Auto deletes tag upon recovery)</p></li>
+<li><p>IPAddresses -&gt; Deprecated (Does not auto-delete tag upon recovery)</p></li>
+<li><p>VLAN -&gt; Deprecated (Auto deletes tag upon recovery)</p></li>
+<li><p>Site -&gt; Decommissioning (Auto deletes tag upon recovery)</p></li>
+<li><p>Interfaces -&gt; Tagged with <code class="docutils literal notranslate"><span class="pre">ssot-safe-delete</span></code> (Does not auto-delete tag upon recovery)</p></li>
+</ul>
+<p>If you would like to change the default status change value, ensure you provide a valid status name available for the referenced object. Not all objects share the same <code class="docutils literal notranslate"><span class="pre">Status</span></code>.</p>
+<p><img alt="Safe Delete" src="_images/safe-delete.png" /></p>
+<p>An example object that’s been modified by SSoT App and tagged as <code class="docutils literal notranslate"><span class="pre">ssot-safe-delete</span></code> and <code class="docutils literal notranslate"><span class="pre">ssot-synced-from-ipfabric</span></code>. Notice the Status and child object, IPAddress has also changed to Deprecated and, it’s status changed and tagged as well.</p>
+<p><img alt="Safe Delete Address" src="_images/safe-delete-ipaddress.png" /></p>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"></a></h2>
+<p>Nautobot SSoT IP Fabric provides a user interface to interact with the underlying job that executes the synchronization from <strong>IP Fabric</strong> into <strong>Nautobot</strong>.</p>
+<section id="single-source-of-truth-dashboard">
+<h3>Single Source of Truth Dashboard<a class="headerlink" href="#single-source-of-truth-dashboard" title="Permalink to this headline"></a></h3>
+<p>This plugin leverages the <a class="reference external" href="https://github.com/nautobot/nautobot-plugin-ssot">Single Source of Truth</a> plugin that provides a dashboard with a fantastic entrypoint for seeing the status of the synchronization between <strong>IP Fabric</strong> and <strong>Nautobot</strong>.</p>
+<p>You can navigate to the SSoT Dashboard with the following steps:</p>
+<ol class="simple">
+<li><p>Click the <strong>Plugins</strong> menu and select <strong>Dashboard</strong> under <em>Single Source of Truth</em>.</p></li>
+</ol>
+<p><img alt="SSoT Dashboard Nav Menu" src="_images/nav_dashboard.png" /></p>
+<p>Now you should see the dashboard with information pertaining to <strong>IP Fabric</strong>.</p>
+<p><img alt="SSoT Dashboard" src="_images/dashboard.png" /></p>
+<p>We can see <strong>IP Fabric</strong> under <strong>Data Sources</strong> with some quick information such as the results of the latest synchronizations and the ability to launch the synchronization job.</p>
+<p>On the right hand side, we’re provided with additional information such as the source, target, start time, status, and the type of job.</p>
+<p>Let’s go ahead and click on <strong>IP Fabric</strong> under <strong>Data Sources</strong>.</p>
+<p><img alt="IPFabric Datasource" src="_images/ipfabric_datasource.png" /></p>
+<p>Now we can see additional details as to which IP Fabric host we’re syncing from and the models that get get mapped between the source and destination. We can also kick off sync job by clicking on <strong>Sync Now</strong>, but we will revisit that shortly.</p>
+<p>Below, the sync history is provided with more details of what happened during each synchronization job.</p>
+<p><img alt="IPFabric Sync History" src="_images/ipfabric_sync_history.png" /></p>
+<p>Now back to running the job. Let’s click on <strong>Sync Now</strong>.</p>
+<p><img alt="Sync Run" src="_images/ipfabric_sync_run.png" /></p>
+<p>There are several options available.</p>
+<ul class="simple">
+<li><p><strong>Debug</strong>: Enables more verbose logging that can be useful for troubleshooting synchronization issues.</p></li>
+<li><p><strong>Safe Delete Mode</strong>: Delete operations changes the object status to a predefined value (configurable via settings) and tags the object with <code class="docutils literal notranslate"><span class="pre">ssot-safe-delete</span></code> tag.</p></li>
+<li><p><strong>Sync Tagged Only</strong>: Only load Nautobot data into Diffsync adapters that’s been tagged with <code class="docutils literal notranslate"><span class="pre">ssot-synced-from-ipfabric</span></code> tag.</p></li>
+<li><p><strong>Dry run</strong>: This will only report the difference between the source and destination without synchronization.</p></li>
+<li><p><strong>Site Filter</strong>: Filter the data loaded into Diffsync by a top level location of a specified Site.</p></li>
+</ul>
+<p>If interested to see the source code, click on <strong>Source</strong>.</p>
+<p>After a job is launched, you will be redirected to the job results page which will provide any logged messages during the synchronization.</p>
+<p>If you’re interested in more details, click <strong>SSoT Sync Details</strong>.</p>
+<p><img alt="Job Results" src="_images/job_results.png" /></p>
+<p>You can then views the details of each object.</p>
+<p><img alt="Sync Details" src="_images/sync_details.png" /></p>
+<p>Site objects include a site diagram from IPFabric, which is using the new custom field to render the appropriate site-id. Navigate to any site that’s been synced by SSoT IPFabric and take a look!</p>
+<p><img alt="Site Diagram" src="_images/site_diagram.png" /></p>
+</section>
+</section>
+<section id="diffsync-models">
+<h2>DiffSync Models<a class="headerlink" href="#diffsync-models" title="Permalink to this headline"></a></h2>
+<section id="ipfabric-site">
+<h3>IPFabric Site<a class="headerlink" href="#ipfabric-site" title="Permalink to this headline"></a></h3>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>IP Fabric (Source)</p></th>
+<th class="head"><p>DiffSync Model</p></th>
+<th class="head"><p>Nautobot (Destination)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>siteName</p></td>
+<td><p>Location.name</p></td>
+<td><p>Site</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ipfabric-device">
+<h3>IPFabric Device<a class="headerlink" href="#ipfabric-device" title="Permalink to this headline"></a></h3>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>IP Fabric (Source)</p></th>
+<th class="head"><p>DiffSync Model</p></th>
+<th class="head"><p>Nautobot (Destination)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>hostname</p></td>
+<td><p>Device.name</p></td>
+<td><p>Device.name</p></td>
+</tr>
+<tr class="row-odd"><td><p>siteName</p></td>
+<td><p>Device.location_name</p></td>
+<td><p>Device.site</p></td>
+</tr>
+<tr class="row-even"><td><p>vendor</p></td>
+<td><p>Device.vendor</p></td>
+<td><p>Device.manufacturer</p></td>
+</tr>
+<tr class="row-odd"><td><p>model</p></td>
+<td><p>Device.model</p></td>
+<td><p>Device.device_type</p></td>
+</tr>
+<tr class="row-even"><td><p>sn</p></td>
+<td><p>Device.serial_number</p></td>
+<td><p>Device.serial</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ipfabric-interface">
+<h3>IPFabric Interface<a class="headerlink" href="#ipfabric-interface" title="Permalink to this headline"></a></h3>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>IP Fabric (Source)</p></th>
+<th class="head"><p>DiffSync Model</p></th>
+<th class="head"><p>Nautobot (Destination)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>intName</p></td>
+<td><p>Interface.name</p></td>
+<td><p>Interface.name</p></td>
+</tr>
+<tr class="row-odd"><td><p>hostname</p></td>
+<td><p>Interface.device_name</p></td>
+<td><p>Interface.assigned_object</p></td>
+</tr>
+<tr class="row-even"><td><p>mac</p></td>
+<td><p>Interface.mac_address</p></td>
+<td><p>Interface.mac_address</p></td>
+</tr>
+<tr class="row-odd"><td><p>mtu</p></td>
+<td><p>Interface.mtu</p></td>
+<td><p>Interface.mtu</p></td>
+</tr>
+<tr class="row-even"><td><p>N/A</p></td>
+<td><p>Interface.type</p></td>
+<td><p>Interface.type</p></td>
+</tr>
+<tr class="row-odd"><td><p>primaryIp</p></td>
+<td><p>Interface.ip_address</p></td>
+<td><p>IPAddress.address</p></td>
+</tr>
+<tr class="row-even"><td><p>N/A</p></td>
+<td><p>Interface.subnet_mask</p></td>
+<td><p>IPAddress.address</p></td>
+</tr>
+<tr class="row-odd"><td><p>N/A</p></td>
+<td><p>Interface.ip_is_primary</p></td>
+<td><p>Device.primary_ip</p></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div><p>Note: Interfaces only support synchronizing 1 IP Address at the moment.</p>
+</div></blockquote>
+</section>
+<section id="ipfabric-vlan">
+<h3>IPFabric VLAN<a class="headerlink" href="#ipfabric-vlan" title="Permalink to this headline"></a></h3>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>IP Fabric (Source)</p></th>
+<th class="head"><p>DiffSync Model</p></th>
+<th class="head"><p>Nautobot (Destination)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>vlanName</p></td>
+<td><p>Vlan.name</p></td>
+<td><p>VLAN.name</p></td>
+</tr>
+<tr class="row-odd"><td><p>vlanId</p></td>
+<td><p>Vlan.vid</p></td>
+<td><p>VLAN.vid</p></td>
+</tr>
+<tr class="row-even"><td><p>status</p></td>
+<td><p>Vlan.status</p></td>
+<td><p>VLAN.status</p></td>
+</tr>
+<tr class="row-odd"><td><p>siteName</p></td>
+<td><p>Vlan.site</p></td>
+<td><p>VLAN.site</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Nautobot SSoT IP Fabric documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="changelog.html" class="btn btn-neutral float-right" title="Changelog" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Network To Code, LLC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

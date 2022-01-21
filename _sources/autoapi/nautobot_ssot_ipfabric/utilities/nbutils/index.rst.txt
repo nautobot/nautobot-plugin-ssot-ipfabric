@@ -19,43 +19,48 @@ Functions
 .. autoapisummary::
 
    nautobot_ssot_ipfabric.utilities.nbutils.create_site
-   nautobot_ssot_ipfabric.utilities.nbutils.create_region
-   nautobot_ssot_ipfabric.utilities.nbutils.create_tenant
-   nautobot_ssot_ipfabric.utilities.nbutils.create_device_type_object
    nautobot_ssot_ipfabric.utilities.nbutils.create_manufacturer
+   nautobot_ssot_ipfabric.utilities.nbutils.create_device_type_object
    nautobot_ssot_ipfabric.utilities.nbutils.create_device_role_object
    nautobot_ssot_ipfabric.utilities.nbutils.create_status
    nautobot_ssot_ipfabric.utilities.nbutils.create_ip
    nautobot_ssot_ipfabric.utilities.nbutils.create_interface
    nautobot_ssot_ipfabric.utilities.nbutils.create_vlan
+   nautobot_ssot_ipfabric.utilities.nbutils.tag_object
 
 
 
-.. py:function:: create_site(site_name, site_id=None, region_obj=None, tenant_obj=None)
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.utilities.nbutils.CONFIG
+   nautobot_ssot_ipfabric.utilities.nbutils.ALLOW_DUPLICATE_IPS
+
+
+.. py:data:: CONFIG
+   
+
+   
+
+.. py:data:: ALLOW_DUPLICATE_IPS
+   
+
+   
+
+.. py:function:: create_site(site_name, site_id=None)
 
    Creates a specified site in Nautobot.
 
    Args:
        site_name (str): Name of the site.
        site_id (str): ID of the site.
-       region_obj (Region): Region Nautobot Object
-       tenant_obj (Tenant): Tenant Nautobot Object
 
 
-.. py:function:: create_region(region_name)
+.. py:function:: create_manufacturer(vendor_name)
 
-   Creates a specified region in Nautobot.
-
-   Args:
-       region_name (str): Name of the site.
-
-
-.. py:function:: create_tenant(tenant_name)
-
-   Create a specified tenant in Nautobot.
-
-   Args:
-       tenant_name (str): The name of the tenant.
+   Create specified manufacturer in Nautobot.
 
 
 .. py:function:: create_device_type_object(device_type, vendor_name)
@@ -65,11 +70,6 @@ Functions
    Args:
        device_type (str): Device model gathered from DiffSync model.
        vendor_name (str): Vendor Name
-
-
-.. py:function:: create_manufacturer(vendor_name)
-
-   Create specified manufacturer in Nautobot.
 
 
 .. py:function:: create_device_role_object(role_name, role_color)
@@ -97,11 +97,13 @@ Functions
 
    Verifies ip address exists in Nautobot. If not, creates specified ip.
 
+   Utility behvariour is manipulated by `settings` if duplicate ip's are allowed.
+
    Args:
        ip_address (str): IP address.
        subnet_mask (str): Subnet mask used for IP Address.
        status (str): Status to assign to IP Address.
-       object_pk (UUID): Object to assign interface
+       object_pk: Object primary key
 
 
 .. py:function:: create_interface(device_obj, interface_details)
@@ -125,5 +127,15 @@ Functions
 
    Returns:
        (VLAN): Returns created or obtained VLAN object.
+
+
+.. py:function:: tag_object(nautobot_object: Any, custom_field: str, tag_slug: Optional[str] = 'ssot-synced-from-ipfabric')
+
+   Apply the given tag and custom field to the identified object.
+
+   Args:
+       nautobot_object (Any): Nautobot ORM Object
+       custom_field (str): Name of custom field to update
+       tag_slug (Optional[str], optional): Tag slug to use as tag. Defaults to "ssot-synced-from-ipfabric".
 
 

@@ -33,19 +33,9 @@ Classes
       Setup.
 
 
-   .. py:method:: test_create_site(self)
+   .. py:method:: test_create_vlan(self)
 
-      Test `create_site` Utility.
-
-
-   .. py:method:: test_create_region(self)
-
-      Test `create_region` Utility.
-
-
-   .. py:method:: test_create_tenant(self)
-
-      Test `create_tenant` Utility.
+      Test `create_vlan` Utility.
 
 
    .. py:method:: test_create_device_type_object(self)
@@ -71,21 +61,6 @@ Classes
    .. py:method:: test_create_status_doesnt_exist(self)
 
       Test `create_status` Utility.
-
-
-   .. py:method:: test_create_ip(self)
-
-      Test `create_ip` Utility.
-
-
-   .. py:method:: test_create_ip_device_add(self)
-
-      Test `create_ip` adding to device Utility.
-
-
-   .. py:method:: test_create_interface(self)
-
-      Test `create_interface` Utility.
 
 
 

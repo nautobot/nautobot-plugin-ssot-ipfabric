@@ -3,39 +3,4 @@
 
 .. py:module:: nautobot_ssot_ipfabric.tests.test_nautobot_adapter
 
-.. autoapi-nested-parse::
-
-   Unit tests for the IPFabric DiffSync adapter class.
-
-
-
-Module Contents
----------------
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   nautobot_ssot_ipfabric.tests.test_nautobot_adapter.IPFabricDiffSyncTestCase
-
-
-
-
-.. py:class:: IPFabricDiffSyncTestCase(methodName='runTest')
-
-   Bases: :py:obj:`django.test.TestCase`
-
-   Test the NautobotDiffSync adapter class.
-
-   .. py:method:: setUp(self)
-
-      Create Nautobot objects to load and test with.
-
-
-   .. py:method:: test_data_loading(self)
-
-      Test the load() function.
-
-
 

@@ -1,0 +1,56 @@
+:py:mod:`nautobot_ssot_ipfabric.diffsync.adapters_shared`
+=========================================================
+
+.. py:module:: nautobot_ssot_ipfabric.diffsync.adapters_shared
+
+.. autoapi-nested-parse::
+
+   Diff sync shared adapter class attritbutes to synchronize applications.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.diffsync.adapters_shared.DiffSyncModelAdapters
+
+
+
+
+.. py:class:: DiffSyncModelAdapters(name=None)
+
+   Bases: :py:obj:`diffsync.DiffSync`
+
+   Nautobot adapter for DiffSync.
+
+   .. py:attribute:: location
+      
+
+      
+
+   .. py:attribute:: device
+      
+
+      
+
+   .. py:attribute:: interface
+      
+
+      
+
+   .. py:attribute:: vlan
+      
+
+      
+
+   .. py:attribute:: top_level
+      :annotation: = ['location']
+
+      
+
+

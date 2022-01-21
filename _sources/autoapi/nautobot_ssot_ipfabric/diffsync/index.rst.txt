@@ -3,6 +3,11 @@
 
 .. py:module:: nautobot_ssot_ipfabric.diffsync
 
+.. autoapi-nested-parse::
+
+   Diffsync Utilities, Adapters and Models.
+
+
 
 Submodules
 ----------
@@ -12,6 +17,52 @@ Submodules
 
    adapter_ipfabric/index.rst
    adapter_nautobot/index.rst
-   tonb_models/index.rst
+   adapters_shared/index.rst
+   diffsync_models/index.rst
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.diffsync.DiffSyncModelAdapters
+
+
+
+
+.. py:class:: DiffSyncModelAdapters(name=None)
+
+   Bases: :py:obj:`diffsync.DiffSync`
+
+   Nautobot adapter for DiffSync.
+
+   .. py:attribute:: location
+      
+
+      
+
+   .. py:attribute:: device
+      
+
+      
+
+   .. py:attribute:: interface
+      
+
+      
+
+   .. py:attribute:: vlan
+      
+
+      
+
+   .. py:attribute:: top_level
+      :annotation: = ['location']
+
+      
 
 

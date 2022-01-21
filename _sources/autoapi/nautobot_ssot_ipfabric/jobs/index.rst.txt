@@ -17,6 +17,7 @@ Classes
 
 .. autoapisummary::
 
+   nautobot_ssot_ipfabric.jobs.OptionalObjectVar
    nautobot_ssot_ipfabric.jobs.IpFabricDataSource
 
 
@@ -27,7 +28,45 @@ Attributes
 
 .. autoapisummary::
 
+   nautobot_ssot_ipfabric.jobs.CONFIG
+   nautobot_ssot_ipfabric.jobs.IPFABRIC_HOST
+   nautobot_ssot_ipfabric.jobs.IPFABRIC_API_TOKEN
+   nautobot_ssot_ipfabric.jobs.name
    nautobot_ssot_ipfabric.jobs.jobs
+
+
+.. py:data:: CONFIG
+   
+
+   
+
+.. py:data:: IPFABRIC_HOST
+   
+
+   
+
+.. py:data:: IPFABRIC_API_TOKEN
+   
+
+   
+
+.. py:data:: name
+   :annotation: = Nautobot SSoT IPFabric
+
+   
+
+.. py:class:: OptionalObjectVar(model=None, display_field='display', query_params=None, null_option=None, *args, **kwargs)
+
+   Bases: :py:obj:`nautobot.extras.jobs.ScriptVariable`
+
+   Custom implementation of an Optional ObjectVar.
+
+   An object primary key is returned and accessible in job kwargs.
+
+   .. py:attribute:: form_field
+      
+
+      
 
 
 .. py:class:: IpFabricDataSource
@@ -41,7 +80,7 @@ Attributes
       Metadata about this Job.
 
       .. py:attribute:: name
-         :annotation: = IP Fabric
+         :annotation: = IP Fabric SSoT Sync
 
          
 
@@ -60,8 +99,28 @@ Attributes
 
          
 
+      .. py:attribute:: field_order
+         :annotation: = ['debug', 'safe_delete_mode', 'sync_ipfabric_tagged_only', 'dry_run']
+
+         
+
 
    .. py:attribute:: debug
+      
+
+      
+
+   .. py:attribute:: safe_delete_mode
+      
+
+      
+
+   .. py:attribute:: sync_ipfabric_tagged_only
+      
+
+      
+
+   .. py:attribute:: site_filter
       
 
       
@@ -76,6 +135,11 @@ Attributes
       :classmethod:
 
       Dictionary describing the configuration of this DataSource.
+
+
+   .. py:method:: log_debug(self, message)
+
+      Conditionally log a debug message.
 
 
    .. py:method:: sync_data(self)

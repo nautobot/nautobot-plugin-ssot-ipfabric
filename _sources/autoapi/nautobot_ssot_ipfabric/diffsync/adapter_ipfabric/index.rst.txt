@@ -30,36 +30,60 @@ Functions
 
 
 
-.. py:class:: IPFabricDiffSync(*args, job, sync, client, **kwargs)
+Attributes
+~~~~~~~~~~
 
-   Bases: :py:obj:`diffsync.DiffSync`
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.logger
+   nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.CONFIG
+   nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.DEFAULT_INTERFACE_TYPE
+   nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.DEFAULT_INTERFACE_MTU
+   nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.DEFAULT_INTERFACE_MAC
+   nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.DEFAULT_DEVICE_ROLE
+   nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.DEFAULT_DEVICE_STATUS
+
+
+.. py:data:: logger
+   
+
+   
+
+.. py:data:: CONFIG
+   
+
+   
+
+.. py:data:: DEFAULT_INTERFACE_TYPE
+   
+
+   
+
+.. py:data:: DEFAULT_INTERFACE_MTU
+   
+
+   
+
+.. py:data:: DEFAULT_INTERFACE_MAC
+   
+
+   
+
+.. py:data:: DEFAULT_DEVICE_ROLE
+   
+
+   
+
+.. py:data:: DEFAULT_DEVICE_STATUS
+   
+
+   
+
+.. py:class:: IPFabricDiffSync(job, sync, client, *args, **kwargs)
+
+   Bases: :py:obj:`nautobot_ssot_ipfabric.diffsync.DiffSyncModelAdapters`
 
    Nautobot adapter for DiffSync.
-
-   .. py:attribute:: location
-      
-
-      
-
-   .. py:attribute:: device
-      
-
-      
-
-   .. py:attribute:: interface
-      
-
-      
-
-   .. py:attribute:: vlan
-      
-
-      
-
-   .. py:attribute:: top_level
-      :annotation: = ['location']
-
-      
 
    .. py:method:: load_sites(self)
 

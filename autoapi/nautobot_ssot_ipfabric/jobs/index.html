@@ -38,7 +38,10 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Readme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../plugin.html">Plugin Overview</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">API Reference</a></li>
@@ -81,7 +84,10 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.jobs.IpFabricDataSource" title="nautobot_ssot_ipfabric.jobs.IpFabricDataSource"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IpFabricDataSource</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.jobs.OptionalObjectVar" title="nautobot_ssot_ipfabric.jobs.OptionalObjectVar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptionalObjectVar</span></code></a></p></td>
+<td><p>Custom implementation of an Optional ObjectVar.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.jobs.IpFabricDataSource" title="nautobot_ssot_ipfabric.jobs.IpFabricDataSource"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IpFabricDataSource</span></code></a></p></td>
 <td><p>Job syncing data from IP Fabric to Nautobot.</p></td>
 </tr>
 </tbody>
@@ -95,11 +101,56 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.jobs.CONFIG" title="nautobot_ssot_ipfabric.jobs.CONFIG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CONFIG</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.jobs.IPFABRIC_HOST" title="nautobot_ssot_ipfabric.jobs.IPFABRIC_HOST"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IPFABRIC_HOST</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.jobs.IPFABRIC_API_TOKEN" title="nautobot_ssot_ipfabric.jobs.IPFABRIC_API_TOKEN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IPFABRIC_API_TOKEN</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.jobs.name" title="nautobot_ssot_ipfabric.jobs.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
+<td><p></p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.jobs.jobs" title="nautobot_ssot_ipfabric.jobs.jobs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jobs</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
+<dl class="py data">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.CONFIG">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.jobs.</span></span><span class="sig-name descname"><span class="pre">CONFIG</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.CONFIG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.IPFABRIC_HOST">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.jobs.</span></span><span class="sig-name descname"><span class="pre">IPFABRIC_HOST</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IPFABRIC_HOST" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.IPFABRIC_API_TOKEN">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.jobs.</span></span><span class="sig-name descname"><span class="pre">IPFABRIC_API_TOKEN</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IPFABRIC_API_TOKEN" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.name">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.jobs.</span></span><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">Nautobot</span> <span class="pre">SSoT</span> <span class="pre">IPFabric</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.OptionalObjectVar">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.jobs.</span></span><span class="sig-name descname"><span class="pre">OptionalObjectVar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'display'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">null_option</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.OptionalObjectVar" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">nautobot.extras.jobs.ScriptVariable</span></code></p>
+<p>Custom implementation of an Optional ObjectVar.</p>
+<p>An object primary key is returned and accessible in job kwargs.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.OptionalObjectVar.form_field">
+<span class="sig-name descname"><span class="pre">form_field</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.OptionalObjectVar.form_field" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.IpFabricDataSource">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.jobs.</span></span><span class="sig-name descname"><span class="pre">IpFabricDataSource</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IpFabricDataSource" title="Permalink to this definition"></a></dt>
@@ -111,7 +162,7 @@
 <dd><p>Metadata about this Job.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.IpFabricDataSource.Meta.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">IP</span> <span class="pre">Fabric</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IpFabricDataSource.Meta.name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">IP</span> <span class="pre">Fabric</span> <span class="pre">SSoT</span> <span class="pre">Sync</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IpFabricDataSource.Meta.name" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -129,11 +180,31 @@
 <span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">Synchronize</span> <span class="pre">data</span> <span class="pre">from</span> <span class="pre">IP</span> <span class="pre">Fabric</span> <span class="pre">into</span> <span class="pre">Nautobot.</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IpFabricDataSource.Meta.description" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.IpFabricDataSource.Meta.field_order">
+<span class="sig-name descname"><span class="pre">field_order</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">['debug',</span> <span class="pre">'safe_delete_mode',</span> <span class="pre">'sync_ipfabric_tagged_only',</span> <span class="pre">'dry_run']</span></em><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IpFabricDataSource.Meta.field_order" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.IpFabricDataSource.debug">
 <span class="sig-name descname"><span class="pre">debug</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IpFabricDataSource.debug" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.IpFabricDataSource.safe_delete_mode">
+<span class="sig-name descname"><span class="pre">safe_delete_mode</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IpFabricDataSource.safe_delete_mode" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.IpFabricDataSource.sync_ipfabric_tagged_only">
+<span class="sig-name descname"><span class="pre">sync_ipfabric_tagged_only</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IpFabricDataSource.sync_ipfabric_tagged_only" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.IpFabricDataSource.site_filter">
+<span class="sig-name descname"><span class="pre">site_filter</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IpFabricDataSource.site_filter" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -146,6 +217,12 @@
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.IpFabricDataSource.config_information">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">config_information</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IpFabricDataSource.config_information" title="Permalink to this definition"></a></dt>
 <dd><p>Dictionary describing the configuration of this DataSource.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.IpFabricDataSource.log_debug">
+<span class="sig-name descname"><span class="pre">log_debug</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IpFabricDataSource.log_debug" title="Permalink to this definition"></a></dt>
+<dd><p>Conditionally log a debug message.</p>
 </dd></dl>
 
 <dl class="py method">

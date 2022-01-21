@@ -1,7 +1,7 @@
-:py:mod:`nautobot_ssot_ipfabric.diffsync.tonb_models`
-=====================================================
+:py:mod:`nautobot_ssot_ipfabric.diffsync.diffsync_models`
+=========================================================
 
-.. py:module:: nautobot_ssot_ipfabric.diffsync.tonb_models
+.. py:module:: nautobot_ssot_ipfabric.diffsync.diffsync_models
 
 .. autoapi-nested-parse::
 
@@ -17,11 +17,11 @@ Classes
 
 .. autoapisummary::
 
-   nautobot_ssot_ipfabric.diffsync.tonb_models.Location
-   nautobot_ssot_ipfabric.diffsync.tonb_models.Device
-   nautobot_ssot_ipfabric.diffsync.tonb_models.Interface
-   nautobot_ssot_ipfabric.diffsync.tonb_models.Vlan
-   nautobot_ssot_ipfabric.diffsync.tonb_models.MgmtInterface
+   nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras
+   nautobot_ssot_ipfabric.diffsync.diffsync_models.Location
+   nautobot_ssot_ipfabric.diffsync.diffsync_models.Device
+   nautobot_ssot_ipfabric.diffsync.diffsync_models.Interface
+   nautobot_ssot_ipfabric.diffsync.diffsync_models.Vlan
 
 
 
@@ -31,35 +31,93 @@ Attributes
 
 .. autoapisummary::
 
-   nautobot_ssot_ipfabric.diffsync.tonb_models.DEFAULT_DEVICE_ROLE
-   nautobot_ssot_ipfabric.diffsync.tonb_models.DEFAULT_DEVICE_ROLE_COLOR
-   nautobot_ssot_ipfabric.diffsync.tonb_models.DEFAULT_DEVICE_STATUS
-   nautobot_ssot_ipfabric.diffsync.tonb_models.DEFAULT_DEVICE_STATUS_COLOR
+   nautobot_ssot_ipfabric.diffsync.diffsync_models.CONFIG
+   nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_ROLE
+   nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_ROLE_COLOR
+   nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_STATUS
+   nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_DEVICE_STATUS_COLOR
+   nautobot_ssot_ipfabric.diffsync.diffsync_models.DEFAULT_INTERFACE_MAC
+   nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_SITE_STATUS
+   nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_DEVICE_STATUS
+   nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_IPADDRESS_STATUS
+   nautobot_ssot_ipfabric.diffsync.diffsync_models.SAFE_DELETE_VLAN_STATUS
 
+
+.. py:data:: CONFIG
+   
+
+   
 
 .. py:data:: DEFAULT_DEVICE_ROLE
-   :annotation: = leaf
+   
 
    
 
 .. py:data:: DEFAULT_DEVICE_ROLE_COLOR
-   :annotation: = ff0000
+   
 
    
 
 .. py:data:: DEFAULT_DEVICE_STATUS
-   :annotation: = Active
+   
 
    
 
 .. py:data:: DEFAULT_DEVICE_STATUS_COLOR
-   :annotation: = ff0000
+   
 
    
 
-.. py:class:: Location
+.. py:data:: DEFAULT_INTERFACE_MAC
+   
+
+   
+
+.. py:data:: SAFE_DELETE_SITE_STATUS
+   
+
+   
+
+.. py:data:: SAFE_DELETE_DEVICE_STATUS
+   
+
+   
+
+.. py:data:: SAFE_DELETE_IPADDRESS_STATUS
+   
+
+   
+
+.. py:data:: SAFE_DELETE_VLAN_STATUS
+   
+
+   
+
+.. py:class:: DiffSyncExtras
 
    Bases: :py:obj:`diffsync.DiffSyncModel`
+
+   Additional components to mix and subclass from with `DiffSyncModel`.
+
+   .. py:attribute:: safe_delete_mode
+      :annotation: :ClassVar[bool] = True
+
+      
+
+   .. py:method:: safe_delete(self, nautobot_object: Any, safe_mode: bool, safe_delete_status: Optional[str] = None)
+
+      Safe delete an object, by adding tags or changing it's default status.
+
+      Args:
+          nautobot_object (Any): Any type of Nautobot object
+          safe_mode (bool): Safe mode or not
+          safe_delete_status (str): Desired status to change to
+
+
+
+.. py:class:: Location
+
+   Bases: :py:obj:`DiffSyncExtras`
 
    Location model.
 
@@ -74,7 +132,7 @@ Attributes
       
 
    .. py:attribute:: _attributes
-      :annotation: = ['site_id']
+      :annotation: = ['site_id', 'status']
 
       
 
@@ -89,6 +147,11 @@ Attributes
       
 
    .. py:attribute:: site_id
+      :annotation: :Optional[str]
+
+      
+
+   .. py:attribute:: status
       :annotation: :str
 
       
@@ -114,10 +177,15 @@ Attributes
       Delete Site in Nautobot.
 
 
+   .. py:method:: update(self, attrs)
+
+      Update Site Object in Nautobot.
+
+
 
 .. py:class:: Device
 
-   Bases: :py:obj:`diffsync.DiffSyncModel`
+   Bases: :py:obj:`DiffSyncExtras`
 
    Device model.
 
@@ -132,7 +200,7 @@ Attributes
       
 
    .. py:attribute:: _attributes
-      :annotation: = ['location_name', 'model', 'vendor']
+      :annotation: = ['location_name', 'model', 'vendor', 'serial_number', 'role', 'status']
 
       
 
@@ -166,8 +234,13 @@ Attributes
 
       
 
-   .. py:attribute:: mgmt_int
-      :annotation: :List[MgmtInterface]
+   .. py:attribute:: role
+      :annotation: :Optional[str]
+
+      
+
+   .. py:attribute:: status
+      :annotation: :Optional[str]
 
       
 
@@ -178,16 +251,6 @@ Attributes
 
    .. py:attribute:: interfaces
       :annotation: :List[Interface]
-
-      
-
-   .. py:attribute:: sys_id
-      :annotation: :Optional[str]
-
-      
-
-   .. py:attribute:: pk
-      :annotation: :Optional[uuid.UUID]
 
       
 
@@ -202,10 +265,15 @@ Attributes
       Delete device in Nautobot.
 
 
+   .. py:method:: update(self, attrs)
+
+      Update devices in Nautbot based on Source.
+
+
 
 .. py:class:: Interface
 
-   Bases: :py:obj:`diffsync.DiffSyncModel`
+   Bases: :py:obj:`DiffSyncExtras`
 
    Interface model.
 
@@ -226,11 +294,6 @@ Attributes
 
    .. py:attribute:: _attributes
       :annotation: = ['description', 'enabled', 'mac_address', 'mtu', 'type', 'mgmt_only', 'ip_address',...
-
-      
-
-   .. py:attribute:: _children
-      
 
       
 
@@ -260,7 +323,7 @@ Attributes
       
 
    .. py:attribute:: mtu
-      :annotation: :Optional[str]
+      :annotation: :Optional[int]
 
       
 
@@ -289,8 +352,8 @@ Attributes
 
       
 
-   .. py:attribute:: pk
-      :annotation: :Optional[uuid.UUID]
+   .. py:attribute:: status
+      :annotation: :str
 
       
 
@@ -300,10 +363,20 @@ Attributes
       Create interface in Nautobot under its parent device.
 
 
+   .. py:method:: delete(self) -> Optional[diffsync.DiffSyncModel]
+
+      Delete Interface Object.
+
+
+   .. py:method:: update(self, attrs)
+
+      Update Interface object in Nautobot.
+
+
 
 .. py:class:: Vlan
 
-   Bases: :py:obj:`diffsync.DiffSyncModel`
+   Bases: :py:obj:`DiffSyncExtras`
 
    VLAN model.
 
@@ -327,11 +400,6 @@ Attributes
 
       
 
-   .. py:attribute:: _children
-      
-
-      
-
    .. py:attribute:: name
       :annotation: :str
 
@@ -352,11 +420,6 @@ Attributes
 
       
 
-   .. py:attribute:: pk
-      :annotation: :Optional[uuid.UUID]
-
-      
-
    .. py:method:: create(cls, diffsync, ids, attrs)
       :classmethod:
 
@@ -368,18 +431,9 @@ Attributes
       Delete.
 
 
+   .. py:method:: update(self, attrs)
 
-.. py:class:: MgmtInterface
+      Update VLAN object in Nautobot.
 
-   Bases: :py:obj:`Interface`
-
-   MgmtInterface class renamed to Interface.
-
-   For compatibility until references are removed.
-
-   .. py:attribute:: _modelname
-      :annotation: = mgmt_interface
-
-      
 
 

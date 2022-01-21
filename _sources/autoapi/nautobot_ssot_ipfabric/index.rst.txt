@@ -15,7 +15,6 @@ Subpackages
    :titlesonly:
    :maxdepth: 3
 
-   api/index.rst
    diffsync/index.rst
    tests/index.rst
    utilities/index.rst
@@ -28,6 +27,7 @@ Submodules
    :maxdepth: 1
 
    jobs/index.rst
+   signals/index.rst
    template_content/index.rst
    workers/index.rst
 
@@ -44,6 +44,14 @@ Classes
 
 
 
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.nautobot_database_ready_callback
+
+
 
 Attributes
 ~~~~~~~~~~
@@ -58,6 +66,11 @@ Attributes
    
 
    
+
+.. py:function:: nautobot_database_ready_callback(sender, *, apps, **kwargs)
+
+   Callback function triggered by the nautobot_database_ready signal when the Nautobot database is fully ready.
+
 
 .. py:class:: NautobotSSoTIPFabricConfig(app_name, app_module)
 
@@ -96,12 +109,12 @@ Attributes
       
 
    .. py:attribute:: required_settings
-      :annotation: = ['IPFABRIC_HOST', 'IPFABRIC_API_TOKEN']
+      :annotation: = ['ipfabric_host', 'ipfabric_api_token']
 
       
 
    .. py:attribute:: min_version
-      :annotation: = 1.1.0
+      :annotation: = 1.2.0
 
       
 
@@ -119,6 +132,11 @@ Attributes
       
 
       
+
+   .. py:method:: ready(self)
+
+      Callback when this plugin is loaded.
+
 
 
 .. py:data:: config
