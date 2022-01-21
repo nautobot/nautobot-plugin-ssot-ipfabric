@@ -10,6 +10,7 @@ Currently this plugin will provide the ability to sync the following IP Fabric m
 - Device -> Nautobot Device
 - Part Numbers -> Nautobot Manufacturer/Device Type/Platform
 - Interfaces -> Nautobot Device Interfaces
+- IPAddresses -> Nautobot IPAddresses
 
 ## Installation & Configuration
 
@@ -57,7 +58,11 @@ PLUGINS_CONFIG = {
       "default_device_status_color" = os.environ.get("DEFAULT_DEVICE_STATUS_COLOR"),
       "default_device_role" = os.environ.get("DEFAULT_DEVICE_ROLE"),
       "default_device_role_color" = os.environ.get("DEFAULT_DEVICE_ROLE_COLOR"),
-      "allow_duplicate_addresses" = os.environ.get("ALLOW_DUPLICATE_ADDRESSES")
+      "safe_delete_device_status" = os.environ.get("SAFE_DELETE_DEVICE_STATUS")
+      "safe_delete_site_status" = os.environ.get("SAFE_DELETE_SITE_STATUS")
+      "safe_delete_ipaddress_status" = os.environ.get("SAFE_DELETE_IPADDRESS_STATUS")
+      "safe_delete_vlan_status" = os.environ.get("SAFE_DELETE_VLAN_STATUS")
+
   }
 }
 ```
@@ -78,7 +83,31 @@ DEFAULT_DEVICE_STATUS = CONFIG.get("default_device_status", "Active")
 DEFAULT_DEVICE_STATUS_COLOR = CONFIG.get("default_device_status_color", "ff0000")
 ALLOW_DUPLICATE_ADDRESSES = CONFIG.get("allow_duplicate_addresses", True)
 NAUTOBOT_HOST = CONFIG.get("nautobot_host")
+SAFE_DELETE_DEVICE_STATUS = CONFIG.get("safe_delete_device_status", "Offline")
+SAFE_DELETE_SITE_STATUS = CONFIG.get("safe_delete_site_status", "Decommissioning")
+SAFE_DELETE_IPADDRESS_STATUS = CONFIG.get("safe_ipaddress_interfaces_status", "Deprecated")
+SAFE_DELETE_VLAN_STATUS = CONFIG.get("safe_delete_vlan_status", "Deprecated")
 ```
+
+## Safe Delete Mode
+
+By design, an SSoT Plugin using Diffsync will Create, Update or Delete when synchronizing two data sources. However, this may not always be what we want to happen with our Source of Truth (Nautobot). A job configuration option is available and enabled by default to prevent deleting objects from the database and instead, update the `Status` of said object alongside assigning a default tag, `ssot-safe-delete`. For example, if an additional snapshot is created from IPFabric, synchronized with Nautobot and, it just so happens that a device was unreachable, down for maintenance, etc., This doesn't `always` mean that our Source of Truth should delete this object, but we may need to bring attention to this matter. We let you decide what should happen. One thing to note is that some of the objects will auto recover from the changed status, if a new job shows the object is present. However, currently IPAddresses and Interfaces will not auto update to remove the `ssot-safe-delete` tag. The user is responsible for reviewing and updating accordingly.
+
+The default status change if an object were to be `deleted` by SSoT Diffsync operations, will be specified below. These are the default transitions states, unless otherwise specified in the configuration options of the plugin by a user.
+
+- Device -> Offline (Auto deletes tag upon recovery)
+- IPAddresses -> Deprecated (Does not auto-delete tag upon recovery)
+- VLAN -> Deprecated (Auto deletes tag upon recovery)
+- Site -> Decommissioning (Auto deletes tag upon recovery)
+- Interfaces -> Tagged with `ssot-safe-delete` (Does not auto-delete tag upon recovery)
+
+If you would like to change the default status change value, ensure you provide a valid status name available for the referenced object. Not all objects share the same `Status`.
+
+![Safe Delete](./images/safe-delete.png)
+
+An example object that's been modified by SSoT App and tagged as `ssot-safe-delete` and `ssot-synced-from-ipfabric`. Notice the Status and child object, IPAddress has also changed to Deprecated and, it's status changed and tagged as well.
+
+![Safe Delete Address](./images/safe-delete-ipaddress.png)
 
 ## Usage
 
@@ -116,10 +145,13 @@ Now back to running the job. Let's click on **Sync Now**.
 
 ![Sync Run](./images/ipfabric_sync_run.png)
 
-There are two options available.
+There are several options available.
 
 - **Debug**: Enables more verbose logging that can be useful for troubleshooting synchronization issues.
+- **Safe Delete Mode**: Delete operations changes the object status to a predefined value (configurable via settings) and tags the object with `ssot-safe-delete` tag.
+- **Sync Tagged Only**: Only load Nautobot data into Diffsync adapters that's been tagged with `ssot-synced-from-ipfabric` tag.
 - **Dry run**: This will only report the difference between the source and destination without synchronization.
+- **Site Filter**: Filter the data loaded into Diffsync by a top level location of a specified Site.
 
 If interested to see the source code, click on **Source**.
 
@@ -132,6 +164,10 @@ If you're interested in more details, click **SSoT Sync Details**.
 You can then views the details of each object.
 
 ![Sync Details](./images/sync_details.png)
+
+Site objects include a site diagram from IPFabric, which is using the new custom field to render the appropriate site-id. Navigate to any site that's been synced by SSoT IPFabric and take a look!
+
+![Site Diagram](./images/site_diagram.png)
 
 ## DiffSync Models
 
@@ -163,6 +199,8 @@ You can then views the details of each object.
 | primaryIp          | Interface.ip_address    | IPAddress.address         |
 | N/A                | Interface.subnet_mask   | IPAddress.address         |
 | N/A                | Interface.ip_is_primary | Device.primary_ip         |
+
+> Note: Interfaces only support synchronizing 1 IP Address at the moment.
 
 ### IPFabric VLAN
 
