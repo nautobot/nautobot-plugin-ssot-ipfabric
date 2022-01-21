@@ -1,144 +1,183 @@
+#  pylint: disable=too-many-arguments
+# Load method is packed with conditionals  #  pylint: disable=too-many-branches
 """DiffSync adapter class for Nautobot as source-of-truth."""
-import logging
+from typing import List
 
-from diffsync import DiffSync
-from diffsync.exceptions import ObjectNotFound
+from diffsync.exceptions import ObjectAlreadyExists
+from django.conf import settings
+from django.db import transaction
+from django.db.models import Q
 from nautobot.dcim.models import Device, Site
+from nautobot.extras.models import Tag
 from nautobot.ipam.models import VLAN
+from netutils.mac import mac_to_format
 
-from . import tonb_models
+from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
-# from netutils.ip import cidr_to_netmask
-
-
-# from django.utils.text import slugify
-
-
-logger = logging.getLogger("adapter_nautobot")
+CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
+DEFAULT_INTERFACE_TYPE = CONFIG.get("default_interface_type", "1000base-t")
+DEFAULT_INTERFACE_MTU = CONFIG.get("default_interface_mtu", 1500)
+DEFAULT_INTERFACE_MAC = CONFIG.get("default_interface_mac", "00:00:00:00:00:01")
+DEFAULT_DEVICE_ROLE = CONFIG.get("default_device_role", "Network Device")
 
 
-class NautobotDiffSync(DiffSync):
+class NautobotDiffSync(DiffSyncModelAdapters):
     """Nautobot adapter for DiffSync."""
 
-    location = tonb_models.Location
-    device = tonb_models.Device
-    interface = tonb_models.Interface
-    vlan = tonb_models.Vlan
-
-    top_level = [
-        "location",
-    ]
-
-    def __init__(self, *args, job, sync, **kwargs):
+    def __init__(
+        self,
+        job,
+        sync,
+        safe_delete_mode: bool,
+        sync_ipfabric_tagged_only: bool,
+        site_filter: Site,
+        *args,
+        **kwargs,
+    ):
         """Initialize the NautobotDiffSync."""
         super().__init__(*args, **kwargs)
         self.job = job
         self.sync = sync
+        self.safe_delete_mode = safe_delete_mode
+        self.sync_ipfabric_tagged_only = sync_ipfabric_tagged_only
+        self.site_filter = site_filter
 
-    def load_sites(self):
-        """Add Nautobot Site objects as DiffSync Location models."""
-        for site_record in Site.objects.all():
-            self.job.log_debug(message=f"Loading Site {site_record.name}")
-            # A Site and a Region may share the same name; if so they become part of the same Location record.
+    def load_interfaces(self, device_record: Device, diffsync_device):
+        """Import a single Nautobot Interface object as a DiffSync Interface model."""
+        # Get MGMT IP
+        mgmt_int_qset = device_record.interfaces.filter(mgmt_only=True)
+        for interface_record in device_record.interfaces.all():
+            interface = self.interface(
+                diffsync=self,
+                status=device_record.status.name,
+                name=interface_record.name,
+                device_name=device_record.name,
+                description=interface_record.description if interface_record.description else None,
+                enabled=True,
+                mac_address=mac_to_format(str(interface_record.mac_address), "MAC_COLON_TWO").upper()
+                if interface_record.mac_address
+                else DEFAULT_INTERFACE_MAC,
+                subnet_mask="255.255.255.255",
+                mtu=interface_record.mtu if interface_record.mtu else DEFAULT_INTERFACE_MTU,
+                type=DEFAULT_INTERFACE_TYPE,
+                mgmt_only=interface_record.mgmt_only if interface_record.mgmt_only else False,
+                pk=interface_record.pk,
+                ip_is_primary=bool(
+                    any(interface for interface in mgmt_int_qset if interface.name == interface_record.name)
+                ),
+                ip_address=str(interface_record.ip_addresses.first().host)
+                if interface_record.ip_addresses.first()
+                else None,
+            )
+            if not self.safe_delete_mode:
+                self.interface.safe_delete_mode = self.safe_delete_mode
+            self.add(interface)
+            diffsync_device.add_child(interface)
+
+    def load_device(self, filtered_devices: List, location):
+        """Load Devices from Nautobot."""
+        for device_record in filtered_devices:
+            device = self.device(
+                diffsync=self,
+                name=device_record.name,
+                model=str(device_record.device_type),
+                role=str(device_record.device_role) if str(device_record.device_role) else DEFAULT_DEVICE_ROLE,
+                location_name=device_record.site.name,
+                vendor=str(device_record.device_type.manufacturer),
+                status=device_record.status.name,
+                serial_number=device_record.serial if device_record.serial else "",
+            )
+            if not self.safe_delete_mode:
+                self.device.safe_delete_mode = self.safe_delete_mode
             try:
-                location = self.get(self.location, site_record.name)
-                location.site_pk = site_record.pk
-            except ObjectNotFound:
+                self.add(device)
+            except ObjectAlreadyExists:
+                self.job.log_debug(message=f"Duplicate device discovered, {device_record.name}")
+                continue
+
+            location.add_child(device)
+            self.load_interfaces(device_record=device_record, diffsync_device=device)
+
+    def load_vlans(self, filtered_vlans: List, location):
+        """Add Nautobot VLAN objects as DiffSync VLAN models."""
+        for vlan_record in filtered_vlans:
+            if not vlan_record:
+                continue
+            vlan = self.vlan(
+                diffsync=self,
+                name=vlan_record.name,
+                site=vlan_record.site.name,
+                status=vlan_record.status.name if vlan_record.status else "Active",
+                vid=vlan_record.vid,
+            )
+            if not self.safe_delete_mode:
+                self.vlan.safe_delete_mode = self.safe_delete_mode
+            try:
+                self.add(vlan)
+            except ObjectAlreadyExists:
+                self.job.log_debug(message=f"Duplicate VLAN discovered, {vlan_record.name}")
+                continue
+            location.add_child(vlan)
+
+    def get_initial_site(self, ssot_tag):
+        """Identify the site objects based on user defined job inputs.
+
+        Args:
+            ssot_tag ([type]): Tag used for filtering
+        """
+        # Simple check / validate Tag is present.
+        if self.sync_ipfabric_tagged_only:
+            site_objects = Site.objects.filter(tags__slug=ssot_tag.slug)
+            if self.site_filter:
+                site_objects = Site.objects.filter(Q(name=self.site_filter.name) & Q(tags__slug=ssot_tag.slug))
+                if not site_objects:
+                    self.job.log_warning(
+                        message=f"{self.site_filter.name} was used to filter, alongside SSoT Tag. {self.site_filter.name} is not tagged."
+                    )
+        elif not self.sync_ipfabric_tagged_only:
+            if self.site_filter:
+                site_objects = Site.objects.filter(name=self.site_filter.name)
+            else:
+                site_objects = Site.objects.all()
+        return site_objects
+
+    @transaction.atomic
+    def load_data(self):
+        """Add Nautobot Site objects as DiffSync Location models."""
+        ssot_tag, _ = Tag.objects.get_or_create(name="SSoT Synced from IPFabric")
+        site_objects = self.get_initial_site(ssot_tag)
+        # The parent object that stores all children, is the Site.
+        if site_objects:
+            for site_record in site_objects:
                 location = self.location(
                     diffsync=self,
                     name=site_record.name,
-                    region_name=site_record.region.name if site_record.region else None,
-                    container_name=site_record.tenant.name if site_record.tenant else None,
-                    site_id=site_record.facility if site_record.facility else "",
-                    site_pk=site_record.pk,
+                    site_id=site_record.custom_field_data.get("ipfabric-site-id"),
+                    status=site_record.status.name,
                 )
+                if not self.safe_delete_mode:
+                    self.location.safe_delete_mode = self.safe_delete_mode
                 self.add(location)
+                try:
+                    # Load Site's Children - Devices with Interfaces, if any.
+                    if self.sync_ipfabric_tagged_only:
+                        nautobot_site_devices = Device.objects.filter(Q(site=site_record) & Q(tags__slug=ssot_tag.slug))
+                    else:
+                        nautobot_site_devices = Device.objects.filter(site=site_record)
 
-    # def load_interface(self, interface_record, device_model):
-    #     """Import a single Nautobot Interface object as a DiffSync Interface model."""
-    #     interface = self.interface(
-    #         diffsync=self,
-    #         name=interface_record.name,
-    #         device_name=device_model.name,
-    #         description=interface_record.description,
-    #         pk=interface_record.pk,
-    #     )
-    #     self.add(interface)
-    #     device_model.add_child(interface)
-
-    # def load_primary_ip_interface(self, interface_record, device_model, device_record):
-    #     """Import a Nautobot primary IP interface object as a DiffSync MgmtInterface model."""
-    #     interface = self.mgmt_interface(
-    #         diffsync=self,
-    #         name=interface_record.name,
-    #         device_name=device_model.name,
-    #         ip_address=device_record.primary_ip4.host,
-    #         subnet_mask=cidr_to_netmask(device_record.primary_ip4.prefix_length),
-    #         description=interface_record.description,
-    #         pk=interface_record.pk,
-    #     )
-    #     self.add(interface)
-    #     device_model.add_child(interface)
-
-    def load_devices(self):
-        """Add Nautobot Device objects as DiffSync Device models."""
-        for device_record in Device.objects.all():
-            self.job.log_debug(message=f"Loading Device {device_record.name}")
-            location = self.get(self.location, device_record.site.name)
-            try:
-                device = self.get(self.device, device_record.name)
-                device.pk = device_record.pk
-            except ObjectNotFound:
-                device = self.device(
-                    diffsync=self,
-                    name=device_record.name,
-                    # platform=str(device_record.platform) if device_record.platform else None,
-                    model=str(device_record.device_type),
-                    # role=str(device_record.device_role),
-                    location_name=device_record.site.name,
-                    vendor=str(device_record.device_type.manufacturer),
-                    # status=device_record.status,
-                    pk=device_record.pk,
-                    serial_number=device_record.serial if device_record.serial else "",
-                )
-
-                self.add(device)
-                location.add_child(device)
-
-    def load_vlans(self):
-        """Add Nautobot VLAN objects as DiffSync VLAN models."""
-        for vlan_record in VLAN.objects.all():
-            self.job.log_debug(message=f"Loading VLAN {vlan_record.name}")
-            location = self.get(self.location, vlan_record.site.name)
-            try:
-                vlan = self.get(self.vlan, vlan_record.name)
-                vlan.pk = vlan_record.pk
-            except ObjectNotFound:
-                vlan = self.vlan(
-                    diffsync=self,
-                    name=vlan_record.name,
-                    site=vlan_record.site.name,
-                    status=vlan_record.status.slug,
-                    pk=vlan_record.pk,
-                    vid=vlan_record.vid,
-                )
-
-                self.add(vlan)
-                location.add_child(vlan)
+                    if not nautobot_site_devices.exists():
+                        continue
+                    self.load_device(nautobot_site_devices, location)
+                    # Load Site Children - Vlans, if any.
+                    nautobot_site_vlans = VLAN.objects.filter(site=site_record)
+                    if not nautobot_site_vlans.exists():
+                        continue
+                    self.load_vlans(nautobot_site_vlans, location)
+                except Site.DoesNotExist:
+                    self.job.log_info(message=f"Unable to find Site, {site_record}.")
+        else:
+            self.job.log_warning(message="No Nautobot records to load.")
 
     def load(self):
         """Load data from Nautobot."""
-        self.load_sites()
-        self.load_devices()
-        self.load_vlans()
-
-
-#                for interface_record in Interface.objects.filter(device=device_record):
-#                    try:
-#                        if interface_record.ip_addresses.get(host=device_record.primary_ip.host):
-#                            self.load_primary_ip_interface(interface_record, device, device_record)
-#                    except (IPAddress.DoesNotExist, AttributeError) as e:
-#                        print(e)
-#                        pass
-#                        # Pass for now but can uncomment to load all interfaces for a device.
-#                        # self.load_interface(interface_record, device)
+        self.load_data()

@@ -1,23 +1,26 @@
 """DiffSync adapter class for Ip Fabric."""
 
-from diffsync import DiffSync
+import logging
 
-from . import tonb_models
+from django.conf import settings
+from netutils.mac import mac_to_format
+
+from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
+
+logger = logging.getLogger("nautobot.jobs")
+
+CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
+DEFAULT_INTERFACE_TYPE = CONFIG.get("default_interface_type", "1000base-t")
+DEFAULT_INTERFACE_MTU = CONFIG.get("default_interface_mtu", 1500)
+DEFAULT_INTERFACE_MAC = CONFIG.get("default_interface_mac", "00:00:00:00:00:01")
+DEFAULT_DEVICE_ROLE = CONFIG.get("default_device_role", "Network Device")
+DEFAULT_DEVICE_STATUS = CONFIG.get("default_device_status", "Active")
 
 
-class IPFabricDiffSync(DiffSync):
+class IPFabricDiffSync(DiffSyncModelAdapters):
     """Nautobot adapter for DiffSync."""
 
-    location = tonb_models.Location
-    device = tonb_models.Device
-    interface = tonb_models.Interface
-    vlan = tonb_models.Vlan
-
-    top_level = [
-        "location",
-    ]
-
-    def __init__(self, *args, job, sync, client, **kwargs):
+    def __init__(self, job, sync, client, *args, **kwargs):
         """Initialize the NautobotDiffSync."""
         super().__init__(*args, **kwargs)
         self.job = job
@@ -28,18 +31,17 @@ class IPFabricDiffSync(DiffSync):
         """Add IP Fabric Site objects as DiffSync Location models."""
         sites = self.client.get_sites()
         for site in sites:
-            self.job.log_debug(message=f"Loading Site {site['siteName']}")
-            location = self.location(diffsync=self, name=site["siteName"], site_id=site["id"])
+            location = self.location(diffsync=self, name=site["siteName"], site_id=site["id"], status="Active")
             self.add(location)
 
     def load_device_interfaces(self, device_model, interfaces, device_primary_ip):
         """Create and load DiffSync Interface model objects for a specific device."""
         device_interfaces = [iface for iface in interfaces if iface.get("hostname") == device_model.name]
-        self.job.log_debug(message=f"Loading {len(device_interfaces)} interfaces for device '{device_model.name}'")
-
         pseudo_interface = pseudo_management_interface(device_model.name, device_interfaces, device_primary_ip)
+
         if pseudo_interface:
             device_interfaces.append(pseudo_interface)
+            logger.info("Pseudo MGMT Interface: %s", pseudo_interface)
 
         for iface in device_interfaces:
             ip_address = iface.get("primaryIp")
@@ -48,21 +50,20 @@ class IPFabricDiffSync(DiffSync):
                 name=iface.get("intName"),
                 device_name=iface.get("hostname"),
                 description=iface.get("dscr"),
-                enabled=not iface.get("reason") == "admin",
-                mac_address=iface.get("mac"),
-                mtu=iface.get("mtu"),
-                # TODO: (GREG) Determine how to handle interface type.
-                type=iface.get("type", "1000base-t"),
+                enabled=True,
+                mac_address=mac_to_format(iface.get("mac"), "MAC_COLON_TWO").upper()
+                if iface.get("mac")
+                else DEFAULT_INTERFACE_MAC,
+                mtu=iface.get("mtu") if iface.get("mtu") else DEFAULT_INTERFACE_MTU,
+                type=DEFAULT_INTERFACE_TYPE,
                 mgmt_only=iface.get("mgmt_only", False),
-                ip_address=iface.get("primaryIp"),
-                # TODO: (GREG) Determine how to handle mask.
+                ip_address=ip_address,
                 subnet_mask="255.255.255.255",
-                # TODO: (GREG) Determine how to handle type.
                 ip_is_primary=ip_address == device_primary_ip,
+                status="Active",
             )
             self.add(interface)
             device_model.add_child(interface)
-            # self.job.log_debug(message=interface)
 
     def load(self):
         """Load data from IP Fabric."""
@@ -75,32 +76,31 @@ class IPFabricDiffSync(DiffSync):
                 continue
             location_vlans = [vlan for vlan in vlans if vlan["siteName"] == location.name]
             for vlan in location_vlans:
-                self.job.log_debug(message=f"Loading VLAN {vlan['vlanName']}")
                 vlan = self.vlan(
                     diffsync=self,
                     name=vlan["vlanName"],
                     site=vlan["siteName"],
                     vid=vlan["vlanId"],
-                    status=vlan["status"],
+                    status=vlan["status"].capitalize(),
                 )
                 self.add(vlan)
                 location.add_child(vlan)
             location_devices = [device for device in devices if device["siteName"] == location.name]
             for device in location_devices:
-                self.job.log_debug(message=f"Loading Device {device['hostname']}")
                 device_primary_ip = device["loginIp"]
                 device_model = self.device(
                     diffsync=self,
                     name=device["hostname"],
                     location_name=device["siteName"],
-                    model=device["model"],
-                    vendor=device["vendor"],
+                    model=device.get("model") if device.get("model") else f"Default-{device.get('vendor')}",
+                    vendor=device.get("vendor").capitalize(),
                     serial_number=device["sn"],
+                    role=DEFAULT_DEVICE_ROLE,
+                    status=DEFAULT_DEVICE_STATUS,
                 )
                 self.add(device_model)
                 location.add_child(device_model)
                 self.load_device_interfaces(device_model, interfaces, device_primary_ip)
-                self.job.log_debug(message=device_model)
 
 
 def pseudo_management_interface(hostname, device_interfaces, device_primary_ip):

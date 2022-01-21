@@ -21,6 +21,7 @@
 	- [Local Development Environment](#local-development-environment)
 	- [Other Miscellaneous Commands To Know](#other-miscellaneous-commands-to-know)
 		- [Python Shell](#python-shell)
+		- [iPython Shell Plus](#ipython-shell-plus)
 		- [Tests](#tests)
 
 ## Introduction
@@ -265,7 +266,7 @@ namespace.configure(
     {
         "nautobot_ssot_ipfabric": {
             ...
-            "python_ver": "3.6",
+            "python_ver": "3.7",
 	    ...
         }
     }

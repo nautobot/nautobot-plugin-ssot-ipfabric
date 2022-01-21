@@ -8,7 +8,10 @@ except ImportError:
 
 __version__ = metadata.version(__name__)
 
+from nautobot.core.signals import nautobot_database_ready
 from nautobot.extras.plugins import PluginConfig
+
+from nautobot_ssot_ipfabric.signals import nautobot_database_ready_callback
 
 
 class NautobotSSoTIPFabricConfig(PluginConfig):
@@ -20,11 +23,16 @@ class NautobotSSoTIPFabricConfig(PluginConfig):
     author = "Network to Code, LLC"
     description = "Nautobot SSoT IPFabric."
     base_url = "ssot-ipfabric"
-    required_settings = ["IPFABRIC_HOST", "IPFABRIC_API_TOKEN"]
-    min_version = "1.1.0"
+    required_settings = ["ipfabric_host", "ipfabric_api_token"]
+    min_version = "1.2.0"
     max_version = "1.9999"
     default_settings = {}
     caching_config = {}
+
+    def ready(self):
+        """Callback when this plugin is loaded."""
+        super().ready()
+        nautobot_database_ready.connect(nautobot_database_ready_callback, sender=self)
 
 
 config = NautobotSSoTIPFabricConfig  # pylint:disable=invalid-name
