@@ -6,12 +6,12 @@ An [SSoT](https://blog.networktocode.com/post/nautobot-ssot-plugin/) plugin prov
 
 | Branch      | Status                                                                                                                                                                                                            |
 | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **main**    | ![Build Status](https://github.com/networktocode-llc/nautobot-plugin-ssot-ipfabric/actions/workflows/nautobot-ssot-ipfabric-ci.yml/badge.svg?branch=main)    |
-| **develop** | ![Build Status](https://github.com/networktocode-llc/nautobot-plugin-ssot-ipfabric/actions/workflows/nautobot-ssot-ipfabric-ci.yml/badge.svg?branch=develop)|
+| **main**    | ![Build Status](https://github.com/nautobot/nautobot-plugin-ssot-ipfabric/actions/workflows/nautobot-ssot-ipfabric-ci.yml/badge.svg?branch=main)    |
+| **develop** | ![Build Status](https://github.com/nautobot/nautobot-plugin-ssot-ipfabric/actions/workflows/nautobot-ssot-ipfabric-ci.yml/badge.svg?branch=develop)|
 
 ## Documentation
 
-Documentation is hosted with Github Pages at [Nautobot SSoT IP Fabric Documentation](https://networktocode-llc.github.io/nautobot-plugin-ssot-ipfabric/)
+Documentation is hosted with Github Pages at [Nautobot SSoT IP Fabric Documentation](https://nautobot.github.io/nautobot-plugin-ssot-ipfabric/)
 
 ## Installation
 
@@ -24,7 +24,7 @@ pip install nautobot-ssot-ipfabric
 To install the plugin manually from repository code
 
 ```shell
-git clone git@github.com:networktocode-llc/nautobot-plugin-ssot-ipfabric.git
+git clone git@github.com:nautobot/nautobot-plugin-ssot-ipfabric.git
 ```
 
 ```bash
