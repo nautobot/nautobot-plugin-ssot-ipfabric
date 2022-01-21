@@ -166,7 +166,7 @@ def create_interface(device_obj, interface_details):
     return interface_obj
 
 
-def create_vlan(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: Site):
+def create_vlan(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: Site, description: str):
     """Creates or obtains VLAN object.
 
     Args:
@@ -174,10 +174,14 @@ def create_vlan(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: Site):
         vlan_id (int): VLAN ID
         vlan_status (str): VLAN Status
         site_obj (Site): Site Django Model
+        description (str): VLAN Description
 
     Returns:
         (VLAN): Returns created or obtained VLAN object.
     """
     status = Status.objects.get(name=vlan_status)
-    vlan_obj, _ = site_obj.vlans.get_or_create(name=vlan_name, vid=vlan_id, status=status)
+    if description:
+        vlan_obj, _ = site_obj.vlans.get_or_create(name=vlan_name, vid=vlan_id, status=status, description=description)
+    else:
+        vlan_obj, _ = site_obj.vlans.get_or_create(name=vlan_name, vid=vlan_id, status=status)
     return vlan_obj

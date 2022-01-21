@@ -32,7 +32,7 @@ class IPFabricDiffSyncTestCase(TestCase):
             name="csr2", device_type=device_type, device_role=device_role, site=site_2, status=status_active
         )
 
-        VLAN.objects.create(name="VLAN101", vid=101, status=status_active, site=site_1)
+        VLAN.objects.create(name="VLAN101", vid=101, status=status_active, site=site_1, description="VLAN101")
 
     def test_data_loading(self):
         """Test the load() function."""
@@ -71,5 +71,6 @@ class IPFabricDiffSyncTestCase(TestCase):
             self.assertTrue(hasattr(vlan, "vid"))
             self.assertTrue(hasattr(vlan, "status"))
             self.assertTrue(hasattr(vlan, "site"))
+            self.assertTrue(hasattr(vlan, "description"))
 
         # TODO: Add testing for any new models we add

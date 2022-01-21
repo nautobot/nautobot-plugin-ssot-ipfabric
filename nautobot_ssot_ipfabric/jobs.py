@@ -14,6 +14,7 @@ from nautobot_ssot_ipfabric.utilities.ipfabric_client import IpFabricClient
 CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
 IPFABRIC_HOST = CONFIG["ipfabric_host"]
 IPFABRIC_API_TOKEN = CONFIG["ipfabric_api_token"]
+IPFABRIC_VERIFY = CONFIG["ipfabric_verify"]
 
 
 # pylint:disable=too-few-public-methods
