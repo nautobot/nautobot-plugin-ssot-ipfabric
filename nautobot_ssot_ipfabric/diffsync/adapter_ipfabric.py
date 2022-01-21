@@ -60,6 +60,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                 ip_address=ip_address,
                 subnet_mask="255.255.255.255",
                 ip_is_primary=ip_address == device_primary_ip,
+                status="Active",
             )
             self.add(interface)
             device_model.add_child(interface)
@@ -80,7 +81,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                     name=vlan["vlanName"],
                     site=vlan["siteName"],
                     vid=vlan["vlanId"],
-                    status=vlan["status"],
+                    status=vlan["status"].capitalize(),
                 )
                 self.add(vlan)
                 location.add_child(vlan)
@@ -91,8 +92,8 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                     diffsync=self,
                     name=device["hostname"],
                     location_name=device["siteName"],
-                    model=device.get("model") if device.get("model") else f"general-{device.get('vendor')}",
-                    vendor=device.get("vendor"),
+                    model=device.get("model") if device.get("model") else f"Default-{device.get('vendor')}",
+                    vendor=device.get("vendor").capitalize(),
                     serial_number=device["sn"],
                     role=DEFAULT_DEVICE_ROLE,
                     status=DEFAULT_DEVICE_STATUS,

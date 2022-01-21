@@ -10,6 +10,7 @@ Currently this plugin will provide the ability to sync the following IP Fabric m
 - Device -> Nautobot Device
 - Part Numbers -> Nautobot Manufacturer/Device Type/Platform
 - Interfaces -> Nautobot Device Interfaces
+- IPAddresses -> Nautobot IPAddresses
 
 ## Installation & Configuration
 
@@ -90,17 +91,17 @@ SAFE_DELETE_VLAN_STATUS = CONFIG.get("safe_delete_vlan_status", "Deprecated")
 
 ## Safe Delete Mode
 
-By design, an SSoT Plugin using Diffsync will Create, Update or Delete when synchronizing two data sources. However, this may not always be what we want to happen with our Source of Truth (Nautobot). A job configuration option is available and enabled by default to prevent deleting objects from the database and instead, update the `Status` of said object. For example, if an additional snapshot is created from IPFabric, synchronized with Nautobot and, it just so happens that a device was unreachable, down for maintenance, etc., This doesn't `always` mean that our Source of Truth should delete this object, but we may need to bring attention to this matter. We let you decide what should happen.
+By design, an SSoT Plugin using Diffsync will Create, Update or Delete when synchronizing two data sources. However, this may not always be what we want to happen with our Source of Truth (Nautobot). A job configuration option is available and enabled by default to prevent deleting objects from the database and instead, update the `Status` of said object alongside assigning a default tag, `ssot-safe-delete`. For example, if an additional snapshot is created from IPFabric, synchronized with Nautobot and, it just so happens that a device was unreachable, down for maintenance, etc., This doesn't `always` mean that our Source of Truth should delete this object, but we may need to bring attention to this matter. We let you decide what should happen. One thing to note is that some of the objects will auto recover from the changed status, if a new job shows the object is present. However, currently IPAddresses and Interfaces will not auto update to remove the `ssot-safe-delete` tag. The user is responsible for reviewing and updating accordingly.
 
-The default status change if an object where to be `deleted` by SSoT Diffsync operations, will be as followed. These are the default transitions states, unless otherwise specified in the configuration options of the plugin.
+The default status change if an object were to be `deleted` by SSoT Diffsync operations, will be specified below. These are the default transitions states, unless otherwise specified in the configuration options of the plugin by a user.
 
-- Device -> Offline
-- IPAddresses -> Deprecated
-- VLAN -> Deprecated
-- Site -> Decommissioning
-- Interfaces -> Tagged with `ssot-safe-delete`
+- Device -> Offline (Auto deletes tag upon recovery)
+- IPAddresses -> Deprecated (Does not auto-delete tag upon recovery)
+- VLAN -> Deprecated (Auto deletes tag upon recovery)
+- Site -> Decommissioning (Auto deletes tag upon recovery)
+- Interfaces -> Tagged with `ssot-safe-delete` (Does not auto-delete tag upon recovery)
 
-If you would like to change the default status change  value, ensure you provide a valid status name available for the referenced object. Not all objects share the same `Status`.
+If you would like to change the default status change value, ensure you provide a valid status name available for the referenced object. Not all objects share the same `Status`.
 
 ## Usage
 

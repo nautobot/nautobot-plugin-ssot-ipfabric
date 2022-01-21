@@ -1,8 +1,11 @@
+#  pylint: disable=too-many-arguments
+# Load method is packed with conditionals  #  pylint: disable=too-many-branches
 """DiffSync adapter class for Nautobot as source-of-truth."""
 from typing import List
 
 from diffsync.exceptions import ObjectAlreadyExists
 from django.conf import settings
+from django.db import transaction
 from django.db.models import Q
 from nautobot.dcim.models import Device, Site
 from nautobot.extras.models import Tag
@@ -21,13 +24,23 @@ DEFAULT_DEVICE_ROLE = CONFIG.get("default_device_role", "Network Device")
 class NautobotDiffSync(DiffSyncModelAdapters):
     """Nautobot adapter for DiffSync."""
 
-    def __init__(self, job, sync, safe_delete_mode: bool, sync_ipfabric_tagged_only: bool, *args, **kwargs):
+    def __init__(
+        self,
+        job,
+        sync,
+        safe_delete_mode: bool,
+        sync_ipfabric_tagged_only: bool,
+        site_filter: Site,
+        *args,
+        **kwargs,
+    ):
         """Initialize the NautobotDiffSync."""
         super().__init__(*args, **kwargs)
         self.job = job
         self.sync = sync
         self.safe_delete_mode = safe_delete_mode
         self.sync_ipfabric_tagged_only = sync_ipfabric_tagged_only
+        self.site_filter = site_filter
 
     def load_interfaces(self, device_record: Device, diffsync_device):
         """Import a single Nautobot Interface object as a DiffSync Interface model."""
@@ -36,6 +49,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
         for interface_record in device_record.interfaces.all():
             interface = self.interface(
                 diffsync=self,
+                status=device_record.status.name,
                 name=interface_record.name,
                 device_name=device_record.name,
                 description=interface_record.description if interface_record.description else None,
@@ -78,7 +92,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
             try:
                 self.add(device)
             except ObjectAlreadyExists:
-                self.job.log_warning(message=f"Duplicate device discovered, {device_record.name}")
+                self.job.log_debug(message=f"Duplicate device discovered, {device_record.name}")
                 continue
 
             location.add_child(device)
@@ -93,7 +107,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 diffsync=self,
                 name=vlan_record.name,
                 site=vlan_record.site.name,
-                status=vlan_record.status.slug if vlan_record.status else "Active",
+                status=vlan_record.status.name if vlan_record.status else "Active",
                 vid=vlan_record.vid,
             )
             if not self.safe_delete_mode:
@@ -105,15 +119,33 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 continue
             location.add_child(vlan)
 
+    def get_initial_site(self, ssot_tag):
+        """Identify the site objects based on user defined job inputs.
+
+        Args:
+            ssot_tag ([type]): Tag used for filtering
+        """
+        # Simple check / validate Tag is present.
+        if self.sync_ipfabric_tagged_only:
+            site_objects = Site.objects.filter(tags__slug=ssot_tag.slug)
+            if self.site_filter:
+                site_objects = Site.objects.filter(Q(name=self.site_filter.name) & Q(tags__slug=ssot_tag.slug))
+                if not site_objects:
+                    self.job.log_warning(
+                        message=f"{self.site_filter.name} was used to filter, alongside SSoT Tag. {self.site_filter.name} is not tagged."
+                    )
+        elif not self.sync_ipfabric_tagged_only:
+            if self.site_filter:
+                site_objects = Site.objects.filter(name=self.site_filter.name)
+            else:
+                site_objects = Site.objects.all()
+        return site_objects
+
+    @transaction.atomic
     def load_data(self):
         """Add Nautobot Site objects as DiffSync Location models."""
-        # Simple check / validate Tag is present.
-        # Also to perform a valid save of post signal aided creation.
         ssot_tag, _ = Tag.objects.get_or_create(name="SSoT Synced from IPFabric")
-        if not self.sync_ipfabric_tagged_only:
-            site_objects = Site.objects.all()
-        else:
-            site_objects = Site.objects.filter(tags__slug=ssot_tag.slug)
+        site_objects = self.get_initial_site(ssot_tag)
         # The parent object that stores all children, is the Site.
         if site_objects:
             for site_record in site_objects:
@@ -127,11 +159,11 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                     self.location.safe_delete_mode = self.safe_delete_mode
                 self.add(location)
                 try:
-                    # Load Site Children - Devices with Interfaces, if any.
-                    if not self.sync_ipfabric_tagged_only:
-                        nautobot_site_devices = Device.objects.filter(site=site_record)
-                    else:
+                    # Load Site's Children - Devices with Interfaces, if any.
+                    if self.sync_ipfabric_tagged_only:
                         nautobot_site_devices = Device.objects.filter(Q(site=site_record) & Q(tags__slug=ssot_tag.slug))
+                    else:
+                        nautobot_site_devices = Device.objects.filter(site=site_record)
 
                     if not nautobot_site_devices.exists():
                         continue
@@ -144,7 +176,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 except Site.DoesNotExist:
                     self.job.log_info(message=f"Unable to find Site, {site_record}.")
         else:
-            self.job.log_info(message="No Nautobot records to load.")
+            self.job.log_warning(message="No Nautobot records to load.")
 
     def load(self):
         """Load data from Nautobot."""

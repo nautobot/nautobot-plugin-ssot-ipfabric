@@ -1,10 +1,15 @@
+#  pylint: disable=keyword-arg-before-vararg
+#  pylint: disable=too-few-public-methods
+#  pylint: disable=too-many-locals
 """IP Fabric Data Target Job."""
 from diffsync.enum import DiffSyncFlags
 from diffsync.exceptions import ObjectNotCreated
 from django.conf import settings
 from django.templatetags.static import static
 from django.urls import reverse
-from nautobot.extras.jobs import BooleanVar, Job
+from nautobot.dcim.models import Site
+from nautobot.extras.jobs import BooleanVar, Job, ScriptVariable
+from nautobot.utilities.forms import DynamicModelChoiceField
 from nautobot_ssot.jobs.base import DataMapping, DataSource
 
 from nautobot_ssot_ipfabric.diffsync.adapter_ipfabric import IPFabricDiffSync
@@ -16,6 +21,40 @@ IPFABRIC_HOST = CONFIG["ipfabric_host"]
 IPFABRIC_API_TOKEN = CONFIG["ipfabric_api_token"]
 
 name = "Nautobot SSoT IPFabric"  # pylint: disable=invalid-name
+
+
+class OptionalObjectVar(ScriptVariable):
+    """Custom implementation of an Optional ObjectVar.
+
+    An object primary key is returned and accessible in job kwargs.
+    """
+
+    form_field = DynamicModelChoiceField
+
+    def __init__(
+        self,
+        model=None,
+        display_field="display",
+        query_params=None,
+        null_option=None,
+        *args,
+        **kwargs,
+    ):
+        """Init."""
+        super().__init__(*args, **kwargs)
+
+        if model is not None:
+            self.field_attrs["queryset"] = model.objects.all()
+        else:
+            raise TypeError("ObjectVar must specify a model")
+
+        self.field_attrs.update(
+            {
+                "display_field": display_field,
+                "query_params": query_params,
+                "null_option": null_option,
+            }
+        )
 
 
 # pylint:disable=too-few-public-methods
@@ -32,6 +71,11 @@ class IpFabricDataSource(DataSource, Job):
         default=True,
         label="Sync Tagged Only",
         description="Only sync objects that have the 'ssot-synced-from-ipfabric' tag.",
+    )
+    site_filter = OptionalObjectVar(
+        description="Only sync Nautobot records belonging to a single Site. This does not filter IPFabric data.",
+        model=Site,
+        required=False,
     )
 
     class Meta:
@@ -71,7 +115,6 @@ class IpFabricDataSource(DataSource, Job):
             "Allow Duplicate Addresses": CONFIG.get("allow_duplicate_addresses", True),
             "Default MTU": CONFIG.get("default_interface_mtu", 1500),
             "Nautobot Host URL": CONFIG.get("nautobot_host"),
-            "Safe Delete Interface Status": CONFIG.get("safe_delete_interface_status", "Inventory"),
             "Safe Delete Device Status": CONFIG.get("safe_delete_device_status", "Deprecated"),
             "Safe Delete Site Status": CONFIG.get("safe_delete_site_status", "Decommissioning"),
             "Safe Delete IPAddress Status": CONFIG.get("safe_ipaddress_interfaces_status", "Deprecated"),
@@ -87,10 +130,16 @@ class IpFabricDataSource(DataSource, Job):
         """Sync a device data from IP Fabric into Nautobot."""
         client = IpFabricClient(IPFABRIC_HOST, IPFABRIC_API_TOKEN)
 
+        debug_mode = self.kwargs["debug"]
         dry_run = self.kwargs["dry_run"]
         safe_mode = self.kwargs["safe_delete_mode"]
-        tagged_only = self.kwargs["safe_delete_mode"]
-        options = f"Dry Run: {dry_run}, Safe Delete Mode: {safe_mode}, Sync Tagged Only: {tagged_only}"
+        tagged_only = self.kwargs["sync_ipfabric_tagged_only"]
+        site_filter = self.kwargs["site_filter"]
+        if site_filter:
+            site_filter_object = Site.objects.get(pk=site_filter)
+        else:
+            site_filter_object = None
+        options = f"Debug: {debug_mode}, Dry Run: {dry_run}, Safe Delete Mode: {safe_mode}, Sync Tagged Only: {tagged_only}, Site Filter: {site_filter_object}"
         self.log_info(message=f"Starting job with the following options: {options}")
 
         ipfabric_source = IPFabricDiffSync(job=self, sync=self.sync, client=client)
@@ -100,8 +149,9 @@ class IpFabricDataSource(DataSource, Job):
         dest = NautobotDiffSync(
             job=self,
             sync=self.sync,
-            safe_delete_mode=self.kwargs["safe_delete_mode"],
-            sync_ipfabric_tagged_only=self.kwargs["sync_ipfabric_tagged_only"],
+            safe_delete_mode=safe_mode,
+            sync_ipfabric_tagged_only=tagged_only,
+            site_filter=site_filter_object,
         )
         self.log_info(message="Loading current data from Nautobot...")
         dest.load()
