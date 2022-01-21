@@ -3,27 +3,18 @@
 # any override will need to include these volumes to use them.
 # see:  https://github.com/docker/compose/issues/3729
 ---
-version: "3.8"
+version: "3.4"
 services:
   nautobot:
-    command: "nautobot-server runserver 0.0.0.0:8080"
-    ports:
-      - "8080:8080"
+    command: "nautobot-server runserver 0.0.0.0:8080 --insecure"
     volumes:
       - "./nautobot_config.py:/opt/nautobot/nautobot_config.py"
       - "../:/source"
-  # docs:
-  #   entrypoint: "mkdocs serve -v -a 0.0.0.0:8080"
-  #   ports:
-  #     - "8001:8080"
-  #   volumes:
-  #     - "../docs:/source/docs:ro"
-  #     - "../mkdocs.yml:/source/mkdocs.yml:ro"
-  #   image: "nautobot-ssot-ipfabric/nautobot:${NAUTOBOT_VER}-py${PYTHON_VER}"
-  #   healthcheck:
-  #     disable: true
-  #   tty: true
   worker:
+    volumes:
+      - "./nautobot_config.py:/opt/nautobot/nautobot_config.py"
+      - "../:/source"
+  celery_worker:
     volumes:
       - "./nautobot_config.py:/opt/nautobot/nautobot_config.py"
       - "../:/source"
