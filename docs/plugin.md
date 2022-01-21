@@ -103,6 +103,12 @@ The default status change if an object were to be `deleted` by SSoT Diffsync ope
 
 If you would like to change the default status change value, ensure you provide a valid status name available for the referenced object. Not all objects share the same `Status`.
 
+![Safe Delete](./images/safe-delete.png)
+
+An example object that's been modified by SSoT App and tagged as `ssot-safe-delete` and `ssot-synced-from-ipfabric`. Notice the Status and child object, IPAddress has also changed to Deprecated and, it's status changed and tagged as well.
+
+![Safe Delete Address](./images/safe-delete-ipaddress.png)
+
 ## Usage
 
 Nautobot SSoT IP Fabric provides a user interface to interact with the underlying job that executes the synchronization from **IP Fabric** into **Nautobot**.
@@ -139,10 +145,13 @@ Now back to running the job. Let's click on **Sync Now**.
 
 ![Sync Run](./images/ipfabric_sync_run.png)
 
-There are two options available.
+There are several options available.
 
 - **Debug**: Enables more verbose logging that can be useful for troubleshooting synchronization issues.
+- **Safe Delete Mode**: Delete operations changes the object status to a predefined value (configurable via settings) and tags the object with `ssot-safe-delete` tag.
+- **Sync Tagged Only**: Only load Nautobot data into Diffsync adapters that's been tagged with `ssot-synced-from-ipfabric` tag.
 - **Dry run**: This will only report the difference between the source and destination without synchronization.
+- **Site Filter**: Filter the data loaded into Diffsync by a top level location of a specified Site.
 
 If interested to see the source code, click on **Source**.
 
@@ -155,6 +164,10 @@ If you're interested in more details, click **SSoT Sync Details**.
 You can then views the details of each object.
 
 ![Sync Details](./images/sync_details.png)
+
+Site objects include a site diagram from IPFabric, which is using the new custom field to render the appropriate site-id. Navigate to any site that's been synced by SSoT IPFabric and take a look!
+
+![Site Diagram](./images/site_diagram.png)
 
 ## DiffSync Models
 
