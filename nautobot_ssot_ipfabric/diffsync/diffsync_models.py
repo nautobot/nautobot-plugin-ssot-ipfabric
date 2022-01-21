@@ -40,6 +40,7 @@ class DiffSyncExtras(DiffSyncModel):
             safe_mode (bool): Safe mode or not
             safe_delete_status (str): Desired status to change to
         """
+        changed = False
         if safe_delete_status:
             safe_delete_status = Status.objects.get(name=safe_delete_status.capitalize())
 
@@ -60,14 +61,18 @@ class DiffSyncExtras(DiffSyncModel):
             if safe_delete_status:
                 if hasattr(nautobot_object, "status"):
                     if not nautobot_object.status == safe_delete_status:
+                        changed = True
                         nautobot_object.status = safe_delete_status
                         self.diffsync.job.log_warning(
                             message=f"{nautobot_object} has changed status to {safe_delete_status}."
                         )
             if hasattr(nautobot_object, "tags"):
                 tag, _ = Tag.objects.get_or_create(name="SSoT Safe Delete")
-                nautobot_object.tags.add(tag)
-            tonb_nbutils.tag_object(nautobot_object=nautobot_object, custom_field="ssot-synced-from-ipfabric")
+                if not any(site_tag for site_tag in nautobot_object.tags.all() if site_tag.name == tag.name):
+                    changed = True
+                    nautobot_object.tags.add(tag)
+            if changed:
+                tonb_nbutils.tag_object(nautobot_object=nautobot_object, custom_field="ssot-synced-from-ipfabric")
         return self
 
 

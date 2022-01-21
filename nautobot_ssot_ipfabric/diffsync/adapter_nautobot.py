@@ -164,10 +164,9 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                         nautobot_site_devices = Device.objects.filter(Q(site=site_record) & Q(tags__slug=ssot_tag.slug))
                     else:
                         nautobot_site_devices = Device.objects.filter(site=site_record)
+                    if nautobot_site_devices.exists():
+                        self.load_device(nautobot_site_devices, location)
 
-                    if not nautobot_site_devices.exists():
-                        continue
-                    self.load_device(nautobot_site_devices, location)
                     # Load Site Children - Vlans, if any.
                     nautobot_site_vlans = VLAN.objects.filter(site=site_record)
                     if not nautobot_site_vlans.exists():
