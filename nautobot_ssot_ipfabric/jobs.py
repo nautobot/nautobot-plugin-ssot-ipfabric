@@ -11,7 +11,6 @@ from nautobot.dcim.models import Site
 from nautobot.extras.jobs import BooleanVar, Job, ScriptVariable
 from nautobot.utilities.forms import DynamicModelChoiceField
 from nautobot_ssot.jobs.base import DataMapping, DataSource
-
 from nautobot_ssot_ipfabric.diffsync.adapter_ipfabric import IPFabricDiffSync
 from nautobot_ssot_ipfabric.diffsync.adapter_nautobot import NautobotDiffSync
 from nautobot_ssot_ipfabric.utilities.ipfabric_client import IpFabricClient
