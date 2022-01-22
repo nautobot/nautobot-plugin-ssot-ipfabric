@@ -28,9 +28,9 @@ class NautobotDiffSync(DiffSyncModelAdapters):
 
     objects_to_delete = defaultdict(list)
 
-    nautobot_site = Site
-    nautobot_device = Device
-    nautobot_vlan = VLAN
+    nb_vlan = VLAN
+    nb_device = Device
+    nb_site = Site
 
     def __init__(
         self,
@@ -60,9 +60,9 @@ class NautobotDiffSync(DiffSyncModelAdapters):
             source (DiffSync): DiffSync
         """
         for grouping in (
-            "nautobot_vlan",
-            "nautobot_device",
-            "nautobot_site",
+            "nb_vlan",
+            "nb_device",
+            "nb_site",
         ):
             for nautobot_object in self.objects_to_delete[grouping]:
                 try:
