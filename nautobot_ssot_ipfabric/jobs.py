@@ -11,7 +11,6 @@ from nautobot.dcim.models import Site
 from nautobot.extras.jobs import BooleanVar, Job, ScriptVariable
 from nautobot.utilities.forms import DynamicModelChoiceField
 from nautobot_ssot.jobs.base import DataMapping, DataSource
-
 from nautobot_ssot_ipfabric.diffsync.adapter_ipfabric import IPFabricDiffSync
 from nautobot_ssot_ipfabric.diffsync.adapter_nautobot import NautobotDiffSync
 from nautobot_ssot_ipfabric.utilities.ipfabric_client import IpFabricClient
@@ -139,7 +138,7 @@ class IpFabricDataSource(DataSource, Job):
             site_filter_object = Site.objects.get(pk=site_filter)
         else:
             site_filter_object = None
-        options = f"Debug: {debug_mode}, Dry Run: {dry_run}, Safe Delete Mode: {safe_mode}, Sync Tagged Only: {tagged_only}, Site Filter: {site_filter_object}"
+        options = f"`Debug`: {debug_mode}, `Dry Run`: {dry_run}, `Safe Delete Mode`: {safe_mode}, `Sync Tagged Only`: {tagged_only}, `Site Filter`: {site_filter_object}"
         self.log_info(message=f"Starting job with the following options: {options}")
 
         ipfabric_source = IPFabricDiffSync(job=self, sync=self.sync, client=client)

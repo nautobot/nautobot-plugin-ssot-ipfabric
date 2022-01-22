@@ -1,10 +1,10 @@
 #  pylint: disable=too-many-arguments
 # Load method is packed with conditionals  #  pylint: disable=too-many-branches
 """DiffSync adapter class for Nautobot as source-of-truth."""
-from typing import List
 from collections import defaultdict
-from diffsync import DiffSync
+from typing import Any, ClassVar, List
 
+from diffsync import DiffSync
 from diffsync.exceptions import ObjectAlreadyExists
 from django.conf import settings
 from django.db import transaction
@@ -28,9 +28,9 @@ class NautobotDiffSync(DiffSyncModelAdapters):
 
     objects_to_delete = defaultdict(list)
 
-    nb_vlan = VLAN
-    nb_device = Device
-    nb_site = Site
+    _vlan: ClassVar[Any] = VLAN
+    _device: ClassVar[Any] = Device
+    _site: ClassVar[Any] = Site
 
     def __init__(
         self,
@@ -60,17 +60,18 @@ class NautobotDiffSync(DiffSyncModelAdapters):
             source (DiffSync): DiffSync
         """
         for grouping in (
-            "nb_vlan",
-            "nb_device",
-            "nb_site",
+            "_vlan",
+            "_device",
+            "_site",
         ):
             for nautobot_object in self.objects_to_delete[grouping]:
+                if self.safe_delete_mode:
+                    continue
                 try:
                     nautobot_object.delete()
                 except ProtectedError:
                     self.job.log_failure(obj=nautobot_object, message="Deletion failed protected object")
             self.objects_to_delete[grouping] = []
-
         return super().sync_complete(source, *args, **kwargs)
 
     def load_interfaces(self, device_record: Device, diffsync_device):
@@ -140,6 +141,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 site=vlan_record.site.name,
                 status=vlan_record.status.name if vlan_record.status else "Active",
                 vid=vlan_record.vid,
+                vlan_pk=vlan_record.pk,
             )
             if not self.safe_delete_mode:
                 self.vlan.safe_delete_mode = self.safe_delete_mode
@@ -150,11 +152,11 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 continue
             location.add_child(vlan)
 
-    def get_initial_site(self, ssot_tag):
+    def get_initial_site(self, ssot_tag: Tag):
         """Identify the site objects based on user defined job inputs.
 
         Args:
-            ssot_tag ([type]): Tag used for filtering
+            ssot_tag (Tag): Tag used for filtering
         """
         # Simple check / validate Tag is present.
         if self.sync_ipfabric_tagged_only:

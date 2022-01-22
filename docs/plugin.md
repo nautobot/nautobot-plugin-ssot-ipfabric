@@ -113,11 +113,9 @@ During job execution, a warning will be provided to show the status change of an
 
 ![Safe Delete Status Change](./images/safe-delete-log.png)
 
-If an object has already been updated with the tag, adding `debug` mode to the job can be helpful to see what's been tagged already.
+If an object has already been updated with the tag, a warning message will be displayed and the object will not be modified (including sync date).
 
 ![Safe Delete Status Change](./images/safe-delete-debug-skip.png)
-
-
 
 ## Usage
 
