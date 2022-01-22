@@ -11,13 +11,18 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 # -- Project information -----------------------------------------------------
+try:
+    from importlib import metadata
+except ImportError:
+    # Python version < 3.8
+    import importlib_metadata as metadata
+
+# The full version, including alpha/beta/rc tags
+release = metadata.version("nautobot_ssot_ipfabric")
 
 project = "Nautobot SSOT IPFabric"
 copyright = "2021, Network To Code, LLC"
 author = "Network To Code, LLC"
-
-# The full version, including alpha/beta/rc tags
-release = "0.9.0"
 
 # -- General configuration ---------------------------------------------------
 
