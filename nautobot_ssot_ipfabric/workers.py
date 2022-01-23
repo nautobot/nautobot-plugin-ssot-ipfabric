@@ -8,9 +8,12 @@ from django_rq import job
 from nautobot.core.settings_funcs import is_truthy
 from nautobot.extras.models import JobResult
 from nautobot_chatops.choices import CommandStatusChoices
+from nautobot_chatops.dispatchers import Dispatcher
 from nautobot_chatops.workers import handle_subcommands, subcommand_of
 
 from nautobot_ssot_ipfabric.jobs import IpFabricDataSource
+
+# from nautobot.dcim.models import Site
 
 CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
 NAUTOBOT_HOST = CONFIG.get("nautobot_host")
@@ -20,10 +23,22 @@ IPFABRIC_LOGO_PATH = "nautobot_ssot_ipfabric/ipfabric_logo.png"
 IPFABRIC_LOGO_ALT = "IPFabric Logo"
 
 
-def prompt_for_bool(dispatcher, action_id, help_text):
+def prompt_for_bool(dispatcher: Dispatcher, action_id: str, help_text: str):
     """Prompt the user to select a True or False choice."""
     choices = [("Yes", "True"), ("No", "False")]
-    return dispatcher.prompt_from_menu(action_id, help_text, choices, default=("Yes", "True"))
+    dispatcher.prompt_from_menu(action_id, help_text, choices, default=("Yes", "True"))
+    return False
+
+
+# def prompt_for_site(dispatcher: Dispatcher, action_id: str, help_text: str, sites=None, offset=0):
+#     """Prompt the user to select a valid site from a drop-down menu."""
+#     if sites is None:
+#         sites = Site.objects.all().order_by("name")
+#     if not sites:
+#         dispatcher.send_error("No sites were found")
+#         return (CommandStatusChoices.STATUS_FAILED, "No sites found")
+#     choices = [(f"{site.name}: {site.name}", site.name) for site in sites]
+#     return dispatcher.prompt_from_menu(action_id, help_text, choices, offset=offset)
 
 
 def ipfabric_logo(dispatcher):
@@ -39,27 +54,40 @@ def ipfabric(subcommand, **kwargs):
 
 @subcommand_of("ipfabric")
 def ssot_sync_to_nautobot(
-    dispatcher, dry_run=None, safe_delete_mode=None, sync_ipfabric_tagged_only=None, site_filter=None
+    dispatcher,
+    dry_run=None,
+    safe_delete_mode=None,
+    sync_ipfabric_tagged_only=None,
 ):
     """Start an SSoT sync from IPFabric to Nautobot."""
-    if not dry_run:
-        prompt_for_bool(dispatcher, f"{BASE_CMD} ssot-sync-to-nautobot", "Do you want to run a Dry Run?")
-        return False
-    if not safe_delete_mode:
-        prompt_for_bool(dispatcher, f"{BASE_CMD} ssot-sync-to-nautobot", "Do you want to run in `Safe Delete Mode`?")
-        return False
-    if not sync_ipfabric_tagged_only:
+    if dry_run is None:
+        prompt_for_bool(dispatcher, f"{BASE_CMD} ssot-sync-to-nautobot", "Do you want to run a `Dry Run`?")
+        return (CommandStatusChoices.STATUS_SUCCEEDED, "Success")
+
+    if safe_delete_mode is None:
+        prompt_for_bool(
+            dispatcher, f"{BASE_CMD} ssot-sync-to-nautobot {dry_run}", "Do you want to run in `Safe Delete Mode`?"
+        )
+        return (CommandStatusChoices.STATUS_SUCCEEDED, "Success")
+
+    if sync_ipfabric_tagged_only is None:
         prompt_for_bool(
             dispatcher,
-            f"{BASE_CMD} ssot-sync-to-nautobot",
+            f"{BASE_CMD} ssot-sync-to-nautobot {dry_run} {safe_delete_mode}",
             "Do you want to sync against `ssot-tagged-from-ipfabric` tagged objects only?",
         )
-        return False
+        return (CommandStatusChoices.STATUS_SUCCEEDED, "Success")
 
-    # TODO: Implement Site-Filtering in Chatops in future release?
-    # This will be an optional object var. Will need to pass back a str of object's PK.
+    # if site_filter is None:
+    #     prompt_for_site(
+    #         dispatcher,
+    #         f"{BASE_CMD} ssot-sync-to-nautobot {dry_run} {safe_delete_mode} {sync_ipfabric_tagged_only}",
+    #         "Select a Site to use as an optional filter?",
+    #     )
+    #     return (CommandStatusChoices.STATUS_SUCCEEDED, "Success")
+
+    # Implement filter in future release
     site_filter = False
-    site_filter = is_truthy(site_filter)
 
     data = {
         "debug": False,
@@ -82,7 +110,7 @@ def ssot_sync_to_nautobot(
     sync_job.job_result.validated_save()
 
     dispatcher.send_markdown(
-        f"Stand by {dispatcher.user_mention()}, I'm running your sync with options set to Dry Run: {dry_run}, Safe Delete Mode: {safe_delete_mode}. Sync Tagged Only: {sync_ipfabric_tagged_only}, Site Filter: {site_filter}",
+        f"Stand by {dispatcher.user_mention()}, I'm running your sync with options set to `Dry Run`: {dry_run}, `Safe Delete Mode`: {safe_delete_mode}. `Sync Tagged Only`: {sync_ipfabric_tagged_only}",
         ephemeral=True,
     )
 
@@ -94,7 +122,11 @@ def ssot_sync_to_nautobot(
         *dispatcher.command_response_header(
             "ipfabric",
             "ssot-sync-to-nautobot",
-            [("Dry Run", str(dry_run))],
+            [
+                ("Dry Run", str(dry_run)),
+                ("Safe Delete Mode", str(safe_delete_mode)),
+                ("Sync IPFabric Tagged Only", str(sync_ipfabric_tagged_only)),
+            ],
             "sync job",
             ipfabric_logo(dispatcher),
         ),
@@ -108,4 +140,5 @@ def ssot_sync_to_nautobot(
         dispatcher.send_warning(
             f"Sync failed. Here is the link to your job: {NAUTOBOT_HOST}{sync_job.sync.get_absolute_url()}"
         )
+
     return CommandStatusChoices.STATUS_SUCCEEDED
