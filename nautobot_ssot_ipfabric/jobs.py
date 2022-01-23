@@ -172,7 +172,7 @@ class IpFabricDataSource(DataSource, Job):
         self.log_info(
             message=f"DiffSync Summary: Create: {create}, Update: {update}, Delete: {delete}, No Change: {no_change}"
         )
-        if not self.kwargs["dry_run"]:
+        if not dry_run:
             self.log_info(message="Syncing from IP Fabric to Nautobot")
             try:
                 dest.sync_from(ipfabric_source)

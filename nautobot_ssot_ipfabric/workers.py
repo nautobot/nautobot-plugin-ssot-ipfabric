@@ -116,8 +116,9 @@ def ssot_sync_to_nautobot(
 
     sync_job.run(data, commit=True)
     sync_job.post_run()
-    sync_job.job_result.status = "completed" if not sync_job.failed else "failed"
-    sync_job.job_result.save()
+    sync_job.job_result.set_status(status="completed" if not sync_job.failed else "failed")
+    sync_job.job_result.validated_save()
+
     blocks = [
         *dispatcher.command_response_header(
             "ipfabric",
@@ -140,5 +141,4 @@ def ssot_sync_to_nautobot(
         dispatcher.send_warning(
             f"Sync failed. Here is the link to your job: {NAUTOBOT_HOST}{sync_job.sync.get_absolute_url()}"
         )
-
     return CommandStatusChoices.STATUS_SUCCEEDED
