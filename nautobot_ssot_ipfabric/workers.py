@@ -56,8 +56,8 @@ def ssot_sync_to_nautobot(
         )
         return False
 
-    # TODO: Implement Site-Filtering in Chatops in future release
-    # This will be an optional object var
+    # TODO: Implement Site-Filtering in Chatops in future release?
+    # This will be an optional object var. Will need to pass back a str of object's PK.
     site_filter = False
     site_filter = is_truthy(site_filter)
 
