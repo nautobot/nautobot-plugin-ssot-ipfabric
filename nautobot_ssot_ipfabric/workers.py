@@ -20,8 +20,8 @@ IPFABRIC_LOGO_PATH = "nautobot_ssot_ipfabric/ipfabric_logo.png"
 IPFABRIC_LOGO_ALT = "IPFabric Logo"
 
 
-def prompt_for_dry_run(dispatcher, action_id, help_text):
-    """Prompt the user to select a Network name."""
+def prompt_for_bool(dispatcher, action_id, help_text):
+    """Prompt the user to select a True or False choice."""
     choices = [("Yes", "True"), ("No", "False")]
     return dispatcher.prompt_from_menu(action_id, help_text, choices, default=("Yes", "True"))
 
@@ -38,15 +38,39 @@ def ipfabric(subcommand, **kwargs):
 
 
 @subcommand_of("ipfabric")
-def ssot_sync_to_nautobot(dispatcher, dry_run=None):
+def ssot_sync_to_nautobot(
+    dispatcher, dry_run=None, safe_delete_mode=None, sync_ipfabric_tagged_only=None, site_filter=None
+):
     """Start an SSoT sync from IPFabric to Nautobot."""
     if not dry_run:
-        prompt_for_dry_run(dispatcher, f"{BASE_CMD} ssot-sync-to-nautobot", "Do you want to run a dry run?")
+        prompt_for_bool(dispatcher, f"{BASE_CMD} ssot-sync-to-nautobot", "Do you want to run a Dry Run?")
+        return False
+    if not safe_delete_mode:
+        prompt_for_bool(dispatcher, f"{BASE_CMD} ssot-sync-to-nautobot", "Do you want to run in `Safe Delete Mode`?")
+        return False
+    if not sync_ipfabric_tagged_only:
+        prompt_for_bool(
+            dispatcher,
+            f"{BASE_CMD} ssot-sync-to-nautobot",
+            "Do you want to sync against `ssot-tagged-from-ipfabric` tagged objects only?",
+        )
         return False
 
-    dry_run = is_truthy(dry_run)
-    data = {"dry_run": dry_run}
+    # TODO: Implement Site-Filtering in Chatops in future release
+    # This will be an optional object var
+    site_filter = False
+    site_filter = is_truthy(site_filter)
+
+    data = {
+        "debug": False,
+        "dry_run": is_truthy(dry_run),
+        "safe_delete_mode": is_truthy(safe_delete_mode),
+        "sync_ipfabric_tagged_only": is_truthy(sync_ipfabric_tagged_only),
+        "site_filter": site_filter,
+    }
+
     sync_job = IpFabricDataSource()
+
     sync_job.job_result = JobResult(
         name=sync_job.class_path,
         obj_type=ContentType.objects.get(
@@ -58,7 +82,7 @@ def ssot_sync_to_nautobot(dispatcher, dry_run=None):
     sync_job.job_result.validated_save()
 
     dispatcher.send_markdown(
-        f"Stand by {dispatcher.user_mention()}, I'm running your sync with dry run set to {dry_run}.",
+        f"Stand by {dispatcher.user_mention()}, I'm running your sync with options set to Dry Run: {dry_run}, Safe Delete Mode: {safe_delete_mode}. Sync Tagged Only: {sync_ipfabric_tagged_only}, Site Filter: {site_filter}",
         ephemeral=True,
     )
 
