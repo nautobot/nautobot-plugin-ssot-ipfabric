@@ -2,11 +2,12 @@
 # Ignore too many args #  pylint:disable=too-many-locals
 """DiffSyncModel subclasses for Nautobot-to-IPFabric data sync."""
 from typing import Any, ClassVar, List, Optional
+from uuid import UUID
 
 from diffsync import DiffSyncModel
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.db.models import ProtectedError, Q
+from django.db.models import Q
 from nautobot.dcim.models import Device as NautobotDevice
 from nautobot.dcim.models import DeviceRole, DeviceType, Site
 from nautobot.extras.models import Tag
@@ -32,42 +33,52 @@ class DiffSyncExtras(DiffSyncModel):
 
     safe_delete_mode: ClassVar[bool] = True
 
-    def safe_delete(self, nautobot_object: Any, safe_mode: bool, safe_delete_status: Optional[str] = None):
+    def safe_delete(self, nautobot_object: Any, safe_mode: bool = True, safe_delete_status: Optional[str] = None):
         """Safe delete an object, by adding tags or changing it's default status.
 
         Args:
             nautobot_object (Any): Any type of Nautobot object
             safe_mode (bool): Safe mode or not
-            safe_delete_status (str): Desired status to change to
+            safe_delete_status (Optional[str], optional): Status name, optional as some objects don't have status field. Defaults to None.
         """
-        if safe_delete_status:
-            safe_delete_status = Status.objects.get(name=safe_delete_status.capitalize())
-
+        update = False
         if not safe_mode:
             self.diffsync.job.log_warning(
                 message=f"{nautobot_object} will be deleted as safe delete mode is not enabled."
             )
-            try:
-                nautobot_object.delete()
-            except ProtectedError as protected_error:
-                self.diffsync.job.log_failure(
-                    message=f"{nautobot_object} cannot be deleted because it is referenced through protected foreign keys, {protected_error.args}"
-                )
-                raise
+            # This allows private class naming of nautobot objects to be ordered for delete()
+            # Example definition in adapter class var: _site = Site
+            self.diffsync.objects_to_delete[f"_{nautobot_object.__class__.__name__.lower()}"].append(
+                nautobot_object
+            )  # pylint: disable=protected-access
             super().delete()
-
         else:
             if safe_delete_status:
+                safe_delete_status = Status.objects.get(name=safe_delete_status.capitalize())
                 if hasattr(nautobot_object, "status"):
                     if not nautobot_object.status == safe_delete_status:
                         nautobot_object.status = safe_delete_status
                         self.diffsync.job.log_warning(
                             message=f"{nautobot_object} has changed status to {safe_delete_status}."
                         )
+                        update = True
+                else:
+                    # Not everything has a status. This may come in handy once more models are synced.
+                    self.diffsync.job.log_warning(message=f"{nautobot_object} has no Status attribute.")
             if hasattr(nautobot_object, "tags"):
-                tag, _ = Tag.objects.get_or_create(name="SSoT Safe Delete")
-                nautobot_object.tags.add(tag)
-            tonb_nbutils.tag_object(nautobot_object=nautobot_object, custom_field="ssot-synced-from-ipfabric")
+                ssot_safe_tag, _ = Tag.objects.get_or_create(name="SSoT Safe Delete")
+                object_tags = nautobot_object.tags.all()
+                # No exception raised for empty iterator, safe to do this any
+                if not any(obj_tag for obj_tag in object_tags if obj_tag.name == ssot_safe_tag.name):
+                    nautobot_object.tags.add(ssot_safe_tag)
+                    update = True
+            if update:
+                tonb_nbutils.tag_object(nautobot_object=nautobot_object, custom_field="ssot-synced-from-ipfabric")
+            else:
+                self.diffsync.job.log_warning(
+                    message=f"{nautobot_object} has previously been tagged with `ssot-safe-delete`. Skipping..."
+                )
+
         return self
 
 
@@ -370,6 +381,7 @@ class Vlan(DiffSyncExtras):
     status: str
     site: str
     description: str
+    vlan_pk: Optional[UUID]
 
     @classmethod
     def create(cls, diffsync, ids, attrs):
@@ -384,7 +396,7 @@ class Vlan(DiffSyncExtras):
 
     def delete(self) -> Optional["DiffSyncModel"]:
         """Delete."""
-        vlan = VLAN.objects.get(name=self.name)
+        vlan = VLAN.objects.get(name=self.name, pk=self.vlan_pk)
         self.safe_delete(
             vlan,
             self.safe_delete_mode,

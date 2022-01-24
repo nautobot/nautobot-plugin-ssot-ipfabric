@@ -131,16 +131,17 @@ class IpFabricDataSource(DataSource, Job):
         """Sync a device data from IP Fabric into Nautobot."""
         client = IpFabricClient(IPFABRIC_HOST, IPFABRIC_API_TOKEN, IPFABRIC_VERIFY)
 
-        debug_mode = self.kwargs["debug"]
         dry_run = self.kwargs["dry_run"]
         safe_mode = self.kwargs["safe_delete_mode"]
         tagged_only = self.kwargs["sync_ipfabric_tagged_only"]
         site_filter = self.kwargs["site_filter"]
+        debug_mode = self.kwargs["debug"]
+
         if site_filter:
             site_filter_object = Site.objects.get(pk=site_filter)
         else:
             site_filter_object = None
-        options = f"Debug: {debug_mode}, Dry Run: {dry_run}, Safe Delete Mode: {safe_mode}, Sync Tagged Only: {tagged_only}, Site Filter: {site_filter_object}"
+        options = f"`Debug`: {debug_mode}, `Dry Run`: {dry_run}, `Safe Delete Mode`: {safe_mode}, `Sync Tagged Only`: {tagged_only}, `Site Filter`: {site_filter_object}"
         self.log_info(message=f"Starting job with the following options: {options}")
 
         ipfabric_source = IPFabricDiffSync(job=self, sync=self.sync, client=client)
@@ -172,7 +173,7 @@ class IpFabricDataSource(DataSource, Job):
         self.log_info(
             message=f"DiffSync Summary: Create: {create}, Update: {update}, Delete: {delete}, No Change: {no_change}"
         )
-        if not self.kwargs["dry_run"]:
+        if not dry_run:
             self.log_info(message="Syncing from IP Fabric to Nautobot")
             try:
                 dest.sync_from(ipfabric_source)

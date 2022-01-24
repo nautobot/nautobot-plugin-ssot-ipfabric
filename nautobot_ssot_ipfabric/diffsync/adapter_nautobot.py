@@ -1,12 +1,14 @@
 #  pylint: disable=too-many-arguments
 # Load method is packed with conditionals  #  pylint: disable=too-many-branches
 """DiffSync adapter class for Nautobot as source-of-truth."""
-from typing import List
+from collections import defaultdict
+from typing import Any, ClassVar, List
 
+from diffsync import DiffSync
 from diffsync.exceptions import ObjectAlreadyExists
 from django.conf import settings
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import ProtectedError, Q
 from nautobot.dcim.models import Device, Site
 from nautobot.extras.models import Tag
 from nautobot.ipam.models import VLAN
@@ -23,6 +25,12 @@ DEFAULT_DEVICE_ROLE = CONFIG.get("default_device_role", "Network Device")
 
 class NautobotDiffSync(DiffSyncModelAdapters):
     """Nautobot adapter for DiffSync."""
+
+    objects_to_delete = defaultdict(list)
+
+    _vlan: ClassVar[Any] = VLAN
+    _device: ClassVar[Any] = Device
+    _site: ClassVar[Any] = Site
 
     def __init__(
         self,
@@ -41,6 +49,30 @@ class NautobotDiffSync(DiffSyncModelAdapters):
         self.safe_delete_mode = safe_delete_mode
         self.sync_ipfabric_tagged_only = sync_ipfabric_tagged_only
         self.site_filter = site_filter
+
+    def sync_complete(self, source: DiffSync, *args, **kwargs):
+        """Clean up function for DiffSync sync.
+
+        Once the sync is complete, this function runs deleting any objects
+        from Nautobot that need to be deleted in a specific order.
+
+        Args:
+            source (DiffSync): DiffSync
+        """
+        for grouping in (
+            "_vlan",
+            "_device",
+            "_site",
+        ):
+            for nautobot_object in self.objects_to_delete[grouping]:
+                if self.safe_delete_mode:
+                    continue
+                try:
+                    nautobot_object.delete()
+                except ProtectedError:
+                    self.job.log_failure(obj=nautobot_object, message="Deletion failed protected object")
+            self.objects_to_delete[grouping] = []
+        return super().sync_complete(source, *args, **kwargs)
 
     def load_interfaces(self, device_record: Device, diffsync_device):
         """Import a single Nautobot Interface object as a DiffSync Interface model."""
@@ -109,6 +141,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 site=vlan_record.site.name,
                 status=vlan_record.status.name if vlan_record.status else "Active",
                 vid=vlan_record.vid,
+                vlan_pk=vlan_record.pk,
                 description=vlan_record.description,
             )
             if not self.safe_delete_mode:
@@ -120,11 +153,11 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 continue
             location.add_child(vlan)
 
-    def get_initial_site(self, ssot_tag):
+    def get_initial_site(self, ssot_tag: Tag):
         """Identify the site objects based on user defined job inputs.
 
         Args:
-            ssot_tag ([type]): Tag used for filtering
+            ssot_tag (Tag): Tag used for filtering
         """
         # Simple check / validate Tag is present.
         if self.sync_ipfabric_tagged_only:
@@ -165,10 +198,9 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                         nautobot_site_devices = Device.objects.filter(Q(site=site_record) & Q(tags__slug=ssot_tag.slug))
                     else:
                         nautobot_site_devices = Device.objects.filter(site=site_record)
+                    if nautobot_site_devices.exists():
+                        self.load_device(nautobot_site_devices, location)
 
-                    if not nautobot_site_devices.exists():
-                        continue
-                    self.load_device(nautobot_site_devices, location)
                     # Load Site Children - Vlans, if any.
                     nautobot_site_vlans = VLAN.objects.filter(site=site_record)
                     if not nautobot_site_vlans.exists():
