@@ -85,11 +85,12 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
             for vlan in location_vlans:
                 if not vlan["vlanId"]:
                     continue
-                description = vlan.get("dscr")
+                description = vlan.get("dscr") if vlan.get("dscr") else f"VLAN ID: {vlan['vlanId']}"
+                vlan_name = vlan.get("vlanName") if vlan.get("vlanName") else f"{vlan['siteName']:['vlanId']}"
                 try:
                     vlan = self.vlan(
                         diffsync=self,
-                        name=vlan["vlanName"] or vlan["vlanId"],
+                        name=vlan_name,
                         site=vlan["siteName"],
                         vid=vlan["vlanId"],
                         status="Active",
