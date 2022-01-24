@@ -1,80 +1,80 @@
 [
-    {
-        "siteName": "JCY-SPINE-01.INFRA.NTC.COM_1",
-        "vlanName": "autovlan",
-        "vlanId": 101,
-        "description": "active"
-    },
-    {
-        "siteName": "JCY-SPINE-01.INFRA.NTC.COM_1",
-        "vlanName": "vlan205",
-        "vlanId": 205,
-        "description": "active"
-    },
-    {
-        "siteName": "JCY-SPINE-01.INFRA.NTC.COM_1",
-        "vlanName": "dbvlan0001",
-        "vlanId": 393,
-        "description": "active"
-    },
-    {
-        "siteName": "JCY-SPINE-01.INFRA.NTC.COM_1",
-        "vlanName": "webvlan0001",
-        "vlanId": 194,
-        "description": "active"
-    },
-    {
-        "siteName": "JCY-SPINE-01.INFRA.NTC.COM_1",
-        "vlanName": "vlan109",
-        "vlanId": 109,
-        "description": "active"
-    },
-    {
-        "siteName": "JCY-SPINE-01.INFRA.NTC.COM_1",
-        "vlanName": "vlan280",
-        "vlanId": 280,
-        "description": "active"
-    },
-    {
-        "siteName": "JCY-SPINE-01.INFRA.NTC.COM_1",
-        "vlanName": "default",
-        "vlanId": 1,
-        "description": "active"
-    },
-    {
-        "siteName": "JCY-SPINE-01.INFRA.NTC.COM_1",
-        "vlanName": "vlan204",
-        "vlanId": 204,
-        "description": "active"
-    },
-    {
-        "siteName": "JCY-SPINE-01.INFRA.NTC.COM_1",
-        "vlanName": "vlan202",
-        "vlanId": 202,
-        "description": "active"
-    },
-    {
-        "siteName": "JCY-SPINE-01.INFRA.NTC.COM_1",
-        "vlanName": "appvlan0004",
-        "vlanId": 292,
-        "description": "active"
-    },
-    {
-        "siteName": "JCY-SPINE-01.INFRA.NTC.COM_1",
-        "vlanName": "vlan203",
-        "vlanId": 203,
-        "description": "active"
-    },
-    {
-        "siteName": "NYC-SPINE-02",
-        "vlanName": "default",
-        "vlanId": 1,
-        "description": "active"
-    },
-    {
-        "siteName": "NYC-LEAF-01",
-        "vlanName": "default",
-        "vlanId": 1,
-        "description": "active"
-    }
+   {
+      "siteName":"NYC-LEAF-01",
+      "vlanName":"default",
+      "vlanId":1,
+      "dscr":"None"
+   },
+   {
+      "siteName":"NYC-SPINE-02",
+      "vlanName":"default",
+      "vlanId":1,
+      "dscr":"None"
+   },
+   {
+      "siteName":"JCY-SPINE-01.INFRA.NTC.COM_1",
+      "vlanName":"default",
+      "vlanId":1,
+      "dscr":"None"
+   },
+   {
+      "siteName":"JCY-SPINE-01.INFRA.NTC.COM_1",
+      "vlanName":"autovlan",
+      "vlanId":101,
+      "dscr":"None"
+   },
+   {
+      "siteName":"JCY-SPINE-01.INFRA.NTC.COM_1",
+      "vlanName":"vlan109",
+      "vlanId":109,
+      "dscr":"None"
+   },
+   {
+      "siteName":"JCY-SPINE-01.INFRA.NTC.COM_1",
+      "vlanName":"webvlan0001",
+      "vlanId":194,
+      "dscr":"None"
+   },
+   {
+      "siteName":"JCY-SPINE-01.INFRA.NTC.COM_1",
+      "vlanName":"vlan202",
+      "vlanId":202,
+      "dscr":"None"
+   },
+   {
+      "siteName":"JCY-SPINE-01.INFRA.NTC.COM_1",
+      "vlanName":"vlan203",
+      "vlanId":203,
+      "dscr":"None"
+   },
+   {
+      "siteName":"JCY-SPINE-01.INFRA.NTC.COM_1",
+      "vlanName":"vlan204",
+      "vlanId":204,
+      "dscr":"None"
+   },
+   {
+      "siteName":"JCY-SPINE-01.INFRA.NTC.COM_1",
+      "vlanName":"vlan205",
+      "vlanId":205,
+      "dscr":"None"
+   },
+   {
+      "siteName":"JCY-SPINE-01.INFRA.NTC.COM_1",
+      "vlanName":"vlan280",
+      "vlanId":280,
+      "dscr":"None"
+   },
+   {
+      "siteName":"JCY-SPINE-01.INFRA.NTC.COM_1",
+      "vlanName":"appvlan0004",
+      "vlanId":292,
+      "dscr":"None"
+   },
+   {
+      "siteName":"JCY-SPINE-01.INFRA.NTC.COM_1",
+      "vlanName":"dbvlan0001",
+      "vlanId":393,
+      "dscr":"None"
+   }
 ]

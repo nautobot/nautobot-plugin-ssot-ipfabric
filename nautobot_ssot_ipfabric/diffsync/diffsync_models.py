@@ -380,7 +380,7 @@ class Vlan(DiffSyncExtras):
     vid: int
     status: str
     site: str
-    description: str
+    description: Optional[str]
     vlan_pk: Optional[UUID]
 
     @classmethod
@@ -389,8 +389,13 @@ class Vlan(DiffSyncExtras):
         status = attrs["status"].lower().capitalize()
         site = Site.objects.get(name=ids["site"])
         name = ids["name"] if ids["name"] else f"VLAN{attrs['vid']}"
+        description = attrs["description"] if attrs["description"] else None
         tonb_nbutils.create_vlan(
-            vlan_name=name, vlan_id=attrs["vid"], vlan_status=status, site_obj=site, description=attrs["description"]
+            vlan_name=name,
+            vlan_id=attrs["vid"],
+            vlan_status=status,
+            site_obj=site,
+            description=description,
         )
         return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
 

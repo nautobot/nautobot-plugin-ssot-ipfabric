@@ -26,7 +26,6 @@ class NautobotSSoTIPFabricConfig(PluginConfig):
     required_settings = ["ipfabric_host", "ipfabric_api_token"]
     min_version = "1.2.0"
     max_version = "1.9999"
-    default_settings = {"ipfabric_verify": True}
     caching_config = {}
 
     def ready(self):

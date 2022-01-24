@@ -43,7 +43,6 @@ This plugin relies on user provided environment variables to interact with IP Fa
 
 - `ipfabric_api_token` - API Token for IP Fabric
 - `ipfabric_host` - IP Fabric URL
-- `ipfabric_verify`: Default: True; False to ignore self-signed certificates
 - `nautobot_host` - Nautobot URL (This is used to generate url links for chatops)
 
 Example `PLUGINS_CONFIG` to be updated in `nautobot_config.py` after successful installation. The chatops configuration is optional, but if you'd like to have the
@@ -60,14 +59,12 @@ PLUGINS_CONFIG = {
     "nautobot_ssot_ipfabric": {
         "ipfabric_api_token": os.environ.get("IPFABRIC_API_TOKEN"),
         "ipfabric_host": os.environ.get("IPFABRIC_HOST"),
-        "ipfabric_verify": is_truthy(os.environ.get("IPFABRIC_VERIFY", True)),
         "nautobot_host": os.environ.get("NAUTOBOT_HOST"),
     },
     "nautobot_ssot": {"hide_example_jobs": True},
     "nautobot_chatops_ipfabric": {
         "IPFABRIC_API_TOKEN": os.environ.get("IPFABRIC_API_TOKEN"),
         "IPFABRIC_HOST": os.environ.get("IPFABRIC_HOST"),
-        "IPFABRIC_VERIFY": is_truthy(os.environ.get("IPFABRIC_VERIFY", True)),
     },
 }
 ```
