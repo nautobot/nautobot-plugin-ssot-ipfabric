@@ -263,7 +263,7 @@ class Interface(DiffSyncExtras):
         "mgmt_only",
         "ip_address",
         "subnet_mask",
-        "ip_is_primary",
+        # "ip_is_primary",
         "status",
     )
 
@@ -301,7 +301,7 @@ class Interface(DiffSyncExtras):
                 object_pk=interface_obj,
             )
             interface_obj.ip_addresses.add(ip_address_obj)
-            if attrs["ip_is_primary"]:
+            if attrs.get("ip_is_primary"):
                 if ip_address_obj.family == 4:
                     device_obj.primary_ip4 = ip_address_obj
                 if ip_address_obj.family == 6:
@@ -390,6 +390,7 @@ class Vlan(DiffSyncExtras):
         site = Site.objects.get(name=ids["site"])
         name = ids["name"] if ids["name"] else f"VLAN{attrs['vid']}"
         description = attrs["description"] if attrs["description"] else None
+        diffsync.job.log_debug(message=f"Creating VLAN: {name}: {len(name)}, {description}: {len(description)}")
         tonb_nbutils.create_vlan(
             vlan_name=name,
             vlan_id=attrs["vid"],

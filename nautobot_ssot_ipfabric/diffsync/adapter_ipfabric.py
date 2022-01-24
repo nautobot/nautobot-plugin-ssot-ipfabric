@@ -5,6 +5,7 @@ import logging
 from diffsync import ObjectAlreadyExists
 from django.conf import settings
 from netutils.mac import mac_to_format
+from nautobot.ipam.models import VLAN
 
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
@@ -87,6 +88,12 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                     continue
                 description = vlan.get("dscr") if vlan.get("dscr") else f"VLAN ID: {vlan['vlanId']}"
                 vlan_name = vlan.get("vlanName") if vlan.get("vlanName") else f"{vlan['siteName']}:{vlan['vlanId']}"
+                name_max_length = VLAN._meta.get_field("name").max_length
+                if len(vlan_name) > name_max_length:
+                    self.job.log_warning(
+                        message=f"Not syncing VLAN, {vlan_name} due to character limit exceeding {name_max_length}."
+                    )
+                    continue
                 try:
                     vlan = self.vlan(
                         diffsync=self,
