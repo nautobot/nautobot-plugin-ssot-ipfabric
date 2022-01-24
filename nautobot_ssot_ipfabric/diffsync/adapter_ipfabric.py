@@ -70,7 +70,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                 self.add(interface)
                 device_model.add_child(interface)
             except ObjectAlreadyExists:
-                self.job.log_debug(message=f"Duplicate VLAN discovered, {iface}")
+                self.job.log_debug(message=f"Duplicate Interface discovered, {iface}")
 
     def load(self):
         """Load data from IP Fabric."""
@@ -86,7 +86,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                 if not vlan["vlanId"]:
                     continue
                 description = vlan.get("dscr") if vlan.get("dscr") else f"VLAN ID: {vlan['vlanId']}"
-                vlan_name = vlan.get("vlanName") if vlan.get("vlanName") else f"{vlan['siteName']:['vlanId']}"
+                vlan_name = vlan.get("vlanName") if vlan.get("vlanName") else f"{vlan['siteName']}:{vlan['vlanId']}"
                 try:
                     vlan = self.vlan(
                         diffsync=self,
