@@ -78,14 +78,14 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
             for vlan in location_vlans:
                 if not vlan["vlanId"]:
                     continue
-                # self.job.log_debug(message=f"Loading VLAN {vlan['vlanName']}")
+                description = vlan["dscr"] or ("VLAN" + str(vlan["vlanId"]))
                 vlan = self.vlan(
                     diffsync=self,
                     name=vlan["vlanName"] or vlan["vlanId"],
                     site=vlan["siteName"],
                     vid=vlan["vlanId"],
                     status="Active",
-                    description=str(vlan["dscr"] or vlan["vlanId"]),
+                    description=description,
                 )
                 self.add(vlan)
                 location.add_child(vlan)
