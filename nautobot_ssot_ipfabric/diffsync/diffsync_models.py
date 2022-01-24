@@ -363,15 +363,13 @@ class Vlan(DiffSyncExtras):
     _modelname = "vlan"
     _identifiers = ("name", "site")
     _shortname = ("name",)
-    _attributes = (
-        "vid",
-        "status",
-    )
+    _attributes = ("vid", "status", "description")
 
     name: str
     vid: int
     status: str
     site: str
+    description: str
 
     @classmethod
     def create(cls, diffsync, ids, attrs):
@@ -379,7 +377,9 @@ class Vlan(DiffSyncExtras):
         status = attrs["status"].lower().capitalize()
         site = Site.objects.get(name=ids["site"])
         name = ids["name"] if ids["name"] else f"VLAN{attrs['vid']}"
-        tonb_nbutils.create_vlan(vlan_name=name, vlan_id=attrs["vid"], vlan_status=status, site_obj=site)
+        tonb_nbutils.create_vlan(
+            vlan_name=name, vlan_id=attrs["vid"], vlan_status=status, site_obj=site, description=attrs["description"]
+        )
         return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
 
     def delete(self) -> Optional["DiffSyncModel"]:

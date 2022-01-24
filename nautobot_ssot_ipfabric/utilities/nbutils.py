@@ -173,10 +173,7 @@ def create_vlan(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: Site, 
         (VLAN): Returns created or obtained VLAN object.
     """
     vlan_obj, _ = site_obj.vlans.get_or_create(
-        name=vlan_name,
-        vid=vlan_id,
-        status=Status.objects.get(name=vlan_status),
-        description=description
+        name=vlan_name, vid=vlan_id, status=Status.objects.get(name=vlan_status), description=description
     )
     tag_object(nautobot_object=vlan_obj, custom_field="ssot-synced-from-ipfabric")
     return vlan_obj
