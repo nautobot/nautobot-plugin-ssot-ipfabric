@@ -6,11 +6,19 @@ from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.db import IntegrityError
 from django.utils.text import slugify
-from nautobot.dcim.models import Device, DeviceRole, DeviceType, Interface, Manufacturer, Site
+from nautobot.dcim.models import (
+    Device,
+    DeviceRole,
+    DeviceType,
+    Interface,
+    Manufacturer,
+    Site,
+)
 from nautobot.extras.choices import CustomFieldTypeChoices
 from nautobot.extras.models import CustomField, Tag
 from nautobot.extras.models.statuses import Status
-from nautobot.ipam.models import IPAddress, VLAN
+from nautobot.ipam.models import VLAN, IPAddress
+from nautobot.utilities.choices import ColorChoices
 from netutils.ip import netmask_to_cidr
 
 CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
@@ -196,7 +204,18 @@ def tag_object(nautobot_object: Any, custom_field: str, tag_name: Optional[str] 
         custom_field (str): Name of custom field to update
         tag_name (Optional[str], optional): Tag name. Defaults to "SSoT Synced From IPFabric".
     """
-    tag, _ = Tag.objects.get_or_create(name=tag_name)
+    if tag_name == "SSoT Synced from IPFabric":
+        tag, _ = Tag.objects.get_or_create(
+            slug="ssot-synced-from-ipfabric",
+            name="SSoT Synced from IPFabric",
+            defaults={
+                "description": "Object synced at some point from IPFabric to Nautobot",
+                "color": ColorChoices.COLOR_LIGHT_GREEN,
+            },
+        )
+    else:
+        tag, _ = Tag.objects.get_or_create(name=tag_name)
+
     today = datetime.date.today().isoformat()
 
     def _tag_object(nautobot_object):

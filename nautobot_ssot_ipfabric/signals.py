@@ -1,13 +1,12 @@
 """Signal handlers for nautobot_ssot_ipfabric."""
 
 from typing import List, Optional
-from django.apps import apps
 
 from nautobot.extras.choices import CustomFieldTypeChoices
 from nautobot.utilities.choices import ColorChoices
 
 
-def create_custom_field(field_name: str, label: str, models: List, apps: apps, cf_type: Optional[str] = "type_date"):
+def create_custom_field(field_name: str, label: str, models: List, apps, cf_type: Optional[str] = "type_date"):
     """Create custom field on a given model instance type.
 
     Args:
@@ -17,7 +16,6 @@ def create_custom_field(field_name: str, label: str, models: List, apps: apps, c
         apps: Django Apps
         cf_type: (str, optional): Type of Field. Supports 'type_text' or 'type_date'. Defaults to 'type_date'.
     """
-
     ContentType = apps.get_model("contenttypes", "ContentType")  # pylint:disable=invalid-name
     CustomField = apps.get_model("extras", "CustomField")  # pylint:disable=invalid-name
     if cf_type == "type_date":

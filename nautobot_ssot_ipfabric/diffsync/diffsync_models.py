@@ -13,6 +13,7 @@ from nautobot.dcim.models import DeviceRole, DeviceType, Site
 from nautobot.extras.models import Tag
 from nautobot.extras.models.statuses import Status
 from nautobot.ipam.models import VLAN
+from nautobot.utilities.choices import ColorChoices
 
 import nautobot_ssot_ipfabric.utilities.nbutils as tonb_nbutils
 
@@ -66,11 +67,19 @@ class DiffSyncExtras(DiffSyncModel):
                     # Not everything has a status. This may come in handy once more models are synced.
                     self.diffsync.job.log_warning(message=f"{nautobot_object} has no Status attribute.")
             if hasattr(nautobot_object, "tags"):
-                ssot_safe_tag, _ = Tag.objects.get_or_create(name="SSoT Safe Delete")
+                ssot_safe_tag, _ = Tag.objects.get_or_create(
+                    slug="ssot-safe-delete",
+                    name="SSoT Safe Delete",
+                    defaults={
+                        "description": "Safe Delete Mode tag to flag an object, but not delete from Nautobot.",
+                        "color": ColorChoices.COLOR_RED,
+                    },
+                )
                 object_tags = nautobot_object.tags.all()
                 # No exception raised for empty iterator, safe to do this any
                 if not any(obj_tag for obj_tag in object_tags if obj_tag.name == ssot_safe_tag.name):
                     nautobot_object.tags.add(ssot_safe_tag)
+                    self.diffsync.job.log_warning(message=f"Tagging {nautobot_object} with `ssot-safe-delete`.")
                     update = True
             if update:
                 tonb_nbutils.tag_object(nautobot_object=nautobot_object, custom_field="ssot-synced-from-ipfabric")
@@ -315,7 +324,6 @@ class Interface(DiffSyncExtras):
         try:
             ssot_tag, _ = Tag.objects.get_or_create(name="SSoT Synced from IPFabric")
             device = NautobotDevice.objects.filter(Q(name=self.device_name) & Q(tags__slug=ssot_tag.slug)).first()
-            # TODO: Implement ordering of delete for diffsync. Interfaces would be first, followed by devices, vlan, site.
             if not device:
                 return
             interface = device.interfaces.get(name=self.name)
@@ -365,6 +373,7 @@ class Interface(DiffSyncExtras):
                 interface.ip_addresses.add(ip_address_obj)
             tonb_nbutils.tag_object(nautobot_object=interface, custom_field="ssot-synced-from-ipfabric")
             return super().update(attrs)
+
         except NautobotDevice.DoesNotExist:
             self.diffsync.job.log_warning(f"Unable to match device by name, {self.name}")
 

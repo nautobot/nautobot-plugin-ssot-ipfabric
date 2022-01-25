@@ -7,11 +7,12 @@ from typing import Any, ClassVar, List
 from diffsync import DiffSync
 from diffsync.exceptions import ObjectAlreadyExists
 from django.conf import settings
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.db.models import ProtectedError, Q
 from nautobot.dcim.models import Device, Site
 from nautobot.extras.models import Tag
-from nautobot.ipam.models import VLAN
+from nautobot.ipam.models import VLAN, Interface
+from nautobot.utilities.choices import ColorChoices
 from netutils.mac import mac_to_format
 
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
@@ -31,6 +32,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
     _vlan: ClassVar[Any] = VLAN
     _device: ClassVar[Any] = Device
     _site: ClassVar[Any] = Site
+    _interface: ClassVar[Any] = Interface
 
     def __init__(
         self,
@@ -61,6 +63,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
         """
         for grouping in (
             "_vlan",
+            "_interface",
             "_device",
             "_site",
         ):
@@ -71,6 +74,11 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                     nautobot_object.delete()
                 except ProtectedError:
                     self.job.log_failure(obj=nautobot_object, message="Deletion failed protected object")
+                except IntegrityError:
+                    self.job.log_failure(
+                        obj=nautobot_object, message=f"Deletion failed due to IntegrityError with {nautobot_object}"
+                    )
+
             self.objects_to_delete[grouping] = []
         return super().sync_complete(source, *args, **kwargs)
 
@@ -109,6 +117,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
     def load_device(self, filtered_devices: List, location):
         """Load Devices from Nautobot."""
         for device_record in filtered_devices:
+            self.job.log_debug(message=f"Loading Nautobot Device: {device_record.name}")
             device = self.device(
                 diffsync=self,
                 name=device_record.name,
@@ -178,10 +187,17 @@ class NautobotDiffSync(DiffSyncModelAdapters):
     @transaction.atomic
     def load_data(self):
         """Add Nautobot Site objects as DiffSync Location models."""
-        ssot_tag, _ = Tag.objects.get_or_create(name="SSoT Synced from IPFabric")
+        ssot_tag, _ = Tag.objects.get_or_create(
+            slug="ssot-synced-from-ipfabric",
+            name="SSoT Synced from IPFabric",
+            defaults={
+                "description": "Object synced at some point from IPFabric to Nautobot",
+                "color": ColorChoices.COLOR_LIGHT_GREEN,
+            },
+        )
         site_objects = self.get_initial_site(ssot_tag)
         # The parent object that stores all children, is the Site.
-        self.job.log_debug(message=f"Found Nautobot Site objects to sync: {site_objects}")
+        self.job.log_debug(message=f"Found Nautobot Site objects to sync: {site_objects.count()}")
 
         if site_objects:
             for site_record in site_objects:
