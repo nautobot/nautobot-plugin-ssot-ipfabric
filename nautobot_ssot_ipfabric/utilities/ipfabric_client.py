@@ -11,7 +11,10 @@ class IpFabricClient(IpFabric):
 
     def __init__(self, host_url, token):  # pylint: disable=W0235
         """Instantiates init from parent class to create connection."""
-        super().__init__(host_url, token)
+        super().__init__(
+            host_url,
+            token,
+        )
 
     def get_sites(self, snapshot_id="$last"):
         """Return Site info."""
@@ -117,10 +120,10 @@ class IpFabricClient(IpFabric):
 
         # columns and snapshot required
         payload = {
-            "columns": ["siteName", "vlanName", "vlanId", "status"],
+            "columns": ["siteName", "vlanName", "vlanId", "dscr"],
             "filters": filters if filters else {},
             "snapshot": snapshot_id,
         }
 
         logger.debug("Requesting VLAN information with payload: %s", payload)
-        return self.get_response("/api/v1/tables/vlan/device", payload)
+        return self.get_response("/api/v1/tables/vlan/site-summary", payload)

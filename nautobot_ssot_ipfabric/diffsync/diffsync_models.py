@@ -263,7 +263,7 @@ class Interface(DiffSyncExtras):
         "mgmt_only",
         "ip_address",
         "subnet_mask",
-        "ip_is_primary",
+        # "ip_is_primary",
         "status",
     )
 
@@ -301,7 +301,7 @@ class Interface(DiffSyncExtras):
                 object_pk=interface_obj,
             )
             interface_obj.ip_addresses.add(ip_address_obj)
-            if attrs["ip_is_primary"]:
+            if attrs.get("ip_is_primary"):
                 if ip_address_obj.family == 4:
                     device_obj.primary_ip4 = ip_address_obj
                 if ip_address_obj.family == 6:
@@ -374,15 +374,13 @@ class Vlan(DiffSyncExtras):
     _modelname = "vlan"
     _identifiers = ("name", "site")
     _shortname = ("name",)
-    _attributes = (
-        "vid",
-        "status",
-    )
+    _attributes = ("vid", "status", "description")
 
     name: str
     vid: int
     status: str
     site: str
+    description: Optional[str]
     vlan_pk: Optional[UUID]
 
     @classmethod
@@ -391,7 +389,15 @@ class Vlan(DiffSyncExtras):
         status = attrs["status"].lower().capitalize()
         site = Site.objects.get(name=ids["site"])
         name = ids["name"] if ids["name"] else f"VLAN{attrs['vid']}"
-        tonb_nbutils.create_vlan(vlan_name=name, vlan_id=attrs["vid"], vlan_status=status, site_obj=site)
+        description = attrs["description"] if attrs["description"] else None
+        diffsync.job.log_debug(message=f"Creating VLAN: {name}: {len(name)}, {description}: {len(description)}")
+        tonb_nbutils.create_vlan(
+            vlan_name=name,
+            vlan_id=attrs["vid"],
+            vlan_status=status,
+            site_obj=site,
+            description=description,
+        )
         return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
 
     def delete(self) -> Optional["DiffSyncModel"]:
@@ -406,8 +412,9 @@ class Vlan(DiffSyncExtras):
 
     def update(self, attrs):
         """Update VLAN object in Nautobot."""
+        vlan = VLAN.objects.get(name=self.name, vid=self.vid, site=Site.objects.get(name=self.site))
+
         if attrs.get("status") == "Active":
-            vlan = VLAN.objects.get(name=self.name, vid=self.vid, site=Site.objects.get(name=self.site))
             safe_delete_tag, _ = Tag.objects.get_or_create(name="SSoT Safe Delete")
             if not vlan.status == "Active":
                 vlan.status = Status.objects.get(name="Active")
@@ -415,6 +422,10 @@ class Vlan(DiffSyncExtras):
             if device_tags.exists():
                 vlan.tags.remove(safe_delete_tag)
             tonb_nbutils.tag_object(nautobot_object=vlan, custom_field="ssot-synced-from-ipfabric")
+        if attrs.get("description"):
+            vlan.description = vlan.description
+
+        tonb_nbutils.tag_object(nautobot_object=vlan, custom_field="ssot-synced-from-ipfabric")
 
 
 Location.update_forward_refs()

@@ -142,6 +142,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 status=vlan_record.status.name if vlan_record.status else "Active",
                 vid=vlan_record.vid,
                 vlan_pk=vlan_record.pk,
+                description=vlan_record.description,
             )
             if not self.safe_delete_mode:
                 self.vlan.safe_delete_mode = self.safe_delete_mode

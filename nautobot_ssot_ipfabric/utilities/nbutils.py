@@ -159,7 +159,7 @@ def create_interface(device_obj, interface_details):
     return interface_obj
 
 
-def create_vlan(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: Site):
+def create_vlan(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: Site, description: str):
     """Creates or obtains VLAN object.
 
     Args:
@@ -167,14 +167,13 @@ def create_vlan(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: Site):
         vlan_id (int): VLAN ID
         vlan_status (str): VLAN Status
         site_obj (Site): Site Django Model
+        description (str): VLAN Description
 
     Returns:
         (VLAN): Returns created or obtained VLAN object.
     """
     vlan_obj, _ = site_obj.vlans.get_or_create(
-        name=vlan_name,
-        vid=vlan_id,
-        status=Status.objects.get(name=vlan_status),
+        name=vlan_name, vid=vlan_id, status=Status.objects.get(name=vlan_status), description=description
     )
     tag_object(nautobot_object=vlan_obj, custom_field="ssot-synced-from-ipfabric")
     return vlan_obj

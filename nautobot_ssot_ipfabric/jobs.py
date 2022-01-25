@@ -178,7 +178,8 @@ class IpFabricDataSource(DataSource, Job):
                 dest.sync_from(ipfabric_source)
             except ObjectNotCreated as err:
                 self.log_debug(f"Unable to create object. {err}")
-            self.log_success(message="Sync complete.")
+
+        self.log_success(message="Sync complete.")
 
 
 jobs = [IpFabricDataSource]
