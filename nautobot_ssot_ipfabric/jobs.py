@@ -20,7 +20,7 @@ CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
 IPFABRIC_HOST = CONFIG["ipfabric_host"]
 IPFABRIC_API_TOKEN = CONFIG["ipfabric_api_token"]
 
-name = "Nautobot SSoT IPFabric"  # pylint: disable=invalid-name
+name = "SSoT - IPFabric"  # pylint: disable=invalid-name
 
 
 class OptionalObjectVar(ScriptVariable):
@@ -81,10 +81,10 @@ class IpFabricDataSource(DataSource, Job):
     class Meta:
         """Metadata about this Job."""
 
-        name = "IP Fabric SSoT Sync"
+        name = "IPFabric ⟹ Nautobot"
         data_source = "IP Fabric"
         data_source_icon = static("nautobot_ssot_ipfabric/ipfabric.png")
-        description = "Synchronize data from IP Fabric into Nautobot."
+        description = "Sync data from IP Fabric into Nautobot."
         field_order = (
             "debug",
             "safe_delete_mode",
