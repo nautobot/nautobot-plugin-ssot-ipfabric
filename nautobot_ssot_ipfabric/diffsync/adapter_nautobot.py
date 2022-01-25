@@ -181,14 +181,22 @@ class NautobotDiffSync(DiffSyncModelAdapters):
         ssot_tag, _ = Tag.objects.get_or_create(name="SSoT Synced from IPFabric")
         site_objects = self.get_initial_site(ssot_tag)
         # The parent object that stores all children, is the Site.
+        self.job.log_debug(message=f"Found Nautobot Site objects to sync: {site_objects}")
+
         if site_objects:
             for site_record in site_objects:
-                location = self.location(
-                    diffsync=self,
-                    name=site_record.name,
-                    site_id=site_record.custom_field_data.get("ipfabric-site-id"),
-                    status=site_record.status.name,
-                )
+                try:
+                    location = self.location(
+                        diffsync=self,
+                        name=site_record.name,
+                        site_id=site_record.custom_field_data.get("ipfabric-site-id"),
+                        status=site_record.status.name,
+                    )
+                except AttributeError:
+                    self.job.log_debug(
+                        message=f"Error loading {site_record}, invalid or missing attributes on object. Skipping..."
+                    )
+                    continue
                 if not self.safe_delete_mode:
                     self.location.safe_delete_mode = self.safe_delete_mode
                 self.add(location)

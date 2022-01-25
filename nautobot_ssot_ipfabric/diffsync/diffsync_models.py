@@ -117,6 +117,7 @@ class Location(DiffSyncExtras):
         site = Site.objects.get(name=self.name)
         if attrs.get("site_id"):
             site.custom_field_data["ipfabric-site-id"] = attrs.get("site_id")
+            site.validated_save()
         if attrs.get("status") == "Active":
             safe_delete_tag, _ = Tag.objects.get_or_create(name="SSoT Safe Delete")
             if not site.status == "Active":
@@ -421,7 +422,6 @@ class Vlan(DiffSyncExtras):
             device_tags = vlan.tags.filter(pk=safe_delete_tag.pk)
             if device_tags.exists():
                 vlan.tags.remove(safe_delete_tag)
-            tonb_nbutils.tag_object(nautobot_object=vlan, custom_field="ssot-synced-from-ipfabric")
         if attrs.get("description"):
             vlan.description = vlan.description
 
