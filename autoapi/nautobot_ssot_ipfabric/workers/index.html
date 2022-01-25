@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nautobot_ssot_ipfabric.workers &mdash; Nautobot SSOT IPFabric 0.9.0 documentation</title>
+  <title>nautobot_ssot_ipfabric.workers &mdash; Nautobot SSOT IPFabric 0.9.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -84,8 +84,8 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.workers.prompt_for_dry_run" title="nautobot_ssot_ipfabric.workers.prompt_for_dry_run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prompt_for_dry_run</span></code></a>(dispatcher, action_id, help_text)</p></td>
-<td><p>Prompt the user to select a Network name.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.workers.prompt_for_bool" title="nautobot_ssot_ipfabric.workers.prompt_for_bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prompt_for_bool</span></code></a>(dispatcher: nautobot_chatops.dispatchers.Dispatcher, action_id: str, help_text: str)</p></td>
+<td><p>Prompt the user to select a True or False choice.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.workers.ipfabric_logo" title="nautobot_ssot_ipfabric.workers.ipfabric_logo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ipfabric_logo</span></code></a>(dispatcher)</p></td>
 <td><p>Construct an image_element containing the locally hosted IP Fabric logo.</p></td>
@@ -93,7 +93,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.workers.ipfabric" title="nautobot_ssot_ipfabric.workers.ipfabric"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ipfabric</span></code></a>(subcommand, **kwargs)</p></td>
 <td><p>Interact with ipfabric plugin.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.workers.ssot_sync_to_nautobot" title="nautobot_ssot_ipfabric.workers.ssot_sync_to_nautobot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssot_sync_to_nautobot</span></code></a>(dispatcher, dry_run=None)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.workers.ssot_sync_to_nautobot" title="nautobot_ssot_ipfabric.workers.ssot_sync_to_nautobot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssot_sync_to_nautobot</span></code></a>(dispatcher, dry_run=None, safe_delete_mode=None, sync_ipfabric_tagged_only=None)</p></td>
 <td><p>Start an SSoT sync from IPFabric to Nautobot.</p></td>
 </tr>
 </tbody>
@@ -150,9 +150,9 @@
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.workers.prompt_for_dry_run">
-<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.workers.</span></span><span class="sig-name descname"><span class="pre">prompt_for_dry_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dispatcher</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">help_text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.workers.prompt_for_dry_run" title="Permalink to this definition"></a></dt>
-<dd><p>Prompt the user to select a Network name.</p>
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.workers.prompt_for_bool">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.workers.</span></span><span class="sig-name descname"><span class="pre">prompt_for_bool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dispatcher</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nautobot_chatops.dispatchers.Dispatcher</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">help_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.workers.prompt_for_bool" title="Permalink to this definition"></a></dt>
+<dd><p>Prompt the user to select a True or False choice.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -169,7 +169,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.workers.ssot_sync_to_nautobot">
-<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.workers.</span></span><span class="sig-name descname"><span class="pre">ssot_sync_to_nautobot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dispatcher</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dry_run</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.workers.ssot_sync_to_nautobot" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.workers.</span></span><span class="sig-name descname"><span class="pre">ssot_sync_to_nautobot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dispatcher</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dry_run</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">safe_delete_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync_ipfabric_tagged_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.workers.ssot_sync_to_nautobot" title="Permalink to this definition"></a></dt>
 <dd><p>Start an SSoT sync from IPFabric to Nautobot.</p>
 </dd></dl>
 

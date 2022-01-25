@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nautobot_ssot_ipfabric.utilities.nbutils &mdash; Nautobot SSOT IPFabric 0.9.0 documentation</title>
+  <title>nautobot_ssot_ipfabric.utilities.nbutils &mdash; Nautobot SSOT IPFabric 0.9.1 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
@@ -105,7 +105,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_interface" title="nautobot_ssot_ipfabric.utilities.nbutils.create_interface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_interface</span></code></a>(device_obj, interface_details)</p></td>
 <td><p>Verifies interface exists on specified device. If not, creates interface.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_vlan" title="nautobot_ssot_ipfabric.utilities.nbutils.create_vlan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_vlan</span></code></a>(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: nautobot.dcim.models.Site)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_vlan" title="nautobot_ssot_ipfabric.utilities.nbutils.create_vlan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_vlan</span></code></a>(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: nautobot.dcim.models.Site, description: str)</p></td>
 <td><p>Creates or obtains VLAN object.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.tag_object" title="nautobot_ssot_ipfabric.utilities.nbutils.tag_object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tag_object</span></code></a>(nautobot_object: Any, custom_field: str, tag_slug: Optional[str] = 'ssot-synced-from-ipfabric')</p></td>
@@ -220,13 +220,14 @@ interface_details (dict): interface details.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.utilities.nbutils.create_vlan">
-<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.utilities.nbutils.</span></span><span class="sig-name descname"><span class="pre">create_vlan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vlan_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vlan_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vlan_status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nautobot.dcim.models.Site</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_vlan" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.utilities.nbutils.</span></span><span class="sig-name descname"><span class="pre">create_vlan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vlan_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vlan_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vlan_status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nautobot.dcim.models.Site</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_vlan" title="Permalink to this definition"></a></dt>
 <dd><p>Creates or obtains VLAN object.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>vlan_name (str): VLAN Name
 vlan_id (int): VLAN ID
 vlan_status (str): VLAN Status
-site_obj (Site): Site Django Model</p>
+site_obj (Site): Site Django Model
+description (str): VLAN Description</p>
 </dd>
 <dt>Returns:</dt><dd><p>(VLAN): Returns created or obtained VLAN object.</p>
 </dd>

@@ -18,7 +18,7 @@ Functions
 
 .. autoapisummary::
 
-   nautobot_ssot_ipfabric.workers.prompt_for_dry_run
+   nautobot_ssot_ipfabric.workers.prompt_for_bool
    nautobot_ssot_ipfabric.workers.ipfabric_logo
    nautobot_ssot_ipfabric.workers.ipfabric
    nautobot_ssot_ipfabric.workers.ssot_sync_to_nautobot
@@ -62,9 +62,9 @@ Attributes
 
    
 
-.. py:function:: prompt_for_dry_run(dispatcher, action_id, help_text)
+.. py:function:: prompt_for_bool(dispatcher: nautobot_chatops.dispatchers.Dispatcher, action_id: str, help_text: str)
 
-   Prompt the user to select a Network name.
+   Prompt the user to select a True or False choice.
 
 
 .. py:function:: ipfabric_logo(dispatcher)
@@ -77,7 +77,7 @@ Attributes
    Interact with ipfabric plugin.
 
 
-.. py:function:: ssot_sync_to_nautobot(dispatcher, dry_run=None)
+.. py:function:: ssot_sync_to_nautobot(dispatcher, dry_run=None, safe_delete_mode=None, sync_ipfabric_tagged_only=None)
 
    Start an SSoT sync from IPFabric to Nautobot.
 

@@ -65,6 +65,37 @@ Attributes
 
    Nautobot adapter for DiffSync.
 
+   .. py:attribute:: objects_to_delete
+      
+
+      
+
+   .. py:attribute:: _vlan
+      :annotation: :ClassVar[Any]
+
+      
+
+   .. py:attribute:: _device
+      :annotation: :ClassVar[Any]
+
+      
+
+   .. py:attribute:: _site
+      :annotation: :ClassVar[Any]
+
+      
+
+   .. py:method:: sync_complete(self, source: diffsync.DiffSync, *args, **kwargs)
+
+      Clean up function for DiffSync sync.
+
+      Once the sync is complete, this function runs deleting any objects
+      from Nautobot that need to be deleted in a specific order.
+
+      Args:
+          source (DiffSync): DiffSync
+
+
    .. py:method:: load_interfaces(self, device_record: nautobot.dcim.models.Device, diffsync_device)
 
       Import a single Nautobot Interface object as a DiffSync Interface model.
@@ -80,12 +111,12 @@ Attributes
       Add Nautobot VLAN objects as DiffSync VLAN models.
 
 
-   .. py:method:: get_initial_site(self, ssot_tag)
+   .. py:method:: get_initial_site(self, ssot_tag: nautobot.extras.models.Tag)
 
       Identify the site objects based on user defined job inputs.
 
       Args:
-          ssot_tag ([type]): Tag used for filtering
+          ssot_tag (Tag): Tag used for filtering
 
 
    .. py:method:: load_data(self)

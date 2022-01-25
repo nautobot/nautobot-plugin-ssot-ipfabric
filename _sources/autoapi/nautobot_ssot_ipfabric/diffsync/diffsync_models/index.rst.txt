@@ -104,14 +104,14 @@ Attributes
 
       
 
-   .. py:method:: safe_delete(self, nautobot_object: Any, safe_mode: bool, safe_delete_status: Optional[str] = None)
+   .. py:method:: safe_delete(self, nautobot_object: Any, safe_mode: bool = True, safe_delete_status: Optional[str] = None)
 
       Safe delete an object, by adding tags or changing it's default status.
 
       Args:
           nautobot_object (Any): Any type of Nautobot object
           safe_mode (bool): Safe mode or not
-          safe_delete_status (str): Desired status to change to
+          safe_delete_status (Optional[str], optional): Status name, optional as some objects don't have status field. Defaults to None.
 
 
 
@@ -396,7 +396,7 @@ Attributes
       
 
    .. py:attribute:: _attributes
-      :annotation: = ['vid', 'status']
+      :annotation: = ['vid', 'status', 'description']
 
       
 
@@ -417,6 +417,16 @@ Attributes
 
    .. py:attribute:: site
       :annotation: :str
+
+      
+
+   .. py:attribute:: description
+      :annotation: :Optional[str]
+
+      
+
+   .. py:attribute:: vlan_pk
+      :annotation: :Optional[uuid.UUID]
 
       
 

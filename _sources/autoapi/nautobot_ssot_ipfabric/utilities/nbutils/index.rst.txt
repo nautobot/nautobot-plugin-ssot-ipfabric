@@ -115,7 +115,7 @@ Attributes
        interface_details (dict): interface details.
 
 
-.. py:function:: create_vlan(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: nautobot.dcim.models.Site)
+.. py:function:: create_vlan(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: nautobot.dcim.models.Site, description: str)
 
    Creates or obtains VLAN object.
 
@@ -124,6 +124,7 @@ Attributes
        vlan_id (int): VLAN ID
        vlan_status (str): VLAN Status
        site_obj (Site): Site Django Model
+       description (str): VLAN Description
 
    Returns:
        (VLAN): Returns created or obtained VLAN object.

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nautobot SSoT Plugin - IPFabric &mdash; Nautobot SSOT IPFabric 0.9.0 documentation</title>
+  <title>Nautobot SSoT Plugin - IPFabric &mdash; Nautobot SSOT IPFabric 0.9.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
@@ -173,8 +173,8 @@ To set any or all, update the plugin configuration dictionary as followed inside
 </section>
 <section id="safe-delete-mode">
 <h2>Safe Delete Mode<a class="headerlink" href="#safe-delete-mode" title="Permalink to this headline"></a></h2>
-<p>By design, an SSoT Plugin using Diffsync will Create, Update or Delete when synchronizing two data sources. However, this may not always be what we want to happen with our Source of Truth (Nautobot). A job configuration option is available and enabled by default to prevent deleting objects from the database and instead, update the <code class="docutils literal notranslate"><span class="pre">Status</span></code> of said object alongside assigning a default tag, <code class="docutils literal notranslate"><span class="pre">ssot-safe-delete</span></code>. For example, if an additional snapshot is created from IPFabric, synchronized with Nautobot and, it just so happens that a device was unreachable, down for maintenance, etc., This doesn’t <code class="docutils literal notranslate"><span class="pre">always</span></code> mean that our Source of Truth should delete this object, but we may need to bring attention to this matter. We let you decide what should happen. One thing to note is that some of the objects will auto recover from the changed status, if a new job shows the object is present. However, currently IPAddresses and Interfaces will not auto update to remove the <code class="docutils literal notranslate"><span class="pre">ssot-safe-delete</span></code> tag. The user is responsible for reviewing and updating accordingly.</p>
-<p>The default status change if an object were to be <code class="docutils literal notranslate"><span class="pre">deleted</span></code> by SSoT Diffsync operations, will be specified below. These are the default transitions states, unless otherwise specified in the configuration options of the plugin by a user.</p>
+<p>By design, an SSoT Plugin using Diffsync will Create, Update or Delete when synchronizing two data sources. However, this may not always be what we want to happen with our Source of Truth (Nautobot). A job configuration option is available and enabled by default to prevent deleting objects from the database and instead, update the <code class="docutils literal notranslate"><span class="pre">Status</span></code> of said object alongside assigning a default tag, <code class="docutils literal notranslate"><span class="pre">ssot-safe-delete</span></code>. For example, if an additional snapshot is created from IPFabric, synchronized with Nautobot and, it just so happens that a device was unreachable, down for maintenance, etc., This doesn’t <code class="docutils literal notranslate"><span class="pre">always</span></code> mean that our Source of Truth should delete this object, but we may need to bring attention to this matter. We let you decide what should happen. One thing to note is that some of the objects will auto recover from the changed status if a new job shows the object is present. However, currently, IPAddresses and Interfaces will not auto-update to remove the <code class="docutils literal notranslate"><span class="pre">ssot-safe-delete</span></code> tag. The user is responsible for reviewing and updating accordingly. Safe delete tagging of objects works in an idempotent way. If an object has been tagged already, the custom field defining the last update will not be updated with a new sync date from IPFabric. So, if you re-run your sync job days apart and, you’d expect the date to change but the object has been flagged as safe to delete; you will not see an updated date on the object custom field unless the status changed, in which case the tag (depending on the object) would be removed followed by updating the last date of sync.</p>
+<p>The default status change of an object were to be <code class="docutils literal notranslate"><span class="pre">deleted</span></code> by SSoT Diffsync operations, will be specified below. These are the default transitions states, unless otherwise specified in the configuration options of the plugin by a user.</p>
 <ul class="simple">
 <li><p>Device -&gt; Offline (Auto deletes tag upon recovery)</p></li>
 <li><p>IPAddresses -&gt; Deprecated (Does not auto-delete tag upon recovery)</p></li>
@@ -186,6 +186,10 @@ To set any or all, update the plugin configuration dictionary as followed inside
 <p><img alt="Safe Delete" src="_images/safe-delete.png" /></p>
 <p>An example object that’s been modified by SSoT App and tagged as <code class="docutils literal notranslate"><span class="pre">ssot-safe-delete</span></code> and <code class="docutils literal notranslate"><span class="pre">ssot-synced-from-ipfabric</span></code>. Notice the Status and child object, IPAddress has also changed to Deprecated and, it’s status changed and tagged as well.</p>
 <p><img alt="Safe Delete Address" src="_images/safe-delete-ipaddress.png" /></p>
+<p>During job execution, a warning will be provided to show the status change of an object.</p>
+<p><img alt="Safe Delete Status Change" src="_images/safe-delete-log.png" /></p>
+<p>If an object has already been updated with the tag, a warning message will be displayed and the object will not be modified (including sync date).</p>
+<p><img alt="Safe Delete Status Change" src="_images/safe-delete-debug-skip.png" /></p>
 </section>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"></a></h2>
