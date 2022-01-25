@@ -16,10 +16,10 @@ class IPFabricJobTest(TestCase):
 
     def test_metadata(self):
         """Verify correctness of the Job Meta attributes."""
-        self.assertEqual("IP Fabric SSoT Sync", jobs.IpFabricDataSource.name)
-        self.assertEqual("IP Fabric SSoT Sync", jobs.IpFabricDataSource.Meta.name)
+        self.assertEqual("IPFabric ⟹ Nautobot", jobs.IpFabricDataSource.name)
+        self.assertEqual("IPFabric ⟹ Nautobot", jobs.IpFabricDataSource.Meta.name)
         self.assertEqual("IP Fabric", jobs.IpFabricDataSource.Meta.data_source)
-        self.assertEqual("Synchronize data from IP Fabric into Nautobot.", jobs.IpFabricDataSource.Meta.description)
+        self.assertEqual("Sync data from IP Fabric into Nautobot.", jobs.IpFabricDataSource.Meta.description)
 
     def test_data_mapping(self):
         """Verify correctness of the data_mappings() API."""
