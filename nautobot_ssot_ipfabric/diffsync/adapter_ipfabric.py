@@ -2,8 +2,10 @@
 
 import logging
 
+from diffsync import ObjectAlreadyExists
 from django.conf import settings
 from netutils.mac import mac_to_format
+from nautobot.ipam.models import VLAN
 
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
@@ -31,8 +33,11 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
         """Add IP Fabric Site objects as DiffSync Location models."""
         sites = self.client.get_sites()
         for site in sites:
-            location = self.location(diffsync=self, name=site["siteName"], site_id=site["id"], status="Active")
-            self.add(location)
+            try:
+                location = self.location(diffsync=self, name=site["siteName"], site_id=site["id"], status="Active")
+                self.add(location)
+            except ObjectAlreadyExists:
+                self.job.log_debug(message=f"Duplicate Site discovered, {site}")
 
     def load_device_interfaces(self, device_model, interfaces, device_primary_ip):
         """Create and load DiffSync Interface model objects for a specific device."""
@@ -45,25 +50,28 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
 
         for iface in device_interfaces:
             ip_address = iface.get("primaryIp")
-            interface = self.interface(
-                diffsync=self,
-                name=iface.get("intName"),
-                device_name=iface.get("hostname"),
-                description=iface.get("dscr"),
-                enabled=True,
-                mac_address=mac_to_format(iface.get("mac"), "MAC_COLON_TWO").upper()
-                if iface.get("mac")
-                else DEFAULT_INTERFACE_MAC,
-                mtu=iface.get("mtu") if iface.get("mtu") else DEFAULT_INTERFACE_MTU,
-                type=DEFAULT_INTERFACE_TYPE,
-                mgmt_only=iface.get("mgmt_only", False),
-                ip_address=ip_address,
-                subnet_mask="255.255.255.255",
-                ip_is_primary=ip_address == device_primary_ip,
-                status="Active",
-            )
-            self.add(interface)
-            device_model.add_child(interface)
+            try:
+                interface = self.interface(
+                    diffsync=self,
+                    name=iface.get("intName"),
+                    device_name=iface.get("hostname"),
+                    description=iface.get("dscr"),
+                    enabled=True,
+                    mac_address=mac_to_format(iface.get("mac"), "MAC_COLON_TWO").upper()
+                    if iface.get("mac")
+                    else DEFAULT_INTERFACE_MAC,
+                    mtu=iface.get("mtu") if iface.get("mtu") else DEFAULT_INTERFACE_MTU,
+                    type=DEFAULT_INTERFACE_TYPE,
+                    mgmt_only=iface.get("mgmt_only", False),
+                    ip_address=ip_address,
+                    subnet_mask="255.255.255.255",
+                    ip_is_primary=ip_address == device_primary_ip,
+                    status="Active",
+                )
+                self.add(interface)
+                device_model.add_child(interface)
+            except ObjectAlreadyExists:
+                self.job.log_debug(message=f"Duplicate Interface discovered, {iface}")
 
     def load(self):
         """Load data from IP Fabric."""
@@ -76,31 +84,49 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                 continue
             location_vlans = [vlan for vlan in vlans if vlan["siteName"] == location.name]
             for vlan in location_vlans:
-                vlan = self.vlan(
-                    diffsync=self,
-                    name=vlan["vlanName"],
-                    site=vlan["siteName"],
-                    vid=vlan["vlanId"],
-                    status=vlan["status"].capitalize(),
-                )
-                self.add(vlan)
-                location.add_child(vlan)
+                if not vlan["vlanId"]:
+                    continue
+                description = vlan.get("dscr") if vlan.get("dscr") else f"VLAN ID: {vlan['vlanId']}"
+                vlan_name = vlan.get("vlanName") if vlan.get("vlanName") else f"{vlan['siteName']}:{vlan['vlanId']}"
+                name_max_length = VLAN._meta.get_field("name").max_length
+                if len(vlan_name) > name_max_length:
+                    self.job.log_warning(
+                        message=f"Not syncing VLAN, {vlan_name} due to character limit exceeding {name_max_length}."
+                    )
+                    continue
+                try:
+                    vlan = self.vlan(
+                        diffsync=self,
+                        name=vlan_name,
+                        site=vlan["siteName"],
+                        vid=vlan["vlanId"],
+                        status="Active",
+                        description=description,
+                    )
+                    self.add(vlan)
+                    location.add_child(vlan)
+                except ObjectAlreadyExists:
+                    self.job.log_debug(message=f"Duplicate VLAN discovered, {vlan}")
+
             location_devices = [device for device in devices if device["siteName"] == location.name]
             for device in location_devices:
                 device_primary_ip = device["loginIp"]
-                device_model = self.device(
-                    diffsync=self,
-                    name=device["hostname"],
-                    location_name=device["siteName"],
-                    model=device.get("model") if device.get("model") else f"Default-{device.get('vendor')}",
-                    vendor=device.get("vendor").capitalize(),
-                    serial_number=device["sn"],
-                    role=DEFAULT_DEVICE_ROLE,
-                    status=DEFAULT_DEVICE_STATUS,
-                )
-                self.add(device_model)
-                location.add_child(device_model)
-                self.load_device_interfaces(device_model, interfaces, device_primary_ip)
+                try:
+                    device_model = self.device(
+                        diffsync=self,
+                        name=device["hostname"],
+                        location_name=device["siteName"],
+                        model=device.get("model") if device.get("model") else f"Default-{device.get('vendor')}",
+                        vendor=device.get("vendor").capitalize(),
+                        serial_number=device["sn"],
+                        role=DEFAULT_DEVICE_ROLE,
+                        status=DEFAULT_DEVICE_STATUS,
+                    )
+                    self.add(device_model)
+                    location.add_child(device_model)
+                    self.load_device_interfaces(device_model, interfaces, device_primary_ip)
+                except ObjectAlreadyExists:
+                    self.job.log_debug(message=f"Duplicate Device discovered, {device}")
 
 
 def pseudo_management_interface(hostname, device_interfaces, device_primary_ip):

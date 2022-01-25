@@ -59,7 +59,7 @@ class TestIpFabricClient(unittest.TestCase):
     @responses.activate
     def test_get_vlans(self):
         """Test `get_vlans` API Call."""
-        endpoint = f"{self.uri}/api/v1/tables/vlan/device"
+        endpoint = f"{self.uri}/api/v1/tables/vlan/site-summary"
         json_response = json_fixture(f"{FIXTURES}/get_vlans.json")
         # IP Fabric Responses are wrapped inside 'data' key.
         response = {"data": json_response}
@@ -71,7 +71,7 @@ class TestIpFabricClient(unittest.TestCase):
         )
         vlans = self.client.get_vlans()
 
-        self.assertEqual(vlans[0]["siteName"], "JCY-SPINE-01.INFRA.NTC.COM_1")
+        self.assertEqual(vlans[0]["siteName"], "NYC-LEAF-01")
         self.assertEqual(len(vlans), 13)
 
     @responses.activate

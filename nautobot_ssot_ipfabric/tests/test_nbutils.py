@@ -61,7 +61,13 @@ class TestNautobotUtils(TestCase):
 
     def test_create_vlan(self):
         """Test `create_vlan` Utility."""
-        vlan = create_vlan(vlan_name="Test-Vlan", vlan_id=100, vlan_status="Test-Vlan-Status", site_obj=self.site)
+        vlan = create_vlan(
+            vlan_name="Test-Vlan",
+            vlan_id=100,
+            vlan_status="Test-Vlan-Status",
+            site_obj=self.site,
+            description="Test-Vlan",
+        )
         self.assertEqual(VLAN.objects.get(name="Test-Vlan").pk, vlan.pk)
 
     # def test_create_site(self):
