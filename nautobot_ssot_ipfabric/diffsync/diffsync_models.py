@@ -43,7 +43,7 @@ class DiffSyncExtras(DiffSyncModel):
             safe_delete_status (Optional[str], optional): Status name, optional as some objects don't have status field. Defaults to None.
         """
         update = False
-        if not safe_mode:
+        if not safe_mode:  # This could just check self, refactor.
             self.diffsync.job.log_warning(
                 message=f"{nautobot_object} will be deleted as safe delete mode is not enabled."
             )
@@ -114,9 +114,15 @@ class Location(DiffSyncExtras):
     def delete(self) -> Optional["DiffSyncModel"]:
         """Delete Site in Nautobot."""
         site_object = Site.objects.get(name=self.name)
+
+        if self.safe_delete_mode != Location.safe_delete_mode:
+            self.diffsync.job.log_debug(
+                message=f"(Safe delete drifted from DiffsyncModel Instance: {self.safe_delete_mode} versus DiffsyncModelClass: {Location.safe_delete_mode}"
+            )
+
         self.safe_delete(
             site_object,
-            self.safe_delete_mode,
+            Location.safe_delete_mode,
             SAFE_DELETE_SITE_STATUS,
         )
         return self
@@ -214,7 +220,7 @@ class Device(DiffSyncExtras):
             device_object = NautobotDevice.objects.get(name=self.name)
             self.safe_delete(
                 device_object,
-                self.safe_delete_mode,
+                Device.safe_delete_mode,
                 SAFE_DELETE_DEVICE_STATUS,
             )
             return self
@@ -304,6 +310,8 @@ class Interface(DiffSyncExtras):
         )
         ip_address = attrs["ip_address"]
         if ip_address:
+            if interface_obj.ip_addresses.all().exists():
+                interface_obj.ip_addresses.all().delete()
             ip_address_obj = tonb_nbutils.create_ip(
                 ip_address=attrs["ip_address"],
                 subnet_mask=attrs["subnet_mask"],
@@ -334,7 +342,7 @@ class Interface(DiffSyncExtras):
             # Attached interfaces do not have a status to update.
             self.safe_delete(
                 interface,
-                self.safe_delete_mode,
+                Interface.safe_delete_mode,
             )
             return self
         except NautobotDevice.DoesNotExist:
@@ -363,7 +371,9 @@ class Interface(DiffSyncExtras):
             if attrs.get("mgmt_only"):
                 interface.mgmt_only = attrs["mgmt_only"]
             if attrs.get("ip_address"):
-                interface.ip_addresses.all().delete()
+                if interface.ip_addresses.all().exists():
+                    self.diffsync.job.log_debug(message=f"Replacing IP from interface {interface} on {device.name}")
+                    interface.ip_addresses.all().delete()
                 ip_address_obj = tonb_nbutils.create_ip(
                     ip_address=attrs.get("ip_address"),
                     subnet_mask=attrs.get("subnet_mask") if attrs.get("subnet_mask") else "255.255.255.255",
@@ -400,7 +410,7 @@ class Vlan(DiffSyncExtras):
         site = Site.objects.get(name=ids["site"])
         name = ids["name"] if ids["name"] else f"VLAN{attrs['vid']}"
         description = attrs["description"] if attrs["description"] else None
-        diffsync.job.log_debug(message=f"Creating VLAN: {name}: {len(name)}, {description}: {len(description)}")
+        diffsync.job.log_debug(message=f"Creating VLAN: {name} description: {description}")
         tonb_nbutils.create_vlan(
             vlan_name=name,
             vlan_id=attrs["vid"],
@@ -415,7 +425,7 @@ class Vlan(DiffSyncExtras):
         vlan = VLAN.objects.get(name=self.name, pk=self.vlan_pk)
         self.safe_delete(
             vlan,
-            self.safe_delete_mode,
+            Vlan.safe_delete_mode,
             SAFE_DELETE_VLAN_STATUS,
         )
         return self

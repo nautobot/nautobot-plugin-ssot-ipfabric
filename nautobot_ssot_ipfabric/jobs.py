@@ -150,7 +150,7 @@ class IpFabricDataSource(DataSource, Job):
         dest = NautobotDiffSync(
             job=self,
             sync=self.sync,
-            safe_delete_mode=safe_mode,
+            safe_delete_mode_var=safe_mode,
             sync_ipfabric_tagged_only=tagged_only,
             site_filter=site_filter_object,
         )
