@@ -4,8 +4,8 @@ import logging
 
 from diffsync import ObjectAlreadyExists
 from django.conf import settings
-from netutils.mac import mac_to_format
 from nautobot.ipam.models import VLAN
+from netutils.mac import mac_to_format
 
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 

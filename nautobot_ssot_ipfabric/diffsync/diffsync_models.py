@@ -1,9 +1,8 @@
 # Ignore return statements for updates and deletes, #  pylint:disable=R1710
 # Ignore too many args #  pylint:disable=too-many-locals
 """DiffSyncModel subclasses for Nautobot-to-IPFabric data sync."""
-from typing import Any, ClassVar, List, Optional
+from typing import Any, List, Optional, ClassVar
 from uuid import UUID
-
 from diffsync import DiffSyncModel
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -13,6 +12,7 @@ from nautobot.dcim.models import DeviceRole, DeviceType, Site
 from nautobot.extras.models import Tag
 from nautobot.extras.models.statuses import Status
 from nautobot.ipam.models import VLAN
+from nautobot.utilities.choices import ColorChoices
 
 import nautobot_ssot_ipfabric.utilities.nbutils as tonb_nbutils
 
@@ -33,16 +33,15 @@ class DiffSyncExtras(DiffSyncModel):
 
     safe_delete_mode: ClassVar[bool] = True
 
-    def safe_delete(self, nautobot_object: Any, safe_mode: bool = True, safe_delete_status: Optional[str] = None):
+    def safe_delete(self, nautobot_object: Any, safe_delete_status: Optional[str] = None):
         """Safe delete an object, by adding tags or changing it's default status.
 
         Args:
             nautobot_object (Any): Any type of Nautobot object
-            safe_mode (bool): Safe mode or not
             safe_delete_status (Optional[str], optional): Status name, optional as some objects don't have status field. Defaults to None.
         """
         update = False
-        if not safe_mode:
+        if not self.safe_delete_mode:  # This could just check self, refactor.
             self.diffsync.job.log_warning(
                 message=f"{nautobot_object} will be deleted as safe delete mode is not enabled."
             )
@@ -66,11 +65,19 @@ class DiffSyncExtras(DiffSyncModel):
                     # Not everything has a status. This may come in handy once more models are synced.
                     self.diffsync.job.log_warning(message=f"{nautobot_object} has no Status attribute.")
             if hasattr(nautobot_object, "tags"):
-                ssot_safe_tag, _ = Tag.objects.get_or_create(name="SSoT Safe Delete")
+                ssot_safe_tag, _ = Tag.objects.get_or_create(
+                    slug="ssot-safe-delete",
+                    name="SSoT Safe Delete",
+                    defaults={
+                        "description": "Safe Delete Mode tag to flag an object, but not delete from Nautobot.",
+                        "color": ColorChoices.COLOR_RED,
+                    },
+                )
                 object_tags = nautobot_object.tags.all()
                 # No exception raised for empty iterator, safe to do this any
                 if not any(obj_tag for obj_tag in object_tags if obj_tag.name == ssot_safe_tag.name):
                     nautobot_object.tags.add(ssot_safe_tag)
+                    self.diffsync.job.log_warning(message=f"Tagging {nautobot_object} with `ssot-safe-delete`.")
                     update = True
             if update:
                 tonb_nbutils.tag_object(nautobot_object=nautobot_object, custom_field="ssot-synced-from-ipfabric")
@@ -105,9 +112,9 @@ class Location(DiffSyncExtras):
     def delete(self) -> Optional["DiffSyncModel"]:
         """Delete Site in Nautobot."""
         site_object = Site.objects.get(name=self.name)
+
         self.safe_delete(
             site_object,
-            self.safe_delete_mode,
             SAFE_DELETE_SITE_STATUS,
         )
         return self
@@ -117,6 +124,7 @@ class Location(DiffSyncExtras):
         site = Site.objects.get(name=self.name)
         if attrs.get("site_id"):
             site.custom_field_data["ipfabric-site-id"] = attrs.get("site_id")
+            site.validated_save()
         if attrs.get("status") == "Active":
             safe_delete_tag, _ = Tag.objects.get_or_create(name="SSoT Safe Delete")
             if not site.status == "Active":
@@ -204,7 +212,6 @@ class Device(DiffSyncExtras):
             device_object = NautobotDevice.objects.get(name=self.name)
             self.safe_delete(
                 device_object,
-                self.safe_delete_mode,
                 SAFE_DELETE_DEVICE_STATUS,
             )
             return self
@@ -294,6 +301,8 @@ class Interface(DiffSyncExtras):
         )
         ip_address = attrs["ip_address"]
         if ip_address:
+            if interface_obj.ip_addresses.all().exists():
+                interface_obj.ip_addresses.all().delete()
             ip_address_obj = tonb_nbutils.create_ip(
                 ip_address=attrs["ip_address"],
                 subnet_mask=attrs["subnet_mask"],
@@ -314,18 +323,16 @@ class Interface(DiffSyncExtras):
         try:
             ssot_tag, _ = Tag.objects.get_or_create(name="SSoT Synced from IPFabric")
             device = NautobotDevice.objects.filter(Q(name=self.device_name) & Q(tags__slug=ssot_tag.slug)).first()
-            # TODO: Implement ordering of delete for diffsync. Interfaces would be first, followed by devices, vlan, site.
             if not device:
                 return
             interface = device.interfaces.get(name=self.name)
             # Access the addr within an interface, change the status if necessary
             if interface.ip_addresses.first():
-                self.safe_delete(interface.ip_addresses.first(), self.safe_delete_mode, SAFE_DELETE_IPADDRESS_STATUS)
+                self.safe_delete(interface.ip_addresses.first(), SAFE_DELETE_IPADDRESS_STATUS)
             # Then do the parent interface
             # Attached interfaces do not have a status to update.
             self.safe_delete(
                 interface,
-                self.safe_delete_mode,
             )
             return self
         except NautobotDevice.DoesNotExist:
@@ -354,7 +361,9 @@ class Interface(DiffSyncExtras):
             if attrs.get("mgmt_only"):
                 interface.mgmt_only = attrs["mgmt_only"]
             if attrs.get("ip_address"):
-                interface.ip_addresses.all().delete()
+                if interface.ip_addresses.all().exists():
+                    self.diffsync.job.log_debug(message=f"Replacing IP from interface {interface} on {device.name}")
+                    interface.ip_addresses.all().delete()
                 ip_address_obj = tonb_nbutils.create_ip(
                     ip_address=attrs.get("ip_address"),
                     subnet_mask=attrs.get("subnet_mask") if attrs.get("subnet_mask") else "255.255.255.255",
@@ -364,6 +373,7 @@ class Interface(DiffSyncExtras):
                 interface.ip_addresses.add(ip_address_obj)
             tonb_nbutils.tag_object(nautobot_object=interface, custom_field="ssot-synced-from-ipfabric")
             return super().update(attrs)
+
         except NautobotDevice.DoesNotExist:
             self.diffsync.job.log_warning(f"Unable to match device by name, {self.name}")
 
@@ -390,7 +400,7 @@ class Vlan(DiffSyncExtras):
         site = Site.objects.get(name=ids["site"])
         name = ids["name"] if ids["name"] else f"VLAN{attrs['vid']}"
         description = attrs["description"] if attrs["description"] else None
-        diffsync.job.log_debug(message=f"Creating VLAN: {name}: {len(name)}, {description}: {len(description)}")
+        diffsync.job.log_debug(message=f"Creating VLAN: {name} description: {description}")
         tonb_nbutils.create_vlan(
             vlan_name=name,
             vlan_id=attrs["vid"],
@@ -405,7 +415,6 @@ class Vlan(DiffSyncExtras):
         vlan = VLAN.objects.get(name=self.name, pk=self.vlan_pk)
         self.safe_delete(
             vlan,
-            self.safe_delete_mode,
             SAFE_DELETE_VLAN_STATUS,
         )
         return self
@@ -421,7 +430,6 @@ class Vlan(DiffSyncExtras):
             device_tags = vlan.tags.filter(pk=safe_delete_tag.pk)
             if device_tags.exists():
                 vlan.tags.remove(safe_delete_tag)
-            tonb_nbutils.tag_object(nautobot_object=vlan, custom_field="ssot-synced-from-ipfabric")
         if attrs.get("description"):
             vlan.description = vlan.description
 
