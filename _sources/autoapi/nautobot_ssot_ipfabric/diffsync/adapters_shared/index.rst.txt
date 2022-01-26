@@ -28,6 +28,11 @@ Classes
 
    Nautobot adapter for DiffSync.
 
+   .. py:attribute:: safe_delete_mode
+      :annotation: :ClassVar[bool] = True
+
+      
+
    .. py:attribute:: location
       
 

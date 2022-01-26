@@ -51,7 +51,7 @@ Attributes
    
 
 .. py:data:: name
-   :annotation: = Nautobot SSoT IPFabric
+   :annotation: = SSoT - IPFabric
 
    
 
@@ -80,7 +80,7 @@ Attributes
       Metadata about this Job.
 
       .. py:attribute:: name
-         :annotation: = IP Fabric SSoT Sync
+         :annotation: = IPFabric ⟹ Nautobot
 
          
 
@@ -95,7 +95,7 @@ Attributes
          
 
       .. py:attribute:: description
-         :annotation: = Synchronize data from IP Fabric into Nautobot.
+         :annotation: = Sync data from IP Fabric into Nautobot.
 
          
 

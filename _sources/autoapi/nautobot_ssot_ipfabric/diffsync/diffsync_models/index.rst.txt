@@ -104,13 +104,12 @@ Attributes
 
       
 
-   .. py:method:: safe_delete(self, nautobot_object: Any, safe_mode: bool = True, safe_delete_status: Optional[str] = None)
+   .. py:method:: safe_delete(self, nautobot_object: Any, safe_delete_status: Optional[str] = None)
 
       Safe delete an object, by adding tags or changing it's default status.
 
       Args:
           nautobot_object (Any): Any type of Nautobot object
-          safe_mode (bool): Safe mode or not
           safe_delete_status (Optional[str], optional): Status name, optional as some objects don't have status field. Defaults to None.
 
 

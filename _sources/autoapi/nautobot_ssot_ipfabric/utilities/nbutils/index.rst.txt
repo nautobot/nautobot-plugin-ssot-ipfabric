@@ -130,13 +130,13 @@ Attributes
        (VLAN): Returns created or obtained VLAN object.
 
 
-.. py:function:: tag_object(nautobot_object: Any, custom_field: str, tag_slug: Optional[str] = 'ssot-synced-from-ipfabric')
+.. py:function:: tag_object(nautobot_object: Any, custom_field: str, tag_name: Optional[str] = 'SSoT Synced from IPFabric')
 
    Apply the given tag and custom field to the identified object.
 
    Args:
        nautobot_object (Any): Nautobot ORM Object
        custom_field (str): Name of custom field to update
-       tag_slug (Optional[str], optional): Tag slug to use as tag. Defaults to "ssot-synced-from-ipfabric".
+       tag_name (Optional[str], optional): Tag name. Defaults to "SSoT Synced From IPFabric".
 
 

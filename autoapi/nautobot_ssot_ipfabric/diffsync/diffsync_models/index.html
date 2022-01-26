@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nautobot_ssot_ipfabric.diffsync.diffsync_models &mdash; Nautobot SSOT IPFabric 0.9.1 documentation</title>
+  <title>nautobot_ssot_ipfabric.diffsync.diffsync_models &mdash; Nautobot SSOT IPFabric 0.9.4 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
@@ -204,11 +204,10 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras.safe_delete">
-<span class="sig-name descname"><span class="pre">safe_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nautobot_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">safe_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">safe_delete_status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras.safe_delete" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">safe_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nautobot_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">safe_delete_status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.diffsync_models.DiffSyncExtras.safe_delete" title="Permalink to this definition"></a></dt>
 <dd><p>Safe delete an object, by adding tags or changing it’s default status.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>nautobot_object (Any): Any type of Nautobot object
-safe_mode (bool): Safe mode or not
 safe_delete_status (Optional[str], optional): Status name, optional as some objects don’t have status field. Defaults to None.</p>
 </dd>
 </dl>

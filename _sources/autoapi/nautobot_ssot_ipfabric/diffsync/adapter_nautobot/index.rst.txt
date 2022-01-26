@@ -59,7 +59,7 @@ Attributes
 
    
 
-.. py:class:: NautobotDiffSync(job, sync, safe_delete_mode: bool, sync_ipfabric_tagged_only: bool, site_filter: nautobot.dcim.models.Site, *args, **kwargs)
+.. py:class:: NautobotDiffSync(job, sync, sync_ipfabric_tagged_only: bool, site_filter: nautobot.dcim.models.Site, *args, **kwargs)
 
    Bases: :py:obj:`nautobot_ssot_ipfabric.diffsync.DiffSyncModelAdapters`
 
@@ -81,6 +81,11 @@ Attributes
       
 
    .. py:attribute:: _site
+      :annotation: :ClassVar[Any]
+
+      
+
+   .. py:attribute:: _interface
       :annotation: :ClassVar[Any]
 
       
