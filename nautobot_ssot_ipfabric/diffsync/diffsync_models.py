@@ -1,9 +1,8 @@
 # Ignore return statements for updates and deletes, #  pylint:disable=R1710
 # Ignore too many args #  pylint:disable=too-many-locals
 """DiffSyncModel subclasses for Nautobot-to-IPFabric data sync."""
-from typing import Any, ClassVar, List, Optional
+from typing import Any, List, Optional, ClassVar
 from uuid import UUID
-
 from diffsync import DiffSyncModel
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -34,16 +33,15 @@ class DiffSyncExtras(DiffSyncModel):
 
     safe_delete_mode: ClassVar[bool] = True
 
-    def safe_delete(self, nautobot_object: Any, safe_mode: bool = True, safe_delete_status: Optional[str] = None):
+    def safe_delete(self, nautobot_object: Any, safe_delete_status: Optional[str] = None):
         """Safe delete an object, by adding tags or changing it's default status.
 
         Args:
             nautobot_object (Any): Any type of Nautobot object
-            safe_mode (bool): Safe mode or not
             safe_delete_status (Optional[str], optional): Status name, optional as some objects don't have status field. Defaults to None.
         """
         update = False
-        if not safe_mode:  # This could just check self, refactor.
+        if not self.safe_delete_mode:  # This could just check self, refactor.
             self.diffsync.job.log_warning(
                 message=f"{nautobot_object} will be deleted as safe delete mode is not enabled."
             )
@@ -115,14 +113,8 @@ class Location(DiffSyncExtras):
         """Delete Site in Nautobot."""
         site_object = Site.objects.get(name=self.name)
 
-        if not self.safe_delete_mode == Location.safe_delete_mode:
-            self.diffsync.job.log_debug(
-                message=f"(Safe delete drifted from DiffsyncModel Instance: {self.safe_delete_mode} versus DiffsyncModelClass: {Location.safe_delete_mode}"
-            )
-
         self.safe_delete(
             site_object,
-            Location.safe_delete_mode,
             SAFE_DELETE_SITE_STATUS,
         )
         return self
@@ -220,7 +212,6 @@ class Device(DiffSyncExtras):
             device_object = NautobotDevice.objects.get(name=self.name)
             self.safe_delete(
                 device_object,
-                Device.safe_delete_mode,
                 SAFE_DELETE_DEVICE_STATUS,
             )
             return self
@@ -337,12 +328,11 @@ class Interface(DiffSyncExtras):
             interface = device.interfaces.get(name=self.name)
             # Access the addr within an interface, change the status if necessary
             if interface.ip_addresses.first():
-                self.safe_delete(interface.ip_addresses.first(), self.safe_delete_mode, SAFE_DELETE_IPADDRESS_STATUS)
+                self.safe_delete(interface.ip_addresses.first(), SAFE_DELETE_IPADDRESS_STATUS)
             # Then do the parent interface
             # Attached interfaces do not have a status to update.
             self.safe_delete(
                 interface,
-                Interface.safe_delete_mode,
             )
             return self
         except NautobotDevice.DoesNotExist:
@@ -425,7 +415,6 @@ class Vlan(DiffSyncExtras):
         vlan = VLAN.objects.get(name=self.name, pk=self.vlan_pk)
         self.safe_delete(
             vlan,
-            Vlan.safe_delete_mode,
             SAFE_DELETE_VLAN_STATUS,
         )
         return self

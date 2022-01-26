@@ -14,7 +14,7 @@ from nautobot.extras.models import Tag
 from nautobot.ipam.models import VLAN, Interface
 from nautobot.utilities.choices import ColorChoices
 from netutils.mac import mac_to_format
-from nautobot_ssot_ipfabric.diffsync import diffsync_models
+
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
 CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
@@ -38,7 +38,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
         self,
         job,
         sync,
-        safe_delete_mode_var: bool,
         sync_ipfabric_tagged_only: bool,
         site_filter: Site,
         *args,
@@ -48,7 +47,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
         super().__init__(*args, **kwargs)
         self.job = job
         self.sync = sync
-        self.safe_delete_mode_var = safe_delete_mode_var
         self.sync_ipfabric_tagged_only = sync_ipfabric_tagged_only
         self.site_filter = site_filter
 
@@ -68,7 +66,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
             "_site",
         ):
             for nautobot_object in self.objects_to_delete[grouping]:
-                if self.safe_delete_mode_var:
+                if NautobotDiffSync.safe_delete_mode:
                     continue
                 try:
                     nautobot_object.delete()
@@ -109,8 +107,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 if interface_record.ip_addresses.first()
                 else None,
             )
-            if not self.safe_delete_mode_var:
-                diffsync_models.Interface.safe_delete_mode = self.safe_delete_mode_var
             self.add(interface)
             diffsync_device.add_child(interface)
 
@@ -128,8 +124,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 status=device_record.status.name,
                 serial_number=device_record.serial if device_record.serial else "",
             )
-            if not self.safe_delete_mode_var:
-                diffsync_models.Device.safe_delete_mode = self.safe_delete_mode_var
             try:
                 self.add(device)
             except ObjectAlreadyExists:
@@ -153,8 +147,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 vlan_pk=vlan_record.pk,
                 description=vlan_record.description,
             )
-            if not self.safe_delete_mode_var:
-                diffsync_models.Vlan.safe_delete_mode = self.safe_delete_mode_var
             try:
                 self.add(vlan)
             except ObjectAlreadyExists:
@@ -213,9 +205,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                         message=f"Error loading {site_record}, invalid or missing attributes on object. Skipping..."
                     )
                     continue
-                if not self.safe_delete_mode_var:
-                    self.job.log_debug(message=f"{self.safe_delete_mode_var}")
-                    diffsync_models.Location.safe_delete_mode = self.safe_delete_mode_var
                 self.add(location)
                 try:
                     # Load Site's Children - Devices with Interfaces, if any.

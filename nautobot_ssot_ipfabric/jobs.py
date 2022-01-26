@@ -12,8 +12,11 @@ from nautobot.extras.jobs import BooleanVar, Job, ScriptVariable
 from nautobot.utilities.forms import DynamicModelChoiceField
 from nautobot_ssot.jobs.base import DataMapping, DataSource
 
+from nautobot_ssot_ipfabric.diffsync.diffsync_models import DiffSyncExtras
+
 from nautobot_ssot_ipfabric.diffsync.adapter_ipfabric import IPFabricDiffSync
 from nautobot_ssot_ipfabric.diffsync.adapter_nautobot import NautobotDiffSync
+from nautobot_ssot_ipfabric.diffsync.adapters_shared import DiffSyncModelAdapters
 from nautobot_ssot_ipfabric.utilities.ipfabric_client import IpFabricClient
 
 CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
@@ -147,13 +150,17 @@ class IpFabricDataSource(DataSource, Job):
         self.log_info(message="Loading current data from IP Fabric...")
         ipfabric_source.load()
 
+        # Set safe mode either way (Defaults to True)
+        DiffSyncModelAdapters.safe_delete_mode = safe_mode
+        DiffSyncExtras.safe_delete_mode = safe_mode
+
         dest = NautobotDiffSync(
             job=self,
             sync=self.sync,
-            safe_delete_mode_var=safe_mode,
             sync_ipfabric_tagged_only=tagged_only,
             site_filter=site_filter_object,
         )
+
         self.log_info(message="Loading current data from Nautobot...")
         dest.load()
 
