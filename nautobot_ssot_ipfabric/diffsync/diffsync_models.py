@@ -115,7 +115,7 @@ class Location(DiffSyncExtras):
         """Delete Site in Nautobot."""
         site_object = Site.objects.get(name=self.name)
 
-        if self.safe_delete_mode != Location.safe_delete_mode:
+        if not self.safe_delete_mode == Location.safe_delete_mode:
             self.diffsync.job.log_debug(
                 message=f"(Safe delete drifted from DiffsyncModel Instance: {self.safe_delete_mode} versus DiffsyncModelClass: {Location.safe_delete_mode}"
             )

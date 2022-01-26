@@ -14,7 +14,7 @@ from nautobot.extras.models import Tag
 from nautobot.ipam.models import VLAN, Interface
 from nautobot.utilities.choices import ColorChoices
 from netutils.mac import mac_to_format
-
+from nautobot_ssot_ipfabric.diffsync import diffsync_models
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
 
 CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
@@ -110,7 +110,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 else None,
             )
             if not self.safe_delete_mode_var:
-                self.interface.safe_delete_mode = self.safe_delete_mode_var
+                diffsync_models.Interface.safe_delete_mode = self.safe_delete_mode_var
             self.add(interface)
             diffsync_device.add_child(interface)
 
@@ -129,7 +129,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 serial_number=device_record.serial if device_record.serial else "",
             )
             if not self.safe_delete_mode_var:
-                self.device.safe_delete_mode = self.safe_delete_mode_var
+                diffsync_models.Device.safe_delete_mode = self.safe_delete_mode_var
             try:
                 self.add(device)
             except ObjectAlreadyExists:
@@ -154,7 +154,7 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 description=vlan_record.description,
             )
             if not self.safe_delete_mode_var:
-                self.vlan.safe_delete_mode = self.safe_delete_mode_var
+                diffsync_models.Vlan.safe_delete_mode = self.safe_delete_mode_var
             try:
                 self.add(vlan)
             except ObjectAlreadyExists:
@@ -214,8 +214,8 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                     )
                     continue
                 if not self.safe_delete_mode_var:
-                    self.job.log_debug(message=f"Safe Delete Mode Var: {self.safe_delete_mode_var}")
-                    self.location.safe_delete_mode = self.safe_delete_mode_var
+                    self.job.log_debug(message=f"{self.safe_delete_mode_var}")
+                    diffsync_models.Location.safe_delete_mode = self.safe_delete_mode_var
                 self.add(location)
                 try:
                     # Load Site's Children - Devices with Interfaces, if any.
