@@ -7,11 +7,12 @@ from typing import Any, ClassVar, List
 from diffsync import DiffSync
 from diffsync.exceptions import ObjectAlreadyExists
 from django.conf import settings
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.db.models import ProtectedError, Q
 from nautobot.dcim.models import Device, Site
 from nautobot.extras.models import Tag
-from nautobot.ipam.models import VLAN
+from nautobot.ipam.models import VLAN, Interface
+from nautobot.utilities.choices import ColorChoices
 from netutils.mac import mac_to_format
 
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
@@ -31,12 +32,12 @@ class NautobotDiffSync(DiffSyncModelAdapters):
     _vlan: ClassVar[Any] = VLAN
     _device: ClassVar[Any] = Device
     _site: ClassVar[Any] = Site
+    _interface: ClassVar[Any] = Interface
 
     def __init__(
         self,
         job,
         sync,
-        safe_delete_mode: bool,
         sync_ipfabric_tagged_only: bool,
         site_filter: Site,
         *args,
@@ -46,7 +47,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
         super().__init__(*args, **kwargs)
         self.job = job
         self.sync = sync
-        self.safe_delete_mode = safe_delete_mode
         self.sync_ipfabric_tagged_only = sync_ipfabric_tagged_only
         self.site_filter = site_filter
 
@@ -61,16 +61,22 @@ class NautobotDiffSync(DiffSyncModelAdapters):
         """
         for grouping in (
             "_vlan",
+            "_interface",
             "_device",
             "_site",
         ):
             for nautobot_object in self.objects_to_delete[grouping]:
-                if self.safe_delete_mode:
+                if NautobotDiffSync.safe_delete_mode:
                     continue
                 try:
                     nautobot_object.delete()
                 except ProtectedError:
                     self.job.log_failure(obj=nautobot_object, message="Deletion failed protected object")
+                except IntegrityError:
+                    self.job.log_failure(
+                        obj=nautobot_object, message=f"Deletion failed due to IntegrityError with {nautobot_object}"
+                    )
+
             self.objects_to_delete[grouping] = []
         return super().sync_complete(source, *args, **kwargs)
 
@@ -101,14 +107,13 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 if interface_record.ip_addresses.first()
                 else None,
             )
-            if not self.safe_delete_mode:
-                self.interface.safe_delete_mode = self.safe_delete_mode
             self.add(interface)
             diffsync_device.add_child(interface)
 
     def load_device(self, filtered_devices: List, location):
         """Load Devices from Nautobot."""
         for device_record in filtered_devices:
+            self.job.log_debug(message=f"Loading Nautobot Device: {device_record.name}")
             device = self.device(
                 diffsync=self,
                 name=device_record.name,
@@ -119,8 +124,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 status=device_record.status.name,
                 serial_number=device_record.serial if device_record.serial else "",
             )
-            if not self.safe_delete_mode:
-                self.device.safe_delete_mode = self.safe_delete_mode
             try:
                 self.add(device)
             except ObjectAlreadyExists:
@@ -144,8 +147,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 vlan_pk=vlan_record.pk,
                 description=vlan_record.description,
             )
-            if not self.safe_delete_mode:
-                self.vlan.safe_delete_mode = self.safe_delete_mode
             try:
                 self.add(vlan)
             except ObjectAlreadyExists:
@@ -178,19 +179,32 @@ class NautobotDiffSync(DiffSyncModelAdapters):
     @transaction.atomic
     def load_data(self):
         """Add Nautobot Site objects as DiffSync Location models."""
-        ssot_tag, _ = Tag.objects.get_or_create(name="SSoT Synced from IPFabric")
+        ssot_tag, _ = Tag.objects.get_or_create(
+            slug="ssot-synced-from-ipfabric",
+            name="SSoT Synced from IPFabric",
+            defaults={
+                "description": "Object synced at some point from IPFabric to Nautobot",
+                "color": ColorChoices.COLOR_LIGHT_GREEN,
+            },
+        )
         site_objects = self.get_initial_site(ssot_tag)
         # The parent object that stores all children, is the Site.
+        self.job.log_debug(message=f"Found {site_objects.count()} Nautobot Site objects to start sync from")
+
         if site_objects:
             for site_record in site_objects:
-                location = self.location(
-                    diffsync=self,
-                    name=site_record.name,
-                    site_id=site_record.custom_field_data.get("ipfabric-site-id"),
-                    status=site_record.status.name,
-                )
-                if not self.safe_delete_mode:
-                    self.location.safe_delete_mode = self.safe_delete_mode
+                try:
+                    location = self.location(
+                        diffsync=self,
+                        name=site_record.name,
+                        site_id=site_record.custom_field_data.get("ipfabric-site-id"),
+                        status=site_record.status.name,
+                    )
+                except AttributeError:
+                    self.job.log_debug(
+                        message=f"Error loading {site_record}, invalid or missing attributes on object. Skipping..."
+                    )
+                    continue
                 self.add(location)
                 try:
                     # Load Site's Children - Devices with Interfaces, if any.

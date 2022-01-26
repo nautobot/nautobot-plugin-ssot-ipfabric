@@ -12,15 +12,18 @@ from nautobot.extras.jobs import BooleanVar, Job, ScriptVariable
 from nautobot.utilities.forms import DynamicModelChoiceField
 from nautobot_ssot.jobs.base import DataMapping, DataSource
 
+from nautobot_ssot_ipfabric.diffsync.diffsync_models import DiffSyncExtras
+
 from nautobot_ssot_ipfabric.diffsync.adapter_ipfabric import IPFabricDiffSync
 from nautobot_ssot_ipfabric.diffsync.adapter_nautobot import NautobotDiffSync
+from nautobot_ssot_ipfabric.diffsync.adapters_shared import DiffSyncModelAdapters
 from nautobot_ssot_ipfabric.utilities.ipfabric_client import IpFabricClient
 
 CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
 IPFABRIC_HOST = CONFIG["ipfabric_host"]
 IPFABRIC_API_TOKEN = CONFIG["ipfabric_api_token"]
 
-name = "Nautobot SSoT IPFabric"  # pylint: disable=invalid-name
+name = "SSoT - IPFabric"  # pylint: disable=invalid-name
 
 
 class OptionalObjectVar(ScriptVariable):
@@ -81,10 +84,10 @@ class IpFabricDataSource(DataSource, Job):
     class Meta:
         """Metadata about this Job."""
 
-        name = "IP Fabric SSoT Sync"
+        name = "IPFabric ⟹ Nautobot"
         data_source = "IP Fabric"
         data_source_icon = static("nautobot_ssot_ipfabric/ipfabric.png")
-        description = "Synchronize data from IP Fabric into Nautobot."
+        description = "Sync data from IP Fabric into Nautobot."
         field_order = (
             "debug",
             "safe_delete_mode",
@@ -147,13 +150,17 @@ class IpFabricDataSource(DataSource, Job):
         self.log_info(message="Loading current data from IP Fabric...")
         ipfabric_source.load()
 
+        # Set safe mode either way (Defaults to True)
+        DiffSyncModelAdapters.safe_delete_mode = safe_mode
+        DiffSyncExtras.safe_delete_mode = safe_mode
+
         dest = NautobotDiffSync(
             job=self,
             sync=self.sync,
-            safe_delete_mode=safe_mode,
             sync_ipfabric_tagged_only=tagged_only,
             site_filter=site_filter_object,
         )
+
         self.log_info(message="Loading current data from Nautobot...")
         dest.load()
 

@@ -285,7 +285,7 @@ namespace.configure(
     {
         "nautobot_ssot_ipfabric": {
             ...
-            "nautobot_ver": "1.0.2",
+            "nautobot_ver": "1.2.4",
 	    ...
         }
     }

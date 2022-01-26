@@ -6,10 +6,19 @@ from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.db import IntegrityError
 from django.utils.text import slugify
-from nautobot.dcim.models import DeviceRole, DeviceType, Manufacturer, Site
-from nautobot.extras.models import Tag
+from nautobot.dcim.models import (
+    Device,
+    DeviceRole,
+    DeviceType,
+    Interface,
+    Manufacturer,
+    Site,
+)
+from nautobot.extras.choices import CustomFieldTypeChoices
+from nautobot.extras.models import CustomField, Tag
 from nautobot.extras.models.statuses import Status
-from nautobot.ipam.models import IPAddress
+from nautobot.ipam.models import VLAN, IPAddress
+from nautobot.utilities.choices import ColorChoices
 from netutils.ip import netmask_to_cidr
 
 CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
@@ -27,7 +36,15 @@ def create_site(site_name, site_id=None):
     site_obj.slug = slugify(site_name)
     site_obj.status = Status.objects.get(name="Active")
     if site_id:
+        # Ensure custom field is available
+        custom_field_obj, _ = CustomField.objects.get_or_create(
+            type=CustomFieldTypeChoices.TYPE_TEXT,
+            name="ipfabric-site-id",
+            defaults={"label": "IPFabric Site ID"},
+        )
+        custom_field_obj.content_types.add(ContentType.objects.get_for_model(Site))
         site_obj.cf["ipfabric-site-id"] = site_id
+        site_obj.validated_save()
     tag_object(nautobot_object=site_obj, custom_field="ssot-synced-from-ipfabric")
     return site_obj
 
@@ -179,15 +196,26 @@ def create_vlan(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: Site, 
     return vlan_obj
 
 
-def tag_object(nautobot_object: Any, custom_field: str, tag_slug: Optional[str] = "ssot-synced-from-ipfabric"):
+def tag_object(nautobot_object: Any, custom_field: str, tag_name: Optional[str] = "SSoT Synced from IPFabric"):
     """Apply the given tag and custom field to the identified object.
 
     Args:
         nautobot_object (Any): Nautobot ORM Object
         custom_field (str): Name of custom field to update
-        tag_slug (Optional[str], optional): Tag slug to use as tag. Defaults to "ssot-synced-from-ipfabric".
+        tag_name (Optional[str], optional): Tag name. Defaults to "SSoT Synced From IPFabric".
     """
-    tag = Tag.objects.get(slug=tag_slug)
+    if tag_name == "SSoT Synced from IPFabric":
+        tag, _ = Tag.objects.get_or_create(
+            slug="ssot-synced-from-ipfabric",
+            name="SSoT Synced from IPFabric",
+            defaults={
+                "description": "Object synced at some point from IPFabric to Nautobot",
+                "color": ColorChoices.COLOR_LIGHT_GREEN,
+            },
+        )
+    else:
+        tag, _ = Tag.objects.get_or_create(name=tag_name)
+
     today = datetime.date.today().isoformat()
 
     def _tag_object(nautobot_object):
@@ -195,9 +223,32 @@ def tag_object(nautobot_object: Any, custom_field: str, tag_slug: Optional[str] 
         if hasattr(nautobot_object, "tags"):
             nautobot_object.tags.add(tag)
         if hasattr(nautobot_object, "cf"):
+            # Ensure that the "ssot-synced-from-ipfabric" custom field is present
+            if not any(cfield for cfield in CustomField.objects.all() if cfield.name == "ssot-synced-from-ipfabric"):
+                custom_field_obj, _ = CustomField.objects.get_or_create(
+                    type=CustomFieldTypeChoices.TYPE_DATE,
+                    name="ssot-synced-from-ipfabric",
+                    defaults={
+                        "label": "Last synced from IPFabric on",
+                    },
+                )
+                synced_from_models = [
+                    Device,
+                    DeviceType,
+                    Interface,
+                    Manufacturer,
+                    Site,
+                    VLAN,
+                    DeviceRole,
+                    IPAddress,
+                ]
+                for model in synced_from_models:
+                    custom_field_obj.content_types.add(ContentType.objects.get_for_model(model))
+                custom_field_obj.validated_save()
+
+            # Update custom field date stamp
             nautobot_object.cf[custom_field] = today
+        nautobot_object.validated_save()
 
     _tag_object(nautobot_object)
-    # This does have a performance cost, but it's necessary to avoid many failure
-    # scenarios and, tagging/custom fields. We could further revaluate.
-    nautobot_object.validated_save()
+    # Ensure proper save

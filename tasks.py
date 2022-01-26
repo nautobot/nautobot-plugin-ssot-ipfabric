@@ -40,7 +40,7 @@ namespace = Collection("nautobot_ssot_ipfabric")
 namespace.configure(
     {
         "nautobot_ssot_ipfabric": {
-            "nautobot_ver": "1.2.0",
+            "nautobot_ver": "1.2.4",
             "project_name": "nautobot_ssot_ipfabric",
             "python_ver": "3.7",
             "local": False,
