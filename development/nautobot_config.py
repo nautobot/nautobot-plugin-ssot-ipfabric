@@ -10,6 +10,21 @@ import sys
 from nautobot.core.settings import *  # noqa: F401,F403
 from nautobot.core.settings_funcs import parse_redis_connection
 
+
+def is_truthy(arg):
+    """Convert "truthy" strings into Booleans.
+    Examples:
+        >>> is_truthy('yes')
+        True
+    Args:
+        arg (str): Truthy string (True values are y, yes, t, true, on and 1; false values are n, no,
+        f, false, off and 0. Raises ValueError if val is anything else.
+    """
+    if isinstance(arg, bool):
+        return arg
+    return bool(strtobool(arg))
+
+
 TESTING = len(sys.argv) > 1 and sys.argv[1] == "test"
 
 # This is a list of valid fully-qualified domain names (FQDNs) for the Nautobot server. Nautobot will not permit write
@@ -68,10 +83,19 @@ PLUGINS = ["nautobot_ssot", "nautobot_ssot_ipfabric", "nautobot_chatops", "nauto
 # Each key in the dictionary is the name of an installed plugin and its value is a dictionary of settings.
 PLUGINS_CONFIG = {
     "nautobot_chatops": {
-        "enable_slack": True,
+        "enable_slack": is_truthy(os.environ.get("ENABLE_SLACK", False)),
         "slack_api_token": os.environ.get("SLACK_API_TOKEN"),
         "slack_signing_secret": os.environ.get("SLACK_SIGNING_SECRET"),
-        "session_cache_timeout": 3600,
+        "slack_slash_command_prefix": os.environ.get("SLACK_SLASH_COMMAND_PREFIX", "/"),
+        "enable_ms_teams": is_truthy(os.environ.get("ENABLE_MS_TEAMS", False)),
+        "microsoft_app_id": os.environ.get("MICROSOFT_APP_ID"),
+        "microsoft_app_password": os.environ.get("MICROSOFT_APP_PASSWORD"),
+        "enable_webex": is_truthy(os.environ.get("ENABLE_WEBEX", False)),
+        "webex_token": os.environ.get("WEBEX_ACCESS_TOKEN"),
+        "webex_signing_secret": os.environ.get("WEBEX_SIGNING_SECRET"),
+        "enable_mattermost": is_truthy(os.environ.get("ENABLE_MATTERMOST", False)),
+        "mattermost_api_token": os.environ.get("MATTERMOST_API_TOKEN"),
+        "mattermost_url": os.environ.get("MATTERMOST_URL"),
     },
     "nautobot_ssot_ipfabric": {
         "ipfabric_api_token": os.environ.get("IPFABRIC_API_TOKEN"),
