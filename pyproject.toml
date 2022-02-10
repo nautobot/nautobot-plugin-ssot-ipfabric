@@ -22,7 +22,7 @@ python = ">=3.7,<4.0"
 nautobot = "^1.2.0"
 nautobot-ssot = "^1.0.1"
 netutils = "^1.0.0"
-nautobot-chatops-ipfabric = "^1.1.0"
+nautobot-chatops-ipfabric = "^1.1.1"
 
 [tool.poetry.dev-dependencies]
 bandit = "*"

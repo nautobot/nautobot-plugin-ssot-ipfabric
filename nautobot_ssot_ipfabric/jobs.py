@@ -22,6 +22,7 @@ from nautobot_ssot_ipfabric.utilities.ipfabric_client import IpFabricClient
 CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
 IPFABRIC_HOST = CONFIG["ipfabric_host"]
 IPFABRIC_API_TOKEN = CONFIG["ipfabric_api_token"]
+IPFABRIC_VERIFY = CONFIG["ipfabric_verify"]
 
 name = "SSoT - IPFabric"  # pylint: disable=invalid-name
 
@@ -131,7 +132,7 @@ class IpFabricDataSource(DataSource, Job):
 
     def sync_data(self):
         """Sync a device data from IP Fabric into Nautobot."""
-        client = IpFabricClient(IPFABRIC_HOST, IPFABRIC_API_TOKEN)
+        client = IpFabricClient(IPFABRIC_HOST, IPFABRIC_API_TOKEN, verify=IPFABRIC_VERIFY)
 
         dry_run = self.kwargs["dry_run"]
         safe_mode = self.kwargs["safe_delete_mode"]

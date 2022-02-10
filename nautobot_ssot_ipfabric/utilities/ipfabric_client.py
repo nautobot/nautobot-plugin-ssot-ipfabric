@@ -9,11 +9,12 @@ logger = logging.getLogger("ipfabric")
 class IpFabricClient(IpFabric):
     """Class for interfacing with IP Fabric API."""
 
-    def __init__(self, host_url, token):  # pylint: disable=W0235
+    def __init__(self, host_url, token, verify=True):  # pylint: disable=W0235
         """Instantiates init from parent class to create connection."""
         super().__init__(
             host_url,
             token,
+            verify
         )
 
     def get_sites(self, snapshot_id="$last"):
