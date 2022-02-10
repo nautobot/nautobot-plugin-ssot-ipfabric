@@ -11,11 +11,7 @@ class IpFabricClient(IpFabric):
 
     def __init__(self, host_url, token, verify=True):  # pylint: disable=W0235
         """Instantiates init from parent class to create connection."""
-        super().__init__(
-            host_url,
-            token,
-            verify
-        )
+        super().__init__(host_url, token, verify)
 
     def get_sites(self, snapshot_id="$last"):
         """Return Site info."""
