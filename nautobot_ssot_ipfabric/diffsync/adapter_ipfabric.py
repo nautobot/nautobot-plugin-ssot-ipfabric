@@ -118,7 +118,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
             for device in location_devices:
                 device_primary_ip = device["loginIp"]
                 sn_length = len(device["sn"])
-                if sn_length >= device_serial_max_length:
+                if sn_length > device_serial_max_length:
                     serial_number = None
                     self.job.log_warning(
                         message=f"Serial Number will not be recorded for {device['hostname']} due to character limit. {sn_length} exceeds {device_serial_max_length}"
