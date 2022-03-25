@@ -18,8 +18,6 @@ DEFAULT_INTERFACE_MTU = CONFIG.get("default_interface_mtu", 1500)
 DEFAULT_INTERFACE_MAC = CONFIG.get("default_interface_mac", "00:00:00:00:00:01")
 DEFAULT_DEVICE_ROLE = CONFIG.get("default_device_role", "Network Device")
 DEFAULT_DEVICE_STATUS = CONFIG.get("default_device_status", "Active")
-IPFABRIC_HOST = CONFIG["ipfabric_host"]
-IPFABRIC_API_TOKEN = CONFIG["ipfabric_api_token"]
 
 device_serial_max_length = Device._meta.get_field("serial").max_length
 name_max_length = VLAN._meta.get_field("name").max_length
