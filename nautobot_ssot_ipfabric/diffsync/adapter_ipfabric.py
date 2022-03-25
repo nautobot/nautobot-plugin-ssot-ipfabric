@@ -4,11 +4,11 @@ import logging
 
 from diffsync import ObjectAlreadyExists
 from django.conf import settings
+from nautobot.dcim.models import Device
 from nautobot.ipam.models import VLAN
 from netutils.mac import mac_to_format
 
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
-from nautobot_ssot_ipfabric.utilities.ipfabric_client import IpFabricClient
 
 logger = logging.getLogger("nautobot.jobs")
 
@@ -20,6 +20,9 @@ DEFAULT_DEVICE_ROLE = CONFIG.get("default_device_role", "Network Device")
 DEFAULT_DEVICE_STATUS = CONFIG.get("default_device_status", "Active")
 IPFABRIC_HOST = CONFIG["ipfabric_host"]
 IPFABRIC_API_TOKEN = CONFIG["ipfabric_api_token"]
+
+device_serial_max_length = Device._meta.get_field("serial").max_length
+name_max_length = VLAN._meta.get_field("name").max_length
 
 
 class IPFabricDiffSync(DiffSyncModelAdapters):
@@ -81,9 +84,10 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
         self.load_sites()
         devices = self.client.inventory.devices.all()
         interfaces = self.client.inventory.interfaces.all()
+
         # TODO: HERE, find vlan getter
-        old_client = IpFabricClient(IPFABRIC_HOST, IPFABRIC_API_TOKEN)
-        vlans = old_client.get_vlans()
+        vlans = self.client.get_vlans()
+
         for location in self.get_all(self.location):
             if location.name is None:
                 continue
@@ -93,7 +97,6 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                     continue
                 description = vlan.get("dscr") if vlan.get("dscr") else f"VLAN ID: {vlan['vlanId']}"
                 vlan_name = vlan.get("vlanName") if vlan.get("vlanName") else f"{vlan['siteName']}:{vlan['vlanId']}"
-                name_max_length = VLAN._meta.get_field("name").max_length
                 if len(vlan_name) > name_max_length:
                     self.job.log_warning(
                         message=f"Not syncing VLAN, {vlan_name} due to character limit exceeding {name_max_length}."
@@ -116,6 +119,14 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
             location_devices = [device for device in devices if device["siteName"] == location.name]
             for device in location_devices:
                 device_primary_ip = device["loginIp"]
+                sn_length = len(device["sn"])
+                if sn_length >= device_serial_max_length:
+                    serial_number = None
+                    self.job.log_warning(
+                        message=f"Serial Number will not be recorded for {device['hostname']} due to character limit. {sn_length} exceeds {device_serial_max_length}"
+                    )
+                else:
+                    serial_number = device["sn"]
                 try:
                     device_model = self.device(
                         diffsync=self,
@@ -123,7 +134,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                         location_name=device["siteName"],
                         model=device.get("model") if device.get("model") else f"Default-{device.get('vendor')}",
                         vendor=device.get("vendor").capitalize(),
-                        serial_number=device["sn"],
+                        serial_number=serial_number,
                         role=DEFAULT_DEVICE_ROLE,
                         status=DEFAULT_DEVICE_STATUS,
                     )

@@ -7,18 +7,16 @@ from diffsync.exceptions import ObjectNotCreated
 from django.conf import settings
 from django.templatetags.static import static
 from django.urls import reverse
+from ipfabric import IPFClient
 from nautobot.dcim.models import Site
 from nautobot.extras.jobs import BooleanVar, Job, ScriptVariable
 from nautobot.utilities.forms import DynamicModelChoiceField
 from nautobot_ssot.jobs.base import DataMapping, DataSource
 
-from nautobot_ssot_ipfabric.diffsync.diffsync_models import DiffSyncExtras
-
 from nautobot_ssot_ipfabric.diffsync.adapter_ipfabric import IPFabricDiffSync
 from nautobot_ssot_ipfabric.diffsync.adapter_nautobot import NautobotDiffSync
 from nautobot_ssot_ipfabric.diffsync.adapters_shared import DiffSyncModelAdapters
-from nautobot_ssot_ipfabric.utilities.ipfabric_client import IpFabricClient
-from ipfabric import IPFClient
+from nautobot_ssot_ipfabric.diffsync.diffsync_models import DiffSyncExtras
 
 CONFIG = settings.PLUGINS_CONFIG.get("nautobot_ssot_ipfabric", {})
 IPFABRIC_HOST = CONFIG["ipfabric_host"]
@@ -132,7 +130,6 @@ class IpFabricDataSource(DataSource, Job):
 
     def sync_data(self):
         """Sync a device data from IP Fabric into Nautobot."""
-        # client = IpFabricClient(IPFABRIC_HOST, IPFABRIC_API_TOKEN)
         client = IPFClient(IPFABRIC_HOST, token=IPFABRIC_API_TOKEN, verify=False, timeout=15)
         dry_run = self.kwargs["dry_run"]
         safe_mode = self.kwargs["safe_delete_mode"]
