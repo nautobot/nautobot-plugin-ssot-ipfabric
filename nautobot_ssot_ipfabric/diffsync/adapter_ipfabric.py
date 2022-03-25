@@ -8,6 +8,7 @@ from nautobot.ipam.models import VLAN
 from netutils.mac import mac_to_format
 
 from nautobot_ssot_ipfabric.diffsync import DiffSyncModelAdapters
+from nautobot_ssot_ipfabric.utilities.ipfabric_client import IpFabricClient
 
 logger = logging.getLogger("nautobot.jobs")
 
@@ -17,6 +18,8 @@ DEFAULT_INTERFACE_MTU = CONFIG.get("default_interface_mtu", 1500)
 DEFAULT_INTERFACE_MAC = CONFIG.get("default_interface_mac", "00:00:00:00:00:01")
 DEFAULT_DEVICE_ROLE = CONFIG.get("default_device_role", "Network Device")
 DEFAULT_DEVICE_STATUS = CONFIG.get("default_device_status", "Active")
+IPFABRIC_HOST = CONFIG["ipfabric_host"]
+IPFABRIC_API_TOKEN = CONFIG["ipfabric_api_token"]
 
 
 class IPFabricDiffSync(DiffSyncModelAdapters):
@@ -31,7 +34,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
 
     def load_sites(self):
         """Add IP Fabric Site objects as DiffSync Location models."""
-        sites = self.client.get_sites()
+        sites = self.client.inventory.sites.all()
         for site in sites:
             try:
                 location = self.location(diffsync=self, name=site["siteName"], site_id=site["id"], status="Active")
@@ -76,9 +79,11 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
     def load(self):
         """Load data from IP Fabric."""
         self.load_sites()
-        devices = self.client.get_device_inventory()
-        interfaces = self.client.get_interface_inventory()
-        vlans = self.client.get_vlans()
+        devices = self.client.inventory.devices.all()
+        interfaces = self.client.inventory.interfaces.all()
+        # TODO: HERE, find vlan getter
+        old_client = IpFabricClient(IPFABRIC_HOST, IPFABRIC_API_TOKEN)
+        vlans = old_client.get_vlans()
         for location in self.get_all(self.location):
             if location.name is None:
                 continue
