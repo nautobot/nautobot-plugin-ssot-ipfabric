@@ -33,7 +33,9 @@ class IPFabricDiffSyncTestCase(TestCase):
         ipfabric_client = MagicMock()
         ipfabric_client.inventory.sites.all.return_value = SITE_FIXTURE
         ipfabric_client.inventory.devices.all.return_value = DEVICE_INVENTORY_FIXTURE
-        ipfabric_client.get_vlans.return_value = VLAN_FIXTURE
+        ipfabric_client.fetch_all = MagicMock(
+            side_effect=(lambda x: VLAN_FIXTURE if x == "tables/vlan/site-summary" else "")
+        )
         ipfabric_client.inventory.interfaces.all.return_value = INTERFACE_FIXTURE
 
         job = IpFabricDataSource()

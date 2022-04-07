@@ -82,9 +82,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
         self.load_sites()
         devices = self.client.inventory.devices.all()
         interfaces = self.client.inventory.interfaces.all()
-
-        # TODO: HERE, find vlan getter
-        vlans = self.client.get_vlans()
+        vlans = self.client.fetch_all("tables/vlan/site-summary")
 
         for location in self.get_all(self.location):
             if location.name is None:
