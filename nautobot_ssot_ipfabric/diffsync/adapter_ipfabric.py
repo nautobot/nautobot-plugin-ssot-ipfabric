@@ -89,7 +89,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                 continue
             location_vlans = [vlan for vlan in vlans if vlan["siteName"] == location.name]
             for vlan in location_vlans:
-                if not vlan["vlanId"]:
+                if not vlan["vlanId"] or int(vlan["vlanId"]) > 4094:
                     continue
                 description = vlan.get("dscr") if vlan.get("dscr") else f"VLAN ID: {vlan['vlanId']}"
                 vlan_name = vlan.get("vlanName") if vlan.get("vlanName") else f"{vlan['siteName']}:{vlan['vlanId']}"
