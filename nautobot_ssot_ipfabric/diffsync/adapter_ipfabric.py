@@ -92,9 +92,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                 if not vlan["vlanId"]:
                     continue
                 if int(vlan["vlanId"]) > 4094:
-                    self.job.log_warning(
-                        message=f"Not syncing VLAN, {vlan['vlanId']} due to being greater than 4094."
-                    )
+                    self.job.log_warning(message=f"Not syncing VLAN, {vlan['vlanId']} due to being greater than 4094.")
                     continue
                 description = vlan.get("dscr") if vlan.get("dscr") else f"VLAN ID: {vlan['vlanId']}"
                 vlan_name = vlan.get("vlanName") if vlan.get("vlanName") else f"{vlan['siteName']}:{vlan['vlanId']}"
