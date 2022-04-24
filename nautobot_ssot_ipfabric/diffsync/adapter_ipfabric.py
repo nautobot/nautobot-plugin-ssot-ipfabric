@@ -89,7 +89,10 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                 continue
             location_vlans = [vlan for vlan in vlans if vlan["siteName"] == location.name]
             for vlan in location_vlans:
-                if not vlan["vlanId"]:
+                if not vlan["vlanId"] or (vlan["vlanId"] < 1 or vlan["vlanId"] > 4094):
+                    self.job.log_warning(
+                        message=f"Not syncing VLAN, NAME: {vlan.get('vlanName')} due to invalid VLAN ID: {vlan.get('vlanId')}."
+                    )
                     continue
                 description = vlan.get("dscr") if vlan.get("dscr") else f"VLAN ID: {vlan['vlanId']}"
                 vlan_name = vlan.get("vlanName") if vlan.get("vlanName") else f"{vlan['siteName']}:{vlan['vlanId']}"
@@ -116,7 +119,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
             for device in location_devices:
                 device_primary_ip = device["loginIp"]
                 sn_length = len(device["sn"])
-                serial_number = device["sn"] if sn_length < device_serial_max_length else None
+                serial_number = device["sn"] if sn_length < device_serial_max_length else ""
                 if not serial_number:
                     self.job.log_warning(
                         message=(

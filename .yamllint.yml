@@ -1,4 +1,6 @@
 ---
+ignore: |
+  /nautobot_ssot_ipfabric/.devcontainer/
 extends: "default"
 rules:
   comments: "enable"
