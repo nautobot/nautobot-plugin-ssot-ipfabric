@@ -121,20 +121,13 @@ def create_ip(ip_address, subnet_mask, status="Active", object_pk=None):
     status_obj = Status.objects.get_for_model(IPAddress).get(slug=slugify(status))
     cidr = netmask_to_cidr(subnet_mask)
     if ALLOW_DUPLICATE_IPS:
-        try:
-            addr = IPAddress.objects.filter(host=ip_address)
-            if addr.exists():
-                if addr.first().assigned_object:  # If one is assigned, assume the rest are for now.
-                    ip_obj = IPAddress.objects.create(
-                        address=f"{ip_address}/{cidr}", status=status_obj, description="Duplicate by IPFabric SSoT"
-                    )
-                else:
-                    # TODO: review this logic, there is use case not properly covered here
-                    return None
-            else:
-                ip_obj = IPAddress.objects.get(address=f"{ip_address}/{cidr}", status=status_obj)
-        except IPAddress.DoesNotExist:
-            ip_obj = IPAddress.objects.create(address=f"{ip_address}/{cidr}", status=status_obj)
+        addr = IPAddress.objects.filter(host=ip_address)
+        data = {"address": f"{ip_address}/{cidr}", "status": status_obj}
+        if addr.exists():
+            data["description"] = "Duplicate by IPFabric SSoT"
+
+        ip_obj = IPAddress.objects.create(**data)
+
     else:
         ip_obj, _ = IPAddress.objects.get_or_create(address=f"{ip_address}/{cidr}", status=status_obj)
 
