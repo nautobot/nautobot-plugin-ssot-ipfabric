@@ -108,9 +108,9 @@ def create_status(status_name, status_color, description="", app_label="dcim", m
 
 
 def create_ip(ip_address, subnet_mask, status="Active", object_pk=None):
-    """Verifies ip address exists in Nautobot. If not, creates specified ip.
+    """Verify ip address exists in Nautobot. If not, creates specified ip.
 
-    Utility behvariour is manipulated by `settings` if duplicate ip's are allowed.
+    Utility behavior is manipulated by `settings` if duplicate ip's are allowed.
 
     Args:
         ip_address (str): IP address.
@@ -128,6 +128,9 @@ def create_ip(ip_address, subnet_mask, status="Active", object_pk=None):
                     ip_obj = IPAddress.objects.create(
                         address=f"{ip_address}/{cidr}", status=status_obj, description="Duplicate by IPFabric SSoT"
                     )
+                else:
+                    # TODO: review this logic, there is use case not properly covered here
+                    return None
             else:
                 ip_obj = IPAddress.objects.get(address=f"{ip_address}/{cidr}", status=status_obj)
         except IPAddress.DoesNotExist:
@@ -137,8 +140,10 @@ def create_ip(ip_address, subnet_mask, status="Active", object_pk=None):
 
     if object_pk:
         ip_obj.assigned_object_id = object_pk.pk
-    # Tag Interface
-    tag_object(nautobot_object=object_pk, custom_field="ssot-synced-from-ipfabric")
+        ip_obj.assigned_object_type = ContentType.objects.get_for_model(type(object_pk))
+        # Tag Interface (object_pk)
+        tag_object(nautobot_object=object_pk, custom_field="ssot-synced-from-ipfabric")
+
     # Tag IP Addr
     tag_object(nautobot_object=ip_obj, custom_field="ssot-synced-from-ipfabric")
     return ip_obj
