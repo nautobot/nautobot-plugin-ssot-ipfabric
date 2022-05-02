@@ -1,8 +1,9 @@
 # Ignore return statements for updates and deletes, #  pylint:disable=R1710
 # Ignore too many args #  pylint:disable=too-many-locals
 """DiffSyncModel subclasses for Nautobot-to-IPFabric data sync."""
-from typing import Any, List, Optional, ClassVar
+from typing import Any, ClassVar, List, Optional
 from uuid import UUID
+
 from diffsync import DiffSyncModel
 from django.conf import settings
 from django.core.exceptions import ValidationError

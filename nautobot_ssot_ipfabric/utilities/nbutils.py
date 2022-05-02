@@ -84,7 +84,7 @@ def create_device_role_object(role_name, role_color):
 
 
 def create_status(status_name, status_color, description="", app_label="dcim", model="device"):
-    """Verifies status object exists in Nautobot. If not, creates specified status. Defaults to dcim | device.
+    """Verify status object exists in Nautobot. If not, creates specified status. Defaults to dcim | device.
 
     Args:
         status_name (str): Status name.
@@ -108,7 +108,7 @@ def create_status(status_name, status_color, description="", app_label="dcim", m
 
 
 def create_ip(ip_address, subnet_mask, status="Active", object_pk=None):
-    """Verifies ip address exists in Nautobot. If not, creates specified ip.
+    """Verify ip address exists in Nautobot. If not, creates specified ip.
 
     Utility behvariour is manipulated by `settings` if duplicate ip's are allowed.
 
@@ -145,7 +145,7 @@ def create_ip(ip_address, subnet_mask, status="Active", object_pk=None):
 
 
 def create_interface(device_obj, interface_details):
-    """Verifies interface exists on specified device. If not, creates interface.
+    """Verify interface exists on specified device. If not, creates interface.
 
     Args:
         device_obj (Device): Device object to check interface against.

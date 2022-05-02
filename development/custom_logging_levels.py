@@ -1,5 +1,4 @@
-"""
-custom_loggin_levels.py
+"""Custom_loggin_levels.py.
 
 Override logging level for specific modules.
 Relies on PYTHONSTARTUP="custom_loggin_levels.py" in environment

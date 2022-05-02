@@ -4,6 +4,7 @@ import logging
 
 from diffsync import ObjectAlreadyExists
 from django.conf import settings
+from nautobot.dcim.models import Device
 from nautobot.ipam.models import VLAN
 from netutils.mac import mac_to_format
 
@@ -18,6 +19,9 @@ DEFAULT_INTERFACE_MAC = CONFIG.get("default_interface_mac", "00:00:00:00:00:01")
 DEFAULT_DEVICE_ROLE = CONFIG.get("default_device_role", "Network Device")
 DEFAULT_DEVICE_STATUS = CONFIG.get("default_device_status", "Active")
 
+device_serial_max_length = Device._meta.get_field("serial").max_length
+name_max_length = VLAN._meta.get_field("name").max_length
+
 
 class IPFabricDiffSync(DiffSyncModelAdapters):
     """Nautobot adapter for DiffSync."""
@@ -31,7 +35,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
 
     def load_sites(self):
         """Add IP Fabric Site objects as DiffSync Location models."""
-        sites = self.client.get_sites()
+        sites = self.client.inventory.sites.all()
         for site in sites:
             try:
                 location = self.location(diffsync=self, name=site["siteName"], site_id=site["id"], status="Active")
@@ -76,19 +80,22 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
     def load(self):
         """Load data from IP Fabric."""
         self.load_sites()
-        devices = self.client.get_device_inventory()
-        interfaces = self.client.get_interface_inventory()
-        vlans = self.client.get_vlans()
+        devices = self.client.inventory.devices.all()
+        interfaces = self.client.inventory.interfaces.all()
+        vlans = self.client.fetch_all("tables/vlan/site-summary")
+
         for location in self.get_all(self.location):
             if location.name is None:
                 continue
             location_vlans = [vlan for vlan in vlans if vlan["siteName"] == location.name]
             for vlan in location_vlans:
-                if not vlan["vlanId"]:
+                if not vlan["vlanId"] or (vlan["vlanId"] < 1 or vlan["vlanId"] > 4094):
+                    self.job.log_warning(
+                        message=f"Not syncing VLAN, NAME: {vlan.get('vlanName')} due to invalid VLAN ID: {vlan.get('vlanId')}."
+                    )
                     continue
                 description = vlan.get("dscr") if vlan.get("dscr") else f"VLAN ID: {vlan['vlanId']}"
                 vlan_name = vlan.get("vlanName") if vlan.get("vlanName") else f"{vlan['siteName']}:{vlan['vlanId']}"
-                name_max_length = VLAN._meta.get_field("name").max_length
                 if len(vlan_name) > name_max_length:
                     self.job.log_warning(
                         message=f"Not syncing VLAN, {vlan_name} due to character limit exceeding {name_max_length}."
@@ -111,6 +118,15 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
             location_devices = [device for device in devices if device["siteName"] == location.name]
             for device in location_devices:
                 device_primary_ip = device["loginIp"]
+                sn_length = len(device["sn"])
+                serial_number = device["sn"] if sn_length < device_serial_max_length else ""
+                if not serial_number:
+                    self.job.log_warning(
+                        message=(
+                            f"Serial Number will not be recorded for {device['hostname']} due to character limit. "
+                            f"{sn_length} exceeds {device_serial_max_length}"
+                        )
+                    )
                 try:
                     device_model = self.device(
                         diffsync=self,
@@ -118,7 +134,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                         location_name=device["siteName"],
                         model=device.get("model") if device.get("model") else f"Default-{device.get('vendor')}",
                         vendor=device.get("vendor").capitalize(),
-                        serial_number=device["sn"],
+                        serial_number=serial_number,
                         role=DEFAULT_DEVICE_ROLE,
                         status=DEFAULT_DEVICE_STATUS,
                     )
