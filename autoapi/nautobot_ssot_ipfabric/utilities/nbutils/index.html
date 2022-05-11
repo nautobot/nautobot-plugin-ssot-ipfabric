@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nautobot_ssot_ipfabric.utilities.nbutils &mdash; Nautobot SSOT IPFabric 0.9.4 documentation</title>
+  <title>nautobot_ssot_ipfabric.utilities.nbutils &mdash; Nautobot SSOT IPFabric 0.9.5 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
@@ -41,9 +41,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../plugin.html">Plugin Overview</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">API Reference</a></li>
 </ul>
 
@@ -78,7 +75,7 @@
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
 <section id="functions">
 <h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h3>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -97,13 +94,13 @@
 <td><p>Create specified device role in Nautobot.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_status" title="nautobot_ssot_ipfabric.utilities.nbutils.create_status"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_status</span></code></a>(status_name, status_color, description='', app_label='dcim', model='device')</p></td>
-<td><p>Verifies status object exists in Nautobot. If not, creates specified status. Defaults to dcim | device.</p></td>
+<td><p>Verify status object exists in Nautobot. If not, creates specified status. Defaults to dcim | device.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_ip" title="nautobot_ssot_ipfabric.utilities.nbutils.create_ip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_ip</span></code></a>(ip_address, subnet_mask, status='Active', object_pk=None)</p></td>
-<td><p>Verifies ip address exists in Nautobot. If not, creates specified ip.</p></td>
+<td><p>Verify ip address exists in Nautobot. If not, creates specified ip.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_interface" title="nautobot_ssot_ipfabric.utilities.nbutils.create_interface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_interface</span></code></a>(device_obj, interface_details)</p></td>
-<td><p>Verifies interface exists on specified device. If not, creates interface.</p></td>
+<td><p>Verify interface exists on specified device. If not, creates interface.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_vlan" title="nautobot_ssot_ipfabric.utilities.nbutils.create_vlan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_vlan</span></code></a>(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: nautobot.dcim.models.Site, description: str)</p></td>
 <td><p>Creates or obtains VLAN object.</p></td>
@@ -116,7 +113,7 @@
 </section>
 <section id="attributes">
 <h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline"></a></h3>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -182,7 +179,7 @@ role_color (str): Role color.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.utilities.nbutils.create_status">
 <span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.utilities.nbutils.</span></span><span class="sig-name descname"><span class="pre">create_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status_color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dcim'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'device'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_status" title="Permalink to this definition"></a></dt>
-<dd><p>Verifies status object exists in Nautobot. If not, creates specified status. Defaults to dcim | device.</p>
+<dd><p>Verify status object exists in Nautobot. If not, creates specified status. Defaults to dcim | device.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>status_name (str): Status name.
 status_color (str): Status color.
@@ -196,8 +193,8 @@ model (str): Django Model (“DEVICE”)</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.utilities.nbutils.create_ip">
 <span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.utilities.nbutils.</span></span><span class="sig-name descname"><span class="pre">create_ip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subnet_mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Active'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_pk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_ip" title="Permalink to this definition"></a></dt>
-<dd><p>Verifies ip address exists in Nautobot. If not, creates specified ip.</p>
-<p>Utility behvariour is manipulated by <cite>settings</cite> if duplicate ip’s are allowed.</p>
+<dd><p>Verify ip address exists in Nautobot. If not, creates specified ip.</p>
+<p>Utility behavior is manipulated by <cite>settings</cite> if duplicate ip’s are allowed.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>ip_address (str): IP address.
 subnet_mask (str): Subnet mask used for IP Address.
@@ -210,7 +207,7 @@ object_pk: Object primary key</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.utilities.nbutils.create_interface">
 <span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.utilities.nbutils.</span></span><span class="sig-name descname"><span class="pre">create_interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface_details</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_interface" title="Permalink to this definition"></a></dt>
-<dd><p>Verifies interface exists on specified device. If not, creates interface.</p>
+<dd><p>Verify interface exists on specified device. If not, creates interface.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>device_obj (Device): Device object to check interface against.
 interface_details (dict): interface details.</p>

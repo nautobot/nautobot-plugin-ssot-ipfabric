@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nautobot_ssot_ipfabric.jobs &mdash; Nautobot SSOT IPFabric 0.9.4 documentation</title>
+  <title>nautobot_ssot_ipfabric.jobs &mdash; Nautobot SSOT IPFabric 0.9.5 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -41,9 +41,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../plugin.html">Plugin Overview</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">API Reference</a></li>
 </ul>
 
@@ -78,7 +75,7 @@
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
 <section id="classes">
 <h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline"></a></h3>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -95,7 +92,7 @@
 </section>
 <section id="attributes">
 <h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline"></a></h3>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -108,6 +105,12 @@
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.jobs.IPFABRIC_API_TOKEN" title="nautobot_ssot_ipfabric.jobs.IPFABRIC_API_TOKEN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IPFABRIC_API_TOKEN</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.jobs.IPFABRIC_SSL_VERIFY" title="nautobot_ssot_ipfabric.jobs.IPFABRIC_SSL_VERIFY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IPFABRIC_SSL_VERIFY</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.jobs.IPFABRIC_TIMEOUT" title="nautobot_ssot_ipfabric.jobs.IPFABRIC_TIMEOUT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IPFABRIC_TIMEOUT</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.jobs.name" title="nautobot_ssot_ipfabric.jobs.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
@@ -131,6 +134,16 @@
 <dl class="py data">
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.IPFABRIC_API_TOKEN">
 <span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.jobs.</span></span><span class="sig-name descname"><span class="pre">IPFABRIC_API_TOKEN</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IPFABRIC_API_TOKEN" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.IPFABRIC_SSL_VERIFY">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.jobs.</span></span><span class="sig-name descname"><span class="pre">IPFABRIC_SSL_VERIFY</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IPFABRIC_SSL_VERIFY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.IPFABRIC_TIMEOUT">
+<span class="sig-prename descclassname"><span class="pre">nautobot_ssot_ipfabric.jobs.</span></span><span class="sig-name descname"><span class="pre">IPFABRIC_TIMEOUT</span></span><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IPFABRIC_TIMEOUT" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py data">
@@ -223,6 +236,18 @@
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.IpFabricDataSource.log_debug">
 <span class="sig-name descname"><span class="pre">log_debug</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IpFabricDataSource.log_debug" title="Permalink to this definition"></a></dt>
 <dd><p>Conditionally log a debug message.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.IpFabricDataSource.load_source_adapter">
+<span class="sig-name descname"><span class="pre">load_source_adapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IpFabricDataSource.load_source_adapter" title="Permalink to this definition"></a></dt>
+<dd><p>Not used.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nautobot_ssot_ipfabric.jobs.IpFabricDataSource.load_target_adapter">
+<span class="sig-name descname"><span class="pre">load_target_adapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.jobs.IpFabricDataSource.load_target_adapter" title="Permalink to this definition"></a></dt>
+<dd><p>Not used.</p>
 </dd></dl>
 
 <dl class="py method">

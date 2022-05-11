@@ -24,7 +24,6 @@ Submodules
    :titlesonly:
    :maxdepth: 1
 
-   test_client/index.rst
    test_ipfabric_adapter/index.rst
    test_jobs/index.rst
    test_nautobot_adapter/index.rst

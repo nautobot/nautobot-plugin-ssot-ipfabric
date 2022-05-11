@@ -15,21 +15,12 @@ Submodules
    :titlesonly:
    :maxdepth: 1
 
-   ipfabric_client/index.rst
    nbutils/index.rst
    test_utils/index.rst
 
 
 Package Contents
 ----------------
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   nautobot_ssot_ipfabric.utilities.IpFabricClient
-
 
 
 Functions
@@ -47,33 +38,6 @@ Functions
    nautobot_ssot_ipfabric.utilities.create_vlan
    nautobot_ssot_ipfabric.utilities.clean_slate
    nautobot_ssot_ipfabric.utilities.json_fixture
-
-
-
-.. py:class:: IpFabricClient(host_url, token)
-
-   Bases: :py:obj:`nautobot_chatops_ipfabric.ipfabric.IpFabric`
-
-   Class for interfacing with IP Fabric API.
-
-   .. py:method:: get_sites(self, snapshot_id='$last')
-
-      Return Site info.
-
-
-   .. py:method:: get_device_inventory(self, search_key=None, filters=None, snapshot_id='$last')
-
-      Return Device info.
-
-
-   .. py:method:: get_interface_inventory(self, search_key=None, filters=None, device=None, snapshot_id='$last')
-
-      Return Interface info.
-
-
-   .. py:method:: get_vlans(self, filters=None, snapshot_id='$last')
-
-      Return VLAN info.
 
 
 
@@ -97,7 +61,7 @@ Functions
 
 .. py:function:: create_interface(device_obj, interface_details)
 
-   Verifies interface exists on specified device. If not, creates interface.
+   Verify interface exists on specified device. If not, creates interface.
 
    Args:
        device_obj (Device): Device object to check interface against.
@@ -106,9 +70,9 @@ Functions
 
 .. py:function:: create_ip(ip_address, subnet_mask, status='Active', object_pk=None)
 
-   Verifies ip address exists in Nautobot. If not, creates specified ip.
+   Verify ip address exists in Nautobot. If not, creates specified ip.
 
-   Utility behvariour is manipulated by `settings` if duplicate ip's are allowed.
+   Utility behavior is manipulated by `settings` if duplicate ip's are allowed.
 
    Args:
        ip_address (str): IP address.
@@ -133,7 +97,7 @@ Functions
 
 .. py:function:: create_status(status_name, status_color, description='', app_label='dcim', model='device')
 
-   Verifies status object exists in Nautobot. If not, creates specified status. Defaults to dcim | device.
+   Verify status object exists in Nautobot. If not, creates specified status. Defaults to dcim | device.
 
    Args:
        status_name (str): Status name.

@@ -31,6 +31,8 @@ Attributes
    nautobot_ssot_ipfabric.jobs.CONFIG
    nautobot_ssot_ipfabric.jobs.IPFABRIC_HOST
    nautobot_ssot_ipfabric.jobs.IPFABRIC_API_TOKEN
+   nautobot_ssot_ipfabric.jobs.IPFABRIC_SSL_VERIFY
+   nautobot_ssot_ipfabric.jobs.IPFABRIC_TIMEOUT
    nautobot_ssot_ipfabric.jobs.name
    nautobot_ssot_ipfabric.jobs.jobs
 
@@ -46,6 +48,16 @@ Attributes
    
 
 .. py:data:: IPFABRIC_API_TOKEN
+   
+
+   
+
+.. py:data:: IPFABRIC_SSL_VERIFY
+   
+
+   
+
+.. py:data:: IPFABRIC_TIMEOUT
    
 
    
@@ -140,6 +152,16 @@ Attributes
    .. py:method:: log_debug(self, message)
 
       Conditionally log a debug message.
+
+
+   .. py:method:: load_source_adapter(self)
+
+      Not used.
+
+
+   .. py:method:: load_target_adapter(self)
+
+      Not used.
 
 
    .. py:method:: sync_data(self)

@@ -42,6 +42,8 @@ Attributes
    nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.DEFAULT_INTERFACE_MAC
    nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.DEFAULT_DEVICE_ROLE
    nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.DEFAULT_DEVICE_STATUS
+   nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.device_serial_max_length
+   nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.name_max_length
 
 
 .. py:data:: logger
@@ -75,6 +77,16 @@ Attributes
    
 
 .. py:data:: DEFAULT_DEVICE_STATUS
+   
+
+   
+
+.. py:data:: device_serial_max_length
+   
+
+   
+
+.. py:data:: name_max_length
    
 
    
