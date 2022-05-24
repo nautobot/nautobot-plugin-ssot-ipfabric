@@ -271,7 +271,7 @@ class Interface(DiffSyncExtras):
         "mgmt_only",
         "ip_address",
         "subnet_mask",
-        # "ip_is_primary",
+        "ip_is_primary",
         "status",
     )
 
@@ -314,8 +314,10 @@ class Interface(DiffSyncExtras):
             if attrs.get("ip_is_primary"):
                 if ip_address_obj.family == 4:
                     device_obj.primary_ip4 = ip_address_obj
+                    device_obj.save()
                 if ip_address_obj.family == 6:
                     device_obj.primary_ip6 = ip_address_obj
+                    device_obj.save()
         interface_obj.save()
         return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
 
