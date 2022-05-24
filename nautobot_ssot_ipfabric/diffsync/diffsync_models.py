@@ -374,6 +374,16 @@ class Interface(DiffSyncExtras):
                     object_pk=interface,
                 )
                 interface.ip_addresses.add(ip_address_obj)
+            if attrs.get("ip_is_primary"):
+                interface_obj = interface.ip_addresses.first()
+                if interface_obj:
+                    if interface_obj.family == 4:
+                        device.primary_ip4 = interface_obj
+                        device.save()
+                    if interface_obj.family == 6:
+                        device.primary_ip6 = interface_obj
+                        device.save()
+            interface.save()
             tonb_nbutils.tag_object(nautobot_object=interface, custom_field="ssot-synced-from-ipfabric")
             return super().update(attrs)
 
