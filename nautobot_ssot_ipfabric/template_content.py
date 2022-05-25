@@ -1,4 +1,4 @@
-"""Testing."""
+"""Tempplate Content for other models."""
 from nautobot.extras.plugins import PluginTemplateExtension
 
 
@@ -12,9 +12,6 @@ class SiteDiagram(PluginTemplateExtension):
         """Implement cool topology from IPFabric based on site."""
         return self.render(
             "nautobot_ssot_ipfabric/inc/diagram.html",
-            extra_context={
-                "ipfabric_site": "{{ settings.PLUGINS_CONFIG.nautobot_ssot_ipfabric.ipfabric_host }}/graph?urls=domains%3Fad%3DvSite%252F55467784%2Btransit%3Fad%3DvSite%252F55467784"
-            },
         )
 
 

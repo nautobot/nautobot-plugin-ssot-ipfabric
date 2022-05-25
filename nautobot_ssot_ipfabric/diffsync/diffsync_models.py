@@ -341,7 +341,7 @@ class Interface(DiffSyncExtras):
         except NautobotDevice.DoesNotExist:
             self.diffsync.job.log_warning(f"Unable to match device by name, {self.name}")
 
-    def update(self, attrs):
+    def update(self, attrs):  # pylint: disable=too-many-branches
         """Update Interface object in Nautobot."""
         try:
             ssot_tag, _ = Tag.objects.get_or_create(name="SSoT Synced from IPFabric")
