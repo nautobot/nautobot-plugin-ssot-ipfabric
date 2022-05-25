@@ -83,7 +83,7 @@ class DiffSyncExtras(DiffSyncModel):
             if update:
                 tonb_nbutils.tag_object(nautobot_object=nautobot_object, custom_field="ssot-synced-from-ipfabric")
             else:
-                self.diffsync.job.log_warning(
+                self.diffsync.job.log_debug(
                     message=f"{nautobot_object} has previously been tagged with `ssot-safe-delete`. Skipping..."
                 )
 
@@ -118,7 +118,7 @@ class Location(DiffSyncExtras):
             site_object,
             SAFE_DELETE_SITE_STATUS,
         )
-        return self
+        return super().delete()
 
     def update(self, attrs):
         """Update Site Object in Nautobot."""
@@ -215,7 +215,7 @@ class Device(DiffSyncExtras):
                 device_object,
                 SAFE_DELETE_DEVICE_STATUS,
             )
-            return self
+            return super().delete()
         except NautobotDevice.DoesNotExist:
             self.diffsync.job.log_warning(f"Unable to match device by name, {self.name}")
 
@@ -337,7 +337,7 @@ class Interface(DiffSyncExtras):
             self.safe_delete(
                 interface,
             )
-            return self
+            return super().delete()
         except NautobotDevice.DoesNotExist:
             self.diffsync.job.log_warning(f"Unable to match device by name, {self.name}")
 
@@ -430,7 +430,7 @@ class Vlan(DiffSyncExtras):
             vlan,
             SAFE_DELETE_VLAN_STATUS,
         )
-        return self
+        return super().delete()
 
     def update(self, attrs):
         """Update VLAN object in Nautobot."""
