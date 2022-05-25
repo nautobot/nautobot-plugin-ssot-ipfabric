@@ -104,9 +104,6 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 type=DEFAULT_INTERFACE_TYPE,
                 mgmt_only=interface_record.mgmt_only if interface_record.mgmt_only else False,
                 pk=interface_record.pk,
-                # ip_is_primary=bool(
-                #     any(interface for interface in mgmt_int_qset if interface.name == interface_record.name)
-                # ),
                 ip_is_primary=interface_record.ip_addresses.first() == device_primary_ip
                 if device_primary_ip
                 else False,

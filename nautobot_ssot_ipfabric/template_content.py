@@ -1,4 +1,4 @@
-"""Tempplate Content for other models."""
+"""Template Content for other models."""
 from nautobot.extras.plugins import PluginTemplateExtension
 
 
