@@ -83,7 +83,7 @@ class DiffSyncExtras(DiffSyncModel):
             if update:
                 tonb_nbutils.tag_object(nautobot_object=nautobot_object, custom_field="ssot-synced-from-ipfabric")
             else:
-                self.diffsync.job.log_warning(
+                self.diffsync.job.log_debug(
                     message=f"{nautobot_object} has previously been tagged with `ssot-safe-delete`. Skipping..."
                 )
 
@@ -118,7 +118,7 @@ class Location(DiffSyncExtras):
             site_object,
             SAFE_DELETE_SITE_STATUS,
         )
-        return self
+        return super().delete()
 
     def update(self, attrs):
         """Update Site Object in Nautobot."""
@@ -215,7 +215,7 @@ class Device(DiffSyncExtras):
                 device_object,
                 SAFE_DELETE_DEVICE_STATUS,
             )
-            return self
+            return super().delete()
         except NautobotDevice.DoesNotExist:
             self.diffsync.job.log_warning(f"Unable to match device by name, {self.name}")
 
@@ -271,7 +271,7 @@ class Interface(DiffSyncExtras):
         "mgmt_only",
         "ip_address",
         "subnet_mask",
-        # "ip_is_primary",
+        "ip_is_primary",
         "status",
     )
 
@@ -314,8 +314,10 @@ class Interface(DiffSyncExtras):
             if attrs.get("ip_is_primary"):
                 if ip_address_obj.family == 4:
                     device_obj.primary_ip4 = ip_address_obj
+                    device_obj.save()
                 if ip_address_obj.family == 6:
                     device_obj.primary_ip6 = ip_address_obj
+                    device_obj.save()
         interface_obj.save()
         return super().create(ids=ids, diffsync=diffsync, attrs=attrs)
 
@@ -335,11 +337,11 @@ class Interface(DiffSyncExtras):
             self.safe_delete(
                 interface,
             )
-            return self
+            return super().delete()
         except NautobotDevice.DoesNotExist:
             self.diffsync.job.log_warning(f"Unable to match device by name, {self.name}")
 
-    def update(self, attrs):
+    def update(self, attrs):  # pylint: disable=too-many-branches
         """Update Interface object in Nautobot."""
         try:
             ssot_tag, _ = Tag.objects.get_or_create(name="SSoT Synced from IPFabric")
@@ -372,6 +374,16 @@ class Interface(DiffSyncExtras):
                     object_pk=interface,
                 )
                 interface.ip_addresses.add(ip_address_obj)
+            if attrs.get("ip_is_primary"):
+                interface_obj = interface.ip_addresses.first()
+                if interface_obj:
+                    if interface_obj.family == 4:
+                        device.primary_ip4 = interface_obj
+                        device.save()
+                    if interface_obj.family == 6:
+                        device.primary_ip6 = interface_obj
+                        device.save()
+            interface.save()
             tonb_nbutils.tag_object(nautobot_object=interface, custom_field="ssot-synced-from-ipfabric")
             return super().update(attrs)
 
@@ -418,7 +430,7 @@ class Vlan(DiffSyncExtras):
             vlan,
             SAFE_DELETE_VLAN_STATUS,
         )
-        return self
+        return super().delete()
 
     def update(self, attrs):
         """Update VLAN object in Nautobot."""

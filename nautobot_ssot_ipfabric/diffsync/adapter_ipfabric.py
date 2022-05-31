@@ -68,8 +68,9 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                     type=DEFAULT_INTERFACE_TYPE,
                     mgmt_only=iface.get("mgmt_only", False),
                     ip_address=ip_address,
+                    # TODO: why is only IPv4? and why /32?
                     subnet_mask="255.255.255.255",
-                    ip_is_primary=ip_address == device_primary_ip,
+                    ip_is_primary=ip_address is not None and ip_address == device_primary_ip,
                     status="Active",
                 )
                 self.add(interface)

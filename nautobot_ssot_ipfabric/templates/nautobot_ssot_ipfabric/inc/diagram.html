@@ -5,7 +5,7 @@
         <strong>IPFabric Site Diagram</strong>
     </div>
     <div class="panel-body">
-        <iframe src="{{ settings.PLUGINS_CONFIG.nautobot_ssot_ipfabric.ipfabric_host }}/graph?urls=domains%3Fad%3DvSite%252F{{ object.custom_field_data.ipfabric_site_id }}%2Btransit%3Fad%3DvSite%252F{{ object.custom_field_data.ipfabric_site_id }}" width="1500" height="1000"></iframe>
+        <iframe src="{{ settings.PLUGINS_CONFIG.nautobot_ssot_ipfabric.ipfabric_host }}/graph?urls=domains%3Fad%3DvSite%252F{{ object.cf | get_item:'ipfabric-site-id'}}%2Btransit%3Fad%3DvSite%252F{{ object.cf | get_item:'ipfabric-site-id' }}" width="1500" height="1000"></iframe>
     </div>
 </div>
 {% endblock %}
