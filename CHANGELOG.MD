@@ -1,4 +1,12 @@
+## v0.9.6 - 2022-05-31
 
+### Fixed
+
+- #94 - Fix `primary_ip` usage in `interface` model, `delete` operations and `device_content` embedded `iframe`.
+
+### Changed
+
+- #94 - Make `ssot-safe-delete` log messages less noisy, using `debug` log level.
 
 ## v0.9.5 - 2022-05-11
 
