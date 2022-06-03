@@ -99,7 +99,7 @@ class IpFabricDataSource(DataSource, Job):
     )
     snapshot = ChoiceVar(
         description="IPFabric snapshot to sync from. Defaults to $latest",
-        default="$latest",
+        default="$last",
         choices=[("$last", "$last")]
         + [(snapshot_id, snapshots[snapshot_id].name or snapshot_id) for snapshot_id in snapshots],
         required=False,
