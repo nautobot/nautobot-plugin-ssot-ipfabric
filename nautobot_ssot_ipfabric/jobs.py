@@ -7,6 +7,7 @@ from diffsync.exceptions import ObjectNotCreated
 from django.conf import settings
 from django.templatetags.static import static
 from django.urls import reverse
+from httpx import ConnectError
 from ipfabric import IPFClient
 from nautobot.dcim.models import Site
 from nautobot.extras.jobs import BooleanVar, Job, ScriptVariable, ChoiceVar
@@ -62,19 +63,24 @@ class OptionalObjectVar(ScriptVariable):
         )
 
 
-client = IPFClient(
-    IPFABRIC_HOST,
-    token=IPFABRIC_API_TOKEN,
-    verify=IPFABRIC_SSL_VERIFY,
-    timeout=IPFABRIC_TIMEOUT,
-)
+try:
+    CLIENT = IPFClient(
+        IPFABRIC_HOST,
+        token=IPFABRIC_API_TOKEN,
+        verify=IPFABRIC_SSL_VERIFY,
+        timeout=IPFABRIC_TIMEOUT,
+    )
+    snapshots = CLIENT.get_snapshots()
+except ConnectError:
+    CLIENT = None
+    snapshots = []
 
 
 # pylint:disable=too-few-public-methods
 class IpFabricDataSource(DataSource, Job):
     """Job syncing data from IP Fabric to Nautobot."""
 
-    client = client
+    client = CLIENT
     debug = BooleanVar(description="Enable for more verbose debug logging")
     safe_delete_mode = BooleanVar(
         description="Records are not deleted. Status fields are updated as necessary.",
@@ -95,10 +101,7 @@ class IpFabricDataSource(DataSource, Job):
         description="IPFabric snapshot to sync from. Defaults to $latest",
         default="$latest",
         choices=[("$last", "$last")]
-        + [
-            (snapshot_id, client.get_snapshots()[snapshot_id].name or snapshot_id)
-            for snapshot_id in client.get_snapshots()
-        ],
+        + [(snapshot_id, snapshots[snapshot_id].name or snapshot_id) for snapshot_id in snapshots],
         required=False,
     )
 
@@ -159,6 +162,10 @@ class IpFabricDataSource(DataSource, Job):
 
     def sync_data(self):
         """Sync a device data from IP Fabric into Nautobot."""
+        if self.client is None:
+            self.log_failure(message="IPFabric client is not ready. Check your config.")
+            return
+
         self.client.snapshot_id = self.kwargs["snapshot"]
         dry_run = self.kwargs["dry_run"]
         safe_mode = self.kwargs["safe_delete_mode"]
