@@ -2,6 +2,7 @@
 #  pylint: disable=too-few-public-methods
 #  pylint: disable=too-many-locals
 """IP Fabric Data Target Job."""
+import uuid
 from diffsync.enum import DiffSyncFlags
 from diffsync.exceptions import ObjectNotCreated
 from django.conf import settings
@@ -27,6 +28,15 @@ IPFABRIC_TIMEOUT = CONFIG["ipfabric_timeout"]
 
 
 name = "SSoT - IPFabric"  # pylint: disable=invalid-name
+
+
+def is_valid_uuid(identifier):
+    """Return true if the identifier it's a valid UUID."""
+    try:
+        uuid.UUID(str(identifier))
+        return True
+    except ValueError:
+        return False
 
 
 class OptionalObjectVar(ScriptVariable):
@@ -100,8 +110,18 @@ class IpFabricDataSource(DataSource, Job):
     snapshot = ChoiceVar(
         description="IPFabric snapshot to sync from. Defaults to $latest",
         default="$last",
-        choices=[("$last", "$last")]
-        + [(snapshot_id, snapshots[snapshot_id].name or snapshot_id) for snapshot_id in snapshots],
+        choices=[
+            (
+                snapshot_id,
+                snapshot_id
+                if not is_valid_uuid(snapshot_id)
+                else snapshots[snapshot_id].name
+                if snapshots[snapshot_id].name
+                else snapshot_id,
+            )
+            for snapshot_id in snapshots
+            if snapshots[snapshot_id].locked
+        ],
         required=False,
     )
 
