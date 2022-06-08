@@ -22,6 +22,14 @@ Classes
 
 
 
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   nautobot_ssot_ipfabric.jobs.is_valid_uuid
+
+
 
 Attributes
 ~~~~~~~~~~
@@ -34,6 +42,7 @@ Attributes
    nautobot_ssot_ipfabric.jobs.IPFABRIC_SSL_VERIFY
    nautobot_ssot_ipfabric.jobs.IPFABRIC_TIMEOUT
    nautobot_ssot_ipfabric.jobs.name
+   nautobot_ssot_ipfabric.jobs.CLIENT
    nautobot_ssot_ipfabric.jobs.jobs
 
 
@@ -67,6 +76,11 @@ Attributes
 
    
 
+.. py:function:: is_valid_uuid(identifier)
+
+   Return true if the identifier it's a valid UUID.
+
+
 .. py:class:: OptionalObjectVar(model=None, display_field='display', query_params=None, null_option=None, *args, **kwargs)
 
    Bases: :py:obj:`nautobot.extras.jobs.ScriptVariable`
@@ -80,6 +94,11 @@ Attributes
 
       
 
+
+.. py:data:: CLIENT
+   
+
+   
 
 .. py:class:: IpFabricDataSource
 
@@ -112,10 +131,15 @@ Attributes
          
 
       .. py:attribute:: field_order
-         :annotation: = ['debug', 'safe_delete_mode', 'sync_ipfabric_tagged_only', 'dry_run']
+         :annotation: = ['debug', 'snapshot', 'safe_delete_mode', 'sync_ipfabric_tagged_only', 'dry_run']
 
          
 
+
+   .. py:attribute:: client
+      
+
+      
 
    .. py:attribute:: debug
       
@@ -133,6 +157,11 @@ Attributes
       
 
    .. py:attribute:: site_filter
+      
+
+      
+
+   .. py:attribute:: snapshot
       
 
       
