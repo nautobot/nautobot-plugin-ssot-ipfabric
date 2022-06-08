@@ -1,3 +1,9 @@
+## v0.10.0 - 2022-06-08
+
+### Added
+
+- #100 - Add a Job option to select the reference snapshot to sync from.
+
 ## v0.9.6 - 2022-05-31
 
 ### Fixed
