@@ -2,14 +2,16 @@
 #  pylint: disable=too-few-public-methods
 #  pylint: disable=too-many-locals
 """IP Fabric Data Target Job."""
+import uuid
 from diffsync.enum import DiffSyncFlags
 from diffsync.exceptions import ObjectNotCreated
 from django.conf import settings
 from django.templatetags.static import static
 from django.urls import reverse
+from httpx import ConnectError
 from ipfabric import IPFClient
 from nautobot.dcim.models import Site
-from nautobot.extras.jobs import BooleanVar, Job, ScriptVariable
+from nautobot.extras.jobs import BooleanVar, Job, ScriptVariable, ChoiceVar
 from nautobot.utilities.forms import DynamicModelChoiceField
 from nautobot_ssot.jobs.base import DataMapping, DataSource
 
@@ -26,6 +28,15 @@ IPFABRIC_TIMEOUT = CONFIG["ipfabric_timeout"]
 
 
 name = "SSoT - IPFabric"  # pylint: disable=invalid-name
+
+
+def is_valid_uuid(identifier):
+    """Return true if the identifier it's a valid UUID."""
+    try:
+        uuid.UUID(str(identifier))
+        return True
+    except ValueError:
+        return False
 
 
 class OptionalObjectVar(ScriptVariable):
@@ -62,10 +73,24 @@ class OptionalObjectVar(ScriptVariable):
         )
 
 
+try:
+    CLIENT = IPFClient(
+        IPFABRIC_HOST,
+        token=IPFABRIC_API_TOKEN,
+        verify=IPFABRIC_SSL_VERIFY,
+        timeout=IPFABRIC_TIMEOUT,
+    )
+    snapshots = CLIENT.get_snapshots()
+except ConnectError:
+    CLIENT = None
+    snapshots = []
+
+
 # pylint:disable=too-few-public-methods
 class IpFabricDataSource(DataSource, Job):
     """Job syncing data from IP Fabric to Nautobot."""
 
+    client = CLIENT
     debug = BooleanVar(description="Enable for more verbose debug logging")
     safe_delete_mode = BooleanVar(
         description="Records are not deleted. Status fields are updated as necessary.",
@@ -82,6 +107,23 @@ class IpFabricDataSource(DataSource, Job):
         model=Site,
         required=False,
     )
+    snapshot = ChoiceVar(
+        description="IPFabric snapshot to sync from. Defaults to $latest",
+        default="$last",
+        choices=[
+            (
+                snapshot_id,
+                snapshot_id
+                if not is_valid_uuid(snapshot_id)
+                else snapshots[snapshot_id].name
+                if snapshots[snapshot_id].name
+                else snapshot_id,
+            )
+            for snapshot_id in snapshots
+            if snapshots[snapshot_id].locked
+        ],
+        required=False,
+    )
 
     class Meta:
         """Metadata about this Job."""
@@ -92,6 +134,7 @@ class IpFabricDataSource(DataSource, Job):
         description = "Sync data from IP Fabric into Nautobot."
         field_order = (
             "debug",
+            "snapshot",
             "safe_delete_mode",
             "sync_ipfabric_tagged_only",
             "dry_run",
@@ -139,9 +182,11 @@ class IpFabricDataSource(DataSource, Job):
 
     def sync_data(self):
         """Sync a device data from IP Fabric into Nautobot."""
-        client = IPFClient(
-            IPFABRIC_HOST, token=IPFABRIC_API_TOKEN, verify=IPFABRIC_SSL_VERIFY, timeout=IPFABRIC_TIMEOUT
-        )
+        if self.client is None:
+            self.log_failure(message="IPFabric client is not ready. Check your config.")
+            return
+
+        self.client.snapshot_id = self.kwargs["snapshot"]
         dry_run = self.kwargs["dry_run"]
         safe_mode = self.kwargs["safe_delete_mode"]
         tagged_only = self.kwargs["sync_ipfabric_tagged_only"]
@@ -152,10 +197,10 @@ class IpFabricDataSource(DataSource, Job):
             site_filter_object = Site.objects.get(pk=site_filter)
         else:
             site_filter_object = None
-        options = f"`Debug`: {debug_mode}, `Dry Run`: {dry_run}, `Safe Delete Mode`: {safe_mode}, `Sync Tagged Only`: {tagged_only}, `Site Filter`: {site_filter_object}"
+        options = f"`Snapshot_id`: {self.client.snapshot_id}.`Debug`: {debug_mode}, `Dry Run`: {dry_run}, `Safe Delete Mode`: {safe_mode}, `Sync Tagged Only`: {tagged_only}, `Site Filter`: {site_filter_object}"
         self.log_info(message=f"Starting job with the following options: {options}")
 
-        ipfabric_source = IPFabricDiffSync(job=self, sync=self.sync, client=client)
+        ipfabric_source = IPFabricDiffSync(job=self, sync=self.sync, client=self.client)
         self.log_info(message="Loading current data from IP Fabric...")
         ipfabric_source.load()
 

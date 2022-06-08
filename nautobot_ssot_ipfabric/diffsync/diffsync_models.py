@@ -230,7 +230,7 @@ class Device(DiffSyncExtras):
                 device_tags = _device.tags.filter(pk=safe_delete_tag.pk)
                 if device_tags.exists():
                     _device.tags.remove(safe_delete_tag)
-
+            # TODO: If only the "model" is changing, the "vendor" is not available
             if attrs.get("model"):
                 device_type_object = tonb_nbutils.create_device_type_object(
                     device_type=attrs["model"], vendor_name=attrs["vendor"]
