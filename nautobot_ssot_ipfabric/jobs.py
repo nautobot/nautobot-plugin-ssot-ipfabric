@@ -73,24 +73,12 @@ class OptionalObjectVar(ScriptVariable):
         )
 
 
-try:
-    CLIENT = IPFClient(
-        IPFABRIC_HOST,
-        token=IPFABRIC_API_TOKEN,
-        verify=IPFABRIC_SSL_VERIFY,
-        timeout=IPFABRIC_TIMEOUT,
-    )
-    snapshots = CLIENT.get_snapshots()
-except (RuntimeError, ConnectError):
-    CLIENT = None
-    snapshots = []
-
-
 # pylint:disable=too-few-public-methods
 class IpFabricDataSource(DataSource, Job):
     """Job syncing data from IP Fabric to Nautobot."""
 
-    client = CLIENT
+    client = None
+    snapshot = None
     debug = BooleanVar(description="Enable for more verbose debug logging")
     safe_delete_mode = BooleanVar(
         description="Records are not deleted. Status fields are updated as necessary.",
@@ -105,23 +93,6 @@ class IpFabricDataSource(DataSource, Job):
     site_filter = OptionalObjectVar(
         description="Only sync Nautobot records belonging to a single Site. This does not filter IPFabric data.",
         model=Site,
-        required=False,
-    )
-    snapshot = ChoiceVar(
-        description="IPFabric snapshot to sync from. Defaults to $latest",
-        default="$last",
-        choices=[
-            (
-                snapshot_id,
-                snapshot_id
-                if not is_valid_uuid(snapshot_id)
-                else snapshots[snapshot_id].name
-                if snapshots[snapshot_id].name
-                else snapshot_id,
-            )
-            for snapshot_id in snapshots
-            if snapshots[snapshot_id].locked
-        ],
         required=False,
     )
 
@@ -139,6 +110,50 @@ class IpFabricDataSource(DataSource, Job):
             "sync_ipfabric_tagged_only",
             "dry_run",
         )
+
+    @classmethod
+    def _get_vars(cls):
+        """Extend JobDataSource._get_vars to include some variables.
+
+        This also initializes them.
+        """
+        got_vars = super()._get_vars()
+
+        if cls.snapshot is None:
+            try:
+                cls.client = IPFClient(
+                    IPFABRIC_HOST,
+                    token=IPFABRIC_API_TOKEN,
+                    verify=IPFABRIC_SSL_VERIFY,
+                    timeout=IPFABRIC_TIMEOUT,
+                )
+                snapshots = cls.client.get_snapshots()
+            except (RuntimeError, ConnectError):
+                cls.client = None
+                snapshots = []
+
+            cls.snapshot = ChoiceVar(
+                description="IPFabric snapshot to sync from. Defaults to $latest",
+                default="$last",
+                choices=[
+                    (
+                        snapshot_id,
+                        snapshot_id
+                        if not is_valid_uuid(snapshot_id)
+                        else snapshots[snapshot_id].name
+                        if snapshots[snapshot_id].name
+                        else snapshot_id,
+                    )
+                    for snapshot_id in snapshots
+                    if snapshots[snapshot_id].locked
+                ],
+                required=False,
+            )
+
+        if hasattr(cls, "snapshot"):
+            got_vars["snapshot"] = cls.snapshot
+
+        return got_vars
 
     @classmethod
     def data_mappings(cls):
