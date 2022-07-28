@@ -81,7 +81,7 @@ try:
         timeout=IPFABRIC_TIMEOUT,
     )
     snapshots = CLIENT.get_snapshots()
-except ConnectError:
+except (RuntimeError, ConnectError):
     CLIENT = None
     snapshots = []
 
