@@ -25,7 +25,9 @@ IPFABRIC_HOST = CONFIG["ipfabric_host"]
 IPFABRIC_API_TOKEN = CONFIG["ipfabric_api_token"]
 IPFABRIC_SSL_VERIFY = CONFIG["ipfabric_ssl_verify"]
 IPFABRIC_TIMEOUT = CONFIG["ipfabric_timeout"]
-
+LAST = "$last"
+PREV = "$prev"
+LAST_LOCKED = "$lastLocked"
 
 name = "SSoT - IPFabric"  # pylint: disable=invalid-name
 
@@ -37,6 +39,33 @@ def is_valid_uuid(identifier):
         return True
     except ValueError:
         return False
+
+
+def get_formatted_snapshots(client):
+    """Get all loaded snapshots and format them for display in choice menu.
+
+    Returns:
+        dict: Snapshot objects as dict of tuples {snapshot_ref: (description, snapshot_id)}
+    """
+    formatted_snapshots = {}
+    snapshot_refs = []
+    if client:
+        for snapshot_ref, snapshot in client.snapshots.items():
+            if snapshot.state != "loaded":
+                continue
+            description = ""
+            if snapshot_ref in [LAST, PREV, LAST_LOCKED]:
+                description += f"{snapshot_ref}: "
+                snapshot_refs.append(snapshot_ref)
+            if snapshot.name:
+                description += snapshot.name + " - " + snapshot.end.strftime("%d-%b-%y %H:%M:%S")
+            else:
+                description += snapshot.end.strftime("%d-%b-%y %H:%M:%S") + " - " + snapshot.snapshot_id
+            formatted_snapshots[snapshot_ref] = (description, snapshot.snapshot_id)
+        for ref in snapshot_refs:
+            formatted_snapshots.pop(formatted_snapshots[ref][1], None)
+
+    return formatted_snapshots
 
 
 class OptionalObjectVar(ScriptVariable):
@@ -122,31 +151,25 @@ class IpFabricDataSource(DataSource, Job):
         if cls.snapshot is None:
             try:
                 cls.client = IPFClient(
-                    IPFABRIC_HOST,
+                    base_url=IPFABRIC_HOST,
                     token=IPFABRIC_API_TOKEN,
                     verify=IPFABRIC_SSL_VERIFY,
                     timeout=IPFABRIC_TIMEOUT,
                 )
-                snapshots = cls.client.get_snapshots()
-            except (RuntimeError, ConnectError):
+            except (RuntimeError, ConnectError) as error:
+                print(f"Got an error {error}")
                 cls.client = None
-                snapshots = []
+
+            formatted_snapshots = get_formatted_snapshots(cls.client)
+            if formatted_snapshots:
+                default_choice = formatted_snapshots["$last"][::-1]
+            else:
+                default_choice = "$last"
 
             cls.snapshot = ChoiceVar(
-                description="IPFabric snapshot to sync from. Defaults to $latest",
-                default="$last",
-                choices=[
-                    (
-                        snapshot_id,
-                        snapshot_id
-                        if not is_valid_uuid(snapshot_id)
-                        else snapshots[snapshot_id].name
-                        if snapshots[snapshot_id].name
-                        else snapshot_id,
-                    )
-                    for snapshot_id in snapshots
-                    if snapshots[snapshot_id].locked
-                ],
+                description="IPFabric snapshot to sync from. Defaults to $last",
+                default=default_choice,
+                choices=[(snapshot_id, snapshot_name) for snapshot_name, snapshot_id in formatted_snapshots.values()],
                 required=False,
             )
 
