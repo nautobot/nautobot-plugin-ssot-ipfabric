@@ -18,7 +18,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.7.1,<4.0"
-nautobot = "^1.4.0"
+nautobot = "^1.2.0"
 nautobot-ssot = "^1.0.1"
 netutils = "^1.0.0"
 ipfabric-diagrams = "~5.0.2"
