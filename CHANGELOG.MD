@@ -1,3 +1,15 @@
+## v1.0.0 - 2022-10-28
+
+### Added
+
+- #113 - Add support for IP Fabric v5.
+- #111 - Remove site diagram feature. NOt supported on IP Fabric v5.
+- #108 - Extend Job form to get and initialize variables. 
+
+## Changed
+
+- Version 1.0.0 of `nautobot-plugin-ssot-ipfabric` only supports IP Fabric version v5.0 and above.
+
 ## v0.10.0 - 2022-06-08
 
 ### Added
