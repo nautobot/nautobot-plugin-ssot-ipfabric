@@ -3,7 +3,7 @@
 ### Added
 
 - #113 - Add support for IP Fabric v5.
-- #111 - Remove site diagram feature. NOt supported on IP Fabric v5.
+- #111 - Remove site diagram feature. Not supported on IP Fabric v5.
 - #108 - Extend Job form to get and initialize variables. 
 
 ## Changed
