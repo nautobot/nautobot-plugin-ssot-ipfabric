@@ -2,6 +2,15 @@
 
 An [SSoT](https://blog.networktocode.com/post/nautobot-ssot-plugin/) plugin providing a simple way to synchronize data between [IPFabric](https://ipfabric.io/) and [Nautobot](https://github.com/nautobot/nautobot). Ensure data stays consistent between the two platforms by leveraging [DiffSync](https://github.com/networktocode/diffsync) capabilities and allowing users to take full advantage of both platforms with up-to-date, synchronized data.
 
+## Version Matrix
+
+Here is a compatibility matrix and the minimum versions required to run this plugin:
+
+| IP Fabric | Python | Nautobot | ssot | ssot-ipfabric | [python-ipfabric](https://github.com/community-fabric/python-ipfabric) | [python-ipfabric-diagrams](https://github.com/community-fabric/python-ipfabric-diagrams) |
+|-----------|--------|----------|---------|------------------|------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
+| 4.4       | 3.7.1  | 1.1.0    | 1.0.1   | 0.10.0            | 0.11.0                                                                 | 1.2.7                                                                                    |
+| 5.0.1     | 3.7.1  | 1.2.0    | 1.0.1   | 1.0.0            | 5.0.11                                                                  | 5.0.2                                                                                    |
+
 ## Build Status
 
 | Branch      | Status                                                                                                                                              |

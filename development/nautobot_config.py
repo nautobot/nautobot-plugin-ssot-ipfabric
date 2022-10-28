@@ -78,6 +78,8 @@ PLUGINS_CONFIG = {
         "ipfabric_api_token": os.environ.get("IPFABRIC_API_TOKEN"),
         "ipfabric_host": os.environ.get("IPFABRIC_HOST"),
         "nautobot_host": os.environ.get("NAUTOBOT_HOST"),
+        "ipfabric_ssl_verify": os.environ.get("IPFABRIC_VERIFY", False),
+        "ipfabric_timeout": os.environ.get("IPFABRIC_TIMEOUT", 15),
     },
     "nautobot_ssot": {"hide_example_jobs": True},
     "nautobot_chatops_ipfabric": {
