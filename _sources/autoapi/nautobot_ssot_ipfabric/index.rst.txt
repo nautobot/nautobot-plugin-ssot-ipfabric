@@ -28,7 +28,6 @@ Submodules
 
    jobs/index.rst
    signals/index.rst
-   template_content/index.rst
    workers/index.rst
 
 
@@ -133,7 +132,7 @@ Attributes
 
       
 
-   .. py:method:: ready(self)
+   .. py:method:: ready()
 
       Callback when this plugin is loaded.
 

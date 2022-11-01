@@ -28,37 +28,37 @@ Classes
 
    Test Nautobot Utility.
 
-   .. py:method:: setUp(self)
+   .. py:method:: setUp()
 
       Setup.
 
 
-   .. py:method:: test_create_vlan(self)
+   .. py:method:: test_create_vlan()
 
       Test `create_vlan` Utility.
 
 
-   .. py:method:: test_create_device_type_object(self)
+   .. py:method:: test_create_device_type_object()
 
       Test `create_device_type_object` Utility.
 
 
-   .. py:method:: test_create_manufacturer(self)
+   .. py:method:: test_create_manufacturer()
 
       Test `create_manufacturer` Utility.
 
 
-   .. py:method:: test_create_device_role(self)
+   .. py:method:: test_create_device_role()
 
       Test `create_device_role` Utility.
 
 
-   .. py:method:: test_create_status(self)
+   .. py:method:: test_create_status()
 
       Test `create_status` Utility.
 
 
-   .. py:method:: test_create_status_doesnt_exist(self)
+   .. py:method:: test_create_status_doesnt_exist()
 
       Test `create_status` Utility.
 

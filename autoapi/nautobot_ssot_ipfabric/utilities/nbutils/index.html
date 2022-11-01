@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nautobot_ssot_ipfabric.utilities.nbutils &mdash; Nautobot SSOT IPFabric 0.9.6 documentation</title>
+  <title>nautobot_ssot_ipfabric.utilities.nbutils &mdash; Nautobot SSOT IPFabric 1.0.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
@@ -81,7 +81,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_site" title="nautobot_ssot_ipfabric.utilities.nbutils.create_site"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_site</span></code></a>(site_name, site_id=None)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_site" title="nautobot_ssot_ipfabric.utilities.nbutils.create_site"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_site</span></code></a>(site_name[, site_id])</p></td>
 <td><p>Creates a specified site in Nautobot.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_manufacturer" title="nautobot_ssot_ipfabric.utilities.nbutils.create_manufacturer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_manufacturer</span></code></a>(vendor_name)</p></td>
@@ -93,19 +93,19 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_device_role_object" title="nautobot_ssot_ipfabric.utilities.nbutils.create_device_role_object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_device_role_object</span></code></a>(role_name, role_color)</p></td>
 <td><p>Create specified device role in Nautobot.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_status" title="nautobot_ssot_ipfabric.utilities.nbutils.create_status"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_status</span></code></a>(status_name, status_color, description='', app_label='dcim', model='device')</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_status" title="nautobot_ssot_ipfabric.utilities.nbutils.create_status"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_status</span></code></a>(status_name, status_color[, ...])</p></td>
 <td><p>Verify status object exists in Nautobot. If not, creates specified status. Defaults to dcim | device.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_ip" title="nautobot_ssot_ipfabric.utilities.nbutils.create_ip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_ip</span></code></a>(ip_address, subnet_mask, status='Active', object_pk=None)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_ip" title="nautobot_ssot_ipfabric.utilities.nbutils.create_ip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_ip</span></code></a>(ip_address, subnet_mask[, status, object_pk])</p></td>
 <td><p>Verify ip address exists in Nautobot. If not, creates specified ip.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_interface" title="nautobot_ssot_ipfabric.utilities.nbutils.create_interface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_interface</span></code></a>(device_obj, interface_details)</p></td>
 <td><p>Verify interface exists on specified device. If not, creates interface.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_vlan" title="nautobot_ssot_ipfabric.utilities.nbutils.create_vlan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_vlan</span></code></a>(vlan_name: str, vlan_id: int, vlan_status: str, site_obj: nautobot.dcim.models.Site, description: str)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.create_vlan" title="nautobot_ssot_ipfabric.utilities.nbutils.create_vlan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_vlan</span></code></a>(vlan_name, vlan_id, vlan_status, site_obj, ...)</p></td>
 <td><p>Creates or obtains VLAN object.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.tag_object" title="nautobot_ssot_ipfabric.utilities.nbutils.tag_object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tag_object</span></code></a>(nautobot_object: Any, custom_field: str, tag_name: Optional[str] = 'SSoT Synced from IPFabric')</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.utilities.nbutils.tag_object" title="nautobot_ssot_ipfabric.utilities.nbutils.tag_object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tag_object</span></code></a>(nautobot_object, custom_field[, tag_name])</p></td>
 <td><p>Apply the given tag and custom field to the identified object.</p></td>
 </tr>
 </tbody>

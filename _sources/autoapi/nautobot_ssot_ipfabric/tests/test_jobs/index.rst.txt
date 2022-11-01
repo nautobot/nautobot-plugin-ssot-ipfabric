@@ -47,12 +47,12 @@ Attributes
 
    Test the IPFabric job.
 
-   .. py:method:: test_metadata(self)
+   .. py:method:: test_metadata()
 
       Verify correctness of the Job Meta attributes.
 
 
-   .. py:method:: test_data_mapping(self)
+   .. py:method:: test_data_mapping()
 
       Verify correctness of the data_mappings() API.
 

@@ -28,6 +28,7 @@ Functions
 .. autoapisummary::
 
    nautobot_ssot_ipfabric.jobs.is_valid_uuid
+   nautobot_ssot_ipfabric.jobs.get_formatted_snapshots
 
 
 
@@ -41,8 +42,10 @@ Attributes
    nautobot_ssot_ipfabric.jobs.IPFABRIC_API_TOKEN
    nautobot_ssot_ipfabric.jobs.IPFABRIC_SSL_VERIFY
    nautobot_ssot_ipfabric.jobs.IPFABRIC_TIMEOUT
+   nautobot_ssot_ipfabric.jobs.LAST
+   nautobot_ssot_ipfabric.jobs.PREV
+   nautobot_ssot_ipfabric.jobs.LAST_LOCKED
    nautobot_ssot_ipfabric.jobs.name
-   nautobot_ssot_ipfabric.jobs.CLIENT
    nautobot_ssot_ipfabric.jobs.jobs
 
 
@@ -71,6 +74,21 @@ Attributes
 
    
 
+.. py:data:: LAST
+   :annotation: = $last
+
+   
+
+.. py:data:: PREV
+   :annotation: = $prev
+
+   
+
+.. py:data:: LAST_LOCKED
+   :annotation: = $lastLocked
+
+   
+
 .. py:data:: name
    :annotation: = SSoT - IPFabric
 
@@ -79,6 +97,14 @@ Attributes
 .. py:function:: is_valid_uuid(identifier)
 
    Return true if the identifier it's a valid UUID.
+
+
+.. py:function:: get_formatted_snapshots(client)
+
+   Get all loaded snapshots and format them for display in choice menu.
+
+   Returns:
+       dict: Snapshot objects as dict of tuples {snapshot_ref: (description, snapshot_id)}
 
 
 .. py:class:: OptionalObjectVar(model=None, display_field='display', query_params=None, null_option=None, *args, **kwargs)
@@ -94,11 +120,6 @@ Attributes
 
       
 
-
-.. py:data:: CLIENT
-   
-
-   
 
 .. py:class:: IpFabricDataSource
 
@@ -141,6 +162,11 @@ Attributes
 
       
 
+   .. py:attribute:: snapshot
+      
+
+      
+
    .. py:attribute:: debug
       
 
@@ -161,39 +187,42 @@ Attributes
 
       
 
-   .. py:attribute:: snapshot
-      
+   .. py:method:: _get_vars()
+      :classmethod:
 
-      
+      Extend JobDataSource._get_vars to include some variables.
 
-   .. py:method:: data_mappings(cls)
+      This also initializes them.
+
+
+   .. py:method:: data_mappings()
       :classmethod:
 
       List describing the data mappings involved in this DataSource.
 
 
-   .. py:method:: config_information(cls)
+   .. py:method:: config_information()
       :classmethod:
 
       Dictionary describing the configuration of this DataSource.
 
 
-   .. py:method:: log_debug(self, message)
+   .. py:method:: log_debug(message)
 
       Conditionally log a debug message.
 
 
-   .. py:method:: load_source_adapter(self)
+   .. py:method:: load_source_adapter()
 
       Not used.
 
 
-   .. py:method:: load_target_adapter(self)
+   .. py:method:: load_target_adapter()
 
       Not used.
 
 
-   .. py:method:: sync_data(self)
+   .. py:method:: sync_data()
 
       Sync a device data from IP Fabric into Nautobot.
 

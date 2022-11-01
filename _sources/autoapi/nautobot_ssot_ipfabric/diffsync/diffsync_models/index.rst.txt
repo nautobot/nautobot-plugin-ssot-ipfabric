@@ -104,7 +104,7 @@ Attributes
 
       
 
-   .. py:method:: safe_delete(self, nautobot_object: Any, safe_delete_status: Optional[str] = None)
+   .. py:method:: safe_delete(nautobot_object: Any, safe_delete_status: Optional[str] = None)
 
       Safe delete an object, by adding tags or changing it's default status.
 
@@ -165,18 +165,18 @@ Attributes
 
       
 
-   .. py:method:: create(cls, diffsync, ids, attrs)
+   .. py:method:: create(diffsync, ids, attrs)
       :classmethod:
 
       Create Site in Nautobot.
 
 
-   .. py:method:: delete(self) -> Optional[diffsync.DiffSyncModel]
+   .. py:method:: delete() -> Optional[diffsync.DiffSyncModel]
 
       Delete Site in Nautobot.
 
 
-   .. py:method:: update(self, attrs)
+   .. py:method:: update(attrs)
 
       Update Site Object in Nautobot.
 
@@ -253,18 +253,18 @@ Attributes
 
       
 
-   .. py:method:: create(cls, diffsync, ids, attrs)
+   .. py:method:: create(diffsync, ids, attrs)
       :classmethod:
 
       Create Device in Nautobot under its parent site.
 
 
-   .. py:method:: delete(self) -> Optional[diffsync.DiffSyncModel]
+   .. py:method:: delete() -> Optional[diffsync.DiffSyncModel]
 
       Delete device in Nautobot.
 
 
-   .. py:method:: update(self, attrs)
+   .. py:method:: update(attrs)
 
       Update devices in Nautbot based on Source.
 
@@ -356,18 +356,18 @@ Attributes
 
       
 
-   .. py:method:: create(cls, diffsync, ids, attrs)
+   .. py:method:: create(diffsync, ids, attrs)
       :classmethod:
 
       Create interface in Nautobot under its parent device.
 
 
-   .. py:method:: delete(self) -> Optional[diffsync.DiffSyncModel]
+   .. py:method:: delete() -> Optional[diffsync.DiffSyncModel]
 
       Delete Interface Object.
 
 
-   .. py:method:: update(self, attrs)
+   .. py:method:: update(attrs)
 
       Update Interface object in Nautobot.
 
@@ -429,18 +429,18 @@ Attributes
 
       
 
-   .. py:method:: create(cls, diffsync, ids, attrs)
+   .. py:method:: create(diffsync, ids, attrs)
       :classmethod:
 
       Create VLANs in Nautobot under the site.
 
 
-   .. py:method:: delete(self) -> Optional[diffsync.DiffSyncModel]
+   .. py:method:: delete() -> Optional[diffsync.DiffSyncModel]
 
       Delete.
 
 
-   .. py:method:: update(self, attrs)
+   .. py:method:: update(attrs)
 
       Update VLAN object in Nautobot.
 

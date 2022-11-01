@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nautobot_ssot_ipfabric.diffsync.adapter_ipfabric &mdash; Nautobot SSOT IPFabric 0.9.6 documentation</title>
+  <title>nautobot_ssot_ipfabric.diffsync.adapter_ipfabric &mdash; Nautobot SSOT IPFabric 1.0.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
@@ -95,7 +95,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.pseudo_management_interface" title="nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.pseudo_management_interface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pseudo_management_interface</span></code></a>(hostname, device_interfaces, device_primary_ip)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.pseudo_management_interface" title="nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.pseudo_management_interface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pseudo_management_interface</span></code></a>(hostname, ...)</p></td>
 <td><p>Return a dict for an non-existing interface for NAT management addresses.</p></td>
 </tr>
 </tbody>
@@ -190,19 +190,19 @@
 <p>Nautobot adapter for DiffSync.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.load_sites">
-<span class="sig-name descname"><span class="pre">load_sites</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.load_sites" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">load_sites</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.load_sites" title="Permalink to this definition"></a></dt>
 <dd><p>Add IP Fabric Site objects as DiffSync Location models.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.load_device_interfaces">
-<span class="sig-name descname"><span class="pre">load_device_interfaces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interfaces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_primary_ip</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.load_device_interfaces" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">load_device_interfaces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interfaces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_primary_ip</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.load_device_interfaces" title="Permalink to this definition"></a></dt>
 <dd><p>Create and load DiffSync Interface model objects for a specific device.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.load">
-<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.load" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nautobot_ssot_ipfabric.diffsync.adapter_ipfabric.IPFabricDiffSync.load" title="Permalink to this definition"></a></dt>
 <dd><p>Load data from IP Fabric.</p>
 </dd></dl>
 

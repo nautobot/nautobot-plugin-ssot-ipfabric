@@ -97,17 +97,17 @@ Attributes
 
    Nautobot adapter for DiffSync.
 
-   .. py:method:: load_sites(self)
+   .. py:method:: load_sites()
 
       Add IP Fabric Site objects as DiffSync Location models.
 
 
-   .. py:method:: load_device_interfaces(self, device_model, interfaces, device_primary_ip)
+   .. py:method:: load_device_interfaces(device_model, interfaces, device_primary_ip)
 
       Create and load DiffSync Interface model objects for a specific device.
 
 
-   .. py:method:: load(self)
+   .. py:method:: load()
 
       Load data from IP Fabric.
 

@@ -72,7 +72,7 @@ Attributes
 
    Test the IPFabricDiffSync adapter class.
 
-   .. py:method:: test_data_loading(self)
+   .. py:method:: test_data_loading()
 
       Test the load() function.
 
