@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nautobot-ssot-ipfabric"
-version = "1.0.0"
+version = "2.0.0"
 description = "Nautobot SSoT IPFabric"
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 license = "Apache-2.0"
@@ -21,8 +21,8 @@ python = ">=3.7.1,<4.0"
 nautobot = "^1.2.0"
 nautobot-ssot = "^1.0.1"
 netutils = "^1.0.0"
-ipfabric-diagrams = "~5.0.2"
-ipfabric = "~5.0.11"
+ipfabric-diagrams = "~6.0.2"
+ipfabric = "~6.0.9"
 
 [tool.poetry.dev-dependencies]
 bandit = "*"
@@ -45,7 +45,7 @@ myst-parser = "^0.15.2"
 sphinx-autoapi = "^1.8.4"
 sphinx-rtd-theme = "^1.0.0"
 nautobot-chatops = "^1.5.1"
-nautobot-chatops-ipfabric = "^2.0.0"
+nautobot-chatops-ipfabric = "^3.0.0"
 toml = "^0.10.2"
 
 [tool.poetry.extras]

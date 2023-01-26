@@ -51,8 +51,6 @@ def get_formatted_snapshots(client):
     snapshot_refs = []
     if client:
         for snapshot_ref, snapshot in client.snapshots.items():
-            if snapshot.state != "loaded":
-                continue
             description = ""
             if snapshot_ref in [LAST, PREV, LAST_LOCKED]:
                 description += f"{snapshot_ref}: "
