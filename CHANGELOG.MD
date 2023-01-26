@@ -1,3 +1,13 @@
+## v2.0.0 - 2023-01-27
+
+### Added
+
+- #117 - Add support for IP Fabric v6.
+
+## Changed
+
+- Version 2.0.0 of `nautobot-plugin-ssot-ipfabric` only supports IP Fabric version v6.0 and above.
+
 ## v1.0.0 - 2022-10-28
 
 ### Added
