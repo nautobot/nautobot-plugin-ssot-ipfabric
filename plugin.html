@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nautobot SSoT Plugin - IPFabric &mdash; Nautobot SSOT IPFabric 1.0.0 documentation</title>
+  <title>Nautobot SSoT Plugin - IPFabric &mdash; Nautobot SSOT IPFabric 2.0.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
@@ -74,8 +74,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Nautobot SSoT Plugin - IPFabric</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Nautobot SSoT Plugin - IPFabric</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/plugin.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -102,14 +102,14 @@
 <section id="installation-configuration">
 <h2>Installation &amp; Configuration<a class="headerlink" href="#installation-configuration" title="Permalink to this headline"></a></h2>
 <p>The plugin is available as a Python package in pypi and can be installed with pip</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install nautobot-ssot-ipfabric
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>nautobot-ssot-ipfabric
 </pre></div>
 </div>
 <blockquote>
 <div><p>The plugin is compatible with Nautobot 1.1.0 and higher</p>
 </div></blockquote>
 <p>To ensure Nautobot SSoT IPFabric is automatically re-installed during future upgrades, create a file named <code class="docutils literal notranslate"><span class="pre">local_requirements.txt</span></code> (if not already existing) in the Nautobot root directory (alongside <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>) and list the <code class="docutils literal notranslate"><span class="pre">nautobot-ssot-ipfabric</span></code> package:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span> nautobot-ssot-ipfabric &gt;&gt; local_requirements.txt
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span>nautobot-ssot-ipfabric<span class="w"> </span>&gt;&gt;<span class="w"> </span>local_requirements.txt
 </pre></div>
 </div>
 <p>Once installed, the plugin needs to be enabled in your <code class="docutils literal notranslate"><span class="pre">nautobot_config.py</span></code> as well as the <strong>IP Fabric Host</strong> and <strong>IP Fabric API Token</strong>.</p>
