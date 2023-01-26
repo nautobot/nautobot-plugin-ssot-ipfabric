@@ -40,9 +40,9 @@ namespace = Collection("nautobot_ssot_ipfabric")
 namespace.configure(
     {
         "nautobot_ssot_ipfabric": {
-            "nautobot_ver": "1.2.4",
+            "nautobot_ver": "1.4.8",
             "project_name": "nautobot_ssot_ipfabric",
-            "python_ver": "3.7",
+            "python_ver": "3.8",
             "local": False,
             "compose_dir": os.path.join(os.path.dirname(__file__), "development"),
             "compose_files": [
