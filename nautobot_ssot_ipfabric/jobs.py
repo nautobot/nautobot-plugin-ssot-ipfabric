@@ -50,6 +50,7 @@ def get_formatted_snapshots(client):
     formatted_snapshots = {}
     snapshot_refs = []
     if client:
+        client.update()
         for snapshot_ref, snapshot in client.snapshots.items():
             description = ""
             if snapshot_ref in [LAST, PREV, LAST_LOCKED]:
