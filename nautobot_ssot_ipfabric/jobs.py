@@ -159,18 +159,18 @@ class IpFabricDataSource(DataSource, Job):
                 print(f"Got an error {error}")
                 cls.client = None
 
-            formatted_snapshots = get_formatted_snapshots(cls.client)
-            if formatted_snapshots:
-                default_choice = formatted_snapshots["$last"][::-1]
-            else:
-                default_choice = "$last"
+        formatted_snapshots = get_formatted_snapshots(cls.client)
+        if formatted_snapshots:
+            default_choice = formatted_snapshots["$last"][::-1]
+        else:
+            default_choice = "$last"
 
-            cls.snapshot = ChoiceVar(
-                description="IPFabric snapshot to sync from. Defaults to $last",
-                default=default_choice,
-                choices=[(snapshot_id, snapshot_name) for snapshot_name, snapshot_id in formatted_snapshots.values()],
-                required=False,
-            )
+        cls.snapshot = ChoiceVar(
+            description="IPFabric snapshot to sync from. Defaults to $last",
+            default=default_choice,
+            choices=[(snapshot_id, snapshot_name) for snapshot_name, snapshot_id in formatted_snapshots.values()],
+            required=False,
+        )
 
         if hasattr(cls, "snapshot"):
             got_vars["snapshot"] = cls.snapshot
