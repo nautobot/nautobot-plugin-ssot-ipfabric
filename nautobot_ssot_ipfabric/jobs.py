@@ -41,7 +41,7 @@ def is_valid_uuid(identifier):
         return False
 
 
-def get_formatted_snapshots(client):
+def get_formatted_snapshots(client: IPFClient):
     """Get all loaded snapshots and format them for display in choice menu.
 
     Returns:
@@ -51,7 +51,7 @@ def get_formatted_snapshots(client):
     snapshot_refs = []
     if client:
         client.update()
-        for snapshot_ref, snapshot in client.snapshots.items():
+        for snapshot_ref, snapshot in client.loaded_snapshots.items():
             description = ""
             if snapshot_ref in [LAST, PREV, LAST_LOCKED]:
                 description += f"{snapshot_ref}: "
@@ -147,13 +147,14 @@ class IpFabricDataSource(DataSource, Job):
         """
         got_vars = super()._get_vars()
 
-        if cls.snapshot is None:
+        if cls.client is None:
             try:
                 cls.client = IPFClient(
                     base_url=IPFABRIC_HOST,
                     token=IPFABRIC_API_TOKEN,
                     verify=IPFABRIC_SSL_VERIFY,
                     timeout=IPFABRIC_TIMEOUT,
+                    unloaded=False,
                 )
             except (RuntimeError, ConnectError) as error:
                 print(f"Got an error {error}")
