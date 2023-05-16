@@ -50,7 +50,7 @@ def get_formatted_snapshots(client: IPFClient):
     formatted_snapshots = {}
     snapshot_refs = []
     if client:
-        client.update()
+
         for snapshot_ref, snapshot in client.loaded_snapshots.items():
             description = ""
             if snapshot_ref in [LAST, PREV, LAST_LOCKED]:
@@ -159,6 +159,8 @@ class IpFabricDataSource(DataSource, Job):
             except (RuntimeError, ConnectError) as error:
                 print(f"Got an error {error}")
                 cls.client = None
+        else:
+            cls.client.update()
 
         formatted_snapshots = get_formatted_snapshots(cls.client)
         if formatted_snapshots:
