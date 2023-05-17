@@ -5,7 +5,6 @@ from typing import Any, Optional
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.db import IntegrityError
-from django.db.models import Q
 from django.utils.text import slugify
 from nautobot.dcim.models import (
     Device,
