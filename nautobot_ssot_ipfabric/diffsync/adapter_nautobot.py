@@ -122,7 +122,9 @@ class NautobotDiffSync(DiffSyncModelAdapters):
                 diffsync=self,
                 name=device_record.name,
                 model=str(device_record.device_type),
-                role=str(device_record.device_role) if str(device_record.device_role) else DEFAULT_DEVICE_ROLE,
+                role=str(device_record.device_role.cf["ipfabric_type"])
+                if str(device_record.device_role.cf["ipfabric_type"])
+                else str(device_record.device_role),
                 location_name=device_record.site.name,
                 vendor=str(device_record.device_type.manufacturer),
                 status=device_record.status.name,
