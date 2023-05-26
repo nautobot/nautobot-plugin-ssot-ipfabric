@@ -173,10 +173,6 @@ You can then views the details of each object.
 
 ![Sync Details](./images/sync_details.png)
 
-Site objects include a site diagram from IPFabric, which is using the new custom field to render the appropriate site-id. Navigate to any site that's been synced by SSoT IPFabric and take a look!
-
-![Site Diagram](./images/site_diagram.png)
-
 ## DiffSync Models
 
 ### IPFabric Site

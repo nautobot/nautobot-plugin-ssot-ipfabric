@@ -59,7 +59,7 @@ class IPFabricDiffSync(DiffSyncModelAdapters):
                     diffsync=self,
                     name=iface.get("intName"),
                     device_name=iface.get("hostname"),
-                    description=iface.get("dscr"),
+                    description=iface.get("dscr", ""),
                     enabled=True,
                     mac_address=mac_to_format(iface.get("mac"), "MAC_COLON_TWO").upper()
                     if iface.get("mac")

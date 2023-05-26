@@ -1,3 +1,11 @@
+## v2.0.1 - 2023-05-26
+
+### Fixed
+
+- #128 - Refresh client to ensure latest snapshots are loaded.
+- #129 - Use new IP Fabric logo on the SSoT dashboard.
+- #133 - Fix device interface import for interfaces with no description.
+
 ## v2.0.0 - 2023-01-27
 
 ### Added
