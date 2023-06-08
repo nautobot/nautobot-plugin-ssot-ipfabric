@@ -194,7 +194,9 @@ Site objects include a site diagram from IPFabric, which is using the new custom
 | vendor             | Device.vendor        | Device.manufacturer    |
 | model              | Device.model         | Device.device_type     |
 | sn                 | Device.serial_number | Device.serial          |
+| devType            | Device.role          | Device.device_role     |
 
+> Note: The corresponding DeviceRole.name can be overwritten for customization. Mapping is done via the CustomField `IPFabric_Type` on the DeviceRole object.
 
 ### IPFabric Interface
 
@@ -219,7 +221,3 @@ Site objects include a site diagram from IPFabric, which is using the new custom
 | vlanId             | Vlan.vid       | VLAN.vid               |
 | status             | Vlan.status    | VLAN.status            |
 | siteName           | Vlan.site      | VLAN.site              |
-
-## Device Roles
-
-Although IP Fabric does not have a dedicated model that corresponds to Nautobot Device Role objects, the plugin will create new Device Roles that correspond to the synced Device's `devType` attribute. The resulting Device Role object in Nautobot will have a custom field called **IPFabric Type** that maps directly to the `devType` field in IP Fabric. You can change the Device Role's name and color without any impact between syncs. However, if you change the custom field **IPFabric Type**, then on subsequent syncs a new Device Role object will be created and the Devices that have been synced from IP Fabric will revert to using the new Device Role.
