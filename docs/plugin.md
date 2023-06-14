@@ -32,7 +32,7 @@ Once installed, the plugin needs to be enabled in your `nautobot_config.py` as w
 
 ```python
 # In your nautobot_config.py
-PLUGINS = ["nautobot_ssot_ipfabric"]
+PLUGINS = ["nautobot_ssot", "nautobot_ssot_ipfabric"]
 
 PLUGINS_CONFIG = {
   "nautobot_ssot_ipfabric": {
