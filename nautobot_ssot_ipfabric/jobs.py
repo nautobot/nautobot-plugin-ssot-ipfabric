@@ -50,7 +50,6 @@ def get_formatted_snapshots(client: IPFClient):
     formatted_snapshots = {}
     snapshot_refs = []
     if client:
-
         for snapshot_ref, snapshot in client.loaded_snapshots.items():
             description = ""
             if snapshot_ref in [LAST, PREV, LAST_LOCKED]:
