@@ -139,6 +139,20 @@ class IpFabricDataSource(DataSource, Job):
             "dry_run",
         )
 
+    @staticmethod
+    def _init_ipf_client():
+        try:
+            return IPFClient(
+                base_url=IPFABRIC_HOST,
+                token=IPFABRIC_API_TOKEN,
+                verify=IPFABRIC_SSL_VERIFY,
+                timeout=IPFABRIC_TIMEOUT,
+                unloaded=False,
+            )
+        except (RuntimeError, ConnectError) as error:
+            print(f"Got an error {error}")
+            return None
+
     @classmethod
     def _get_vars(cls):
         """Extend JobDataSource._get_vars to include some variables.
@@ -148,17 +162,7 @@ class IpFabricDataSource(DataSource, Job):
         got_vars = super()._get_vars()
 
         if cls.client is None:
-            try:
-                cls.client = IPFClient(
-                    base_url=IPFABRIC_HOST,
-                    token=IPFABRIC_API_TOKEN,
-                    verify=IPFABRIC_SSL_VERIFY,
-                    timeout=IPFABRIC_TIMEOUT,
-                    unloaded=False,
-                )
-            except (RuntimeError, ConnectError) as error:
-                print(f"Got an error {error}")
-                cls.client = None
+            cls.client = cls._init_ipf_client()
         else:
             cls.client.update()
 
@@ -222,6 +226,8 @@ class IpFabricDataSource(DataSource, Job):
 
     def sync_data(self):
         """Sync a device data from IP Fabric into Nautobot."""
+        if self.client is None:
+            self.client = self._init_ipf_client()
         if self.client is None:
             self.log_failure(message="IPFabric client is not ready. Check your config.")
             return
