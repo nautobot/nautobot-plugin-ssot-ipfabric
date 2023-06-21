@@ -163,7 +163,7 @@ def create_interface(device_obj, interface_details):
         interface_obj, _ = device_obj.interfaces.get_or_create(**fields)
     except IntegrityError:
         interface_obj, _ = device_obj.interfaces.get_or_create(name=fields["name"])
-        interface_obj.description = fields.get("description")
+        interface_obj.description = fields.get("description", "")
         interface_obj.enabled = fields.get("enabled")
         interface_obj.mac_address = fields.get("mac_address")
         interface_obj.mtu = fields.get("mtu")
