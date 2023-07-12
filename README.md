@@ -60,6 +60,8 @@ Example `PLUGINS_CONFIG` to be updated in `nautobot_config.py` after successful 
 ability to call the sync job through chatops, you will be required to configure it.
 
 ```python
+PLUGINS = ["nautobot_ssot", "nautobot_ssot_ipfabric"]
+
 PLUGINS_CONFIG = {
     "nautobot_chatops": {
         "enable_slack": True,
