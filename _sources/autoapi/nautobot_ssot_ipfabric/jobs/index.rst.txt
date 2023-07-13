@@ -99,7 +99,7 @@ Attributes
    Return true if the identifier it's a valid UUID.
 
 
-.. py:function:: get_formatted_snapshots(client)
+.. py:function:: get_formatted_snapshots(client: ipfabric.IPFClient)
 
    Get all loaded snapshots and format them for display in choice menu.
 
@@ -186,6 +186,10 @@ Attributes
       
 
       
+
+   .. py:method:: _init_ipf_client()
+      :staticmethod:
+
 
    .. py:method:: _get_vars()
       :classmethod:
