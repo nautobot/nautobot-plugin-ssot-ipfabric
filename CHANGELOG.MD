@@ -1,3 +1,10 @@
+## v2.0.2 - 2023-07-13
+
+### Fixed
+
+- #130 - Fix IP Fabric client snapshot reloading.
+- #136 - Correct documentation on `nautobot-ssot` framework requirement.
+
 ## v2.0.1 - 2023-05-26
 
 ### Fixed
