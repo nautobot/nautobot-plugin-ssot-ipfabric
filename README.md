@@ -1,3 +1,5 @@
+# The code in this repository has been migrated to the [Nautobot SSoT Repository](https://github.com/nautobot/nautobot-plugin-ssot) as an integration - read more about it in the [SSoT Docs](https://docs.nautobot.com/projects/ssot/en/latest/admin/install/)! As of August 2023 this repository has been **FROZEN** - all development / issues / discussions for this integration are in the [Nautobot SSoT Repository](https://github.com/nautobot/nautobot-plugin-ssot) going forward.
+
 # Nautobot SSoT IPFabric
 
 An [SSoT](https://blog.networktocode.com/post/nautobot-ssot-plugin/) plugin providing a simple way to synchronize data between [IPFabric](https://ipfabric.io/) and [Nautobot](https://github.com/nautobot/nautobot). Ensure data stays consistent between the two platforms by leveraging [DiffSync](https://github.com/networktocode/diffsync) capabilities and allowing users to take full advantage of both platforms with up-to-date, synchronized data.
